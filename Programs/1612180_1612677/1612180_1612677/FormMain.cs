@@ -20,7 +20,7 @@ namespace _1612180_1612677
 
         private Point p1 = new Point();
         private Point p2 = new Point();
-        private bool moving = false;
+        private bool isMouseDown = false;
 
         private const int CLICK_SHAPE = -1;
         private const int NO_SHAPE = 0;
@@ -48,7 +48,7 @@ namespace _1612180_1612677
                 case LINE_SHAPE:
                     p1.X = e.X;
                     p1.Y = e.Y;
-                    moving = true;
+                    isMouseDown = true;
                     break;
 
                 default:
@@ -60,21 +60,16 @@ namespace _1612180_1612677
         {
             switch (typeShape)
             {
-                case CLICK_SHAPE:
-
-                    break;
-
                 case NO_SHAPE:
                     break;
 
                 case LINE_SHAPE:
                     // tha chuot ra
-                    moving = false;
+                    isMouseDown = false;
 
                     // draw
                     MyShape myshape = new MyLine(bitmap, new Pen(Color.Red), p1, p2);
-                    myshape.draw();
-                    pictureBoxMain.Refresh();
+                    drawWrap(myshape);
 
                     // them vao danh sach hinh
                     shapes.Add(myshape);
@@ -86,7 +81,7 @@ namespace _1612180_1612677
         private void pictureBoxMain_MouseMove(object sender, MouseEventArgs e)
         {
             // kiem tra co dang di chuyen hay khong
-            if (!moving)
+            if (!isMouseDown)
             {
                 return;
             }
@@ -99,16 +94,14 @@ namespace _1612180_1612677
                 case LINE_SHAPE:
                     // xoa doan thang cu
                     MyShape myshape = new MyLine(bitmap, new Pen(Color.White), p1, p2);
-                    myshape.draw();
-                    pictureBoxMain.Refresh();
+                    drawWrap(myshape);
 
                     // ve doan thang moi
                     drawShapes();
                     p2.X = e.X;
                     p2.Y = e.Y;
                     myshape = new MyLine(bitmap, new Pen(Color.Red), p1, p2);
-                    myshape.draw();
-                    pictureBoxMain.Refresh();
+                    drawWrap(myshape);
 
                     break;
 
@@ -122,7 +115,7 @@ namespace _1612180_1612677
             // tao bien bitmap gan cho pictureBox
             bitmap = new Bitmap(pictureBoxMain.Width, pictureBoxMain.Height, PixelFormat.Format24bppRgb);
             pictureBoxMain.Image = bitmap;
-            clear();
+            clearAll();
         }
 
         private void buttonDrawLine_Click(object sender, EventArgs e)
@@ -131,7 +124,7 @@ namespace _1612180_1612677
         }
 
         // xoa het anh trong pictureBox
-        private void clear()
+        private void clearAll()
         {
             Graphics graphics = Graphics.FromImage(bitmap);
             graphics.Clear(Color.White);
@@ -139,13 +132,13 @@ namespace _1612180_1612677
             pictureBoxMain.Refresh();
         }
 
-        private void buttonClear_Click(object sender, EventArgs e)
+        private void buttonClearAll_Click(object sender, EventArgs e)
         {
             // xoa het danh sach cac hinh
             shapes.Clear();
 
             // xoa trong pictureBox
-            clear();
+            clearAll();
         }
 
         private void buttonClick_Click(object sender, EventArgs e)
@@ -180,6 +173,13 @@ namespace _1612180_1612677
 
                 drawShapes();
             }
+        }
+
+        // wrap draw and pictureBox refresh
+        private void drawWrap(MyShape myshape)
+        {
+            myshape.draw();
+            pictureBoxMain.Refresh();
         }
     }
 }

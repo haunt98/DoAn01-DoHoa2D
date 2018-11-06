@@ -37,7 +37,7 @@
             this.buttonDrawRectangle = new System.Windows.Forms.Button();
             this.buttonDrawLine = new System.Windows.Forms.Button();
             this.pictureBoxMain = new System.Windows.Forms.PictureBox();
-            this.buttonClear = new System.Windows.Forms.Button();
+            this.buttonClearAll = new System.Windows.Forms.Button();
             this.buttonClick = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMain)).BeginInit();
@@ -120,15 +120,15 @@
             this.pictureBoxMain.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureBoxMain_MouseMove);
             this.pictureBoxMain.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pictureBoxMain_MouseUp);
             // 
-            // buttonClear
+            // buttonClearAll
             // 
-            this.buttonClear.Location = new System.Drawing.Point(305, 1);
-            this.buttonClear.Name = "buttonClear";
-            this.buttonClear.Size = new System.Drawing.Size(75, 23);
-            this.buttonClear.TabIndex = 4;
-            this.buttonClear.Text = "Clear";
-            this.buttonClear.UseVisualStyleBackColor = true;
-            this.buttonClear.Click += new System.EventHandler(this.buttonClear_Click);
+            this.buttonClearAll.Location = new System.Drawing.Point(305, 1);
+            this.buttonClearAll.Name = "buttonClearAll";
+            this.buttonClearAll.Size = new System.Drawing.Size(75, 23);
+            this.buttonClearAll.TabIndex = 4;
+            this.buttonClearAll.Text = "Clear All";
+            this.buttonClearAll.UseVisualStyleBackColor = true;
+            this.buttonClearAll.Click += new System.EventHandler(this.buttonClearAll_Click);
             // 
             // buttonClick
             // 
@@ -146,7 +146,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(680, 432);
             this.Controls.Add(this.buttonClick);
-            this.Controls.Add(this.buttonClear);
+            this.Controls.Add(this.buttonClearAll);
             this.Controls.Add(this.pictureBoxMain);
             this.Controls.Add(this.buttonDrawLine);
             this.Controls.Add(this.buttonDrawRectangle);
@@ -174,7 +174,7 @@
         private System.Windows.Forms.Button buttonDrawRectangle;
         private System.Windows.Forms.Button buttonDrawLine;
         private System.Windows.Forms.PictureBox pictureBoxMain;
-        private System.Windows.Forms.Button buttonClear;
+        private System.Windows.Forms.Button buttonClearAll;
         private System.Windows.Forms.Button buttonClick;
     }
 }
