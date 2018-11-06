@@ -52,12 +52,36 @@ namespace _1612180_1612677
             graphics.Dispose();
         }
 
-        // https://stackoverflow.com/questions/34171073/c-sharp-how-do-i-detect-if-a-line-painted-drawn-on-a-form-has-been-clicked-on
-        public override bool isPointBelong(Point p)
+        // kiem tra chinh xac mot diem
+        public bool isPointBelongPrecisely(Point p)
         {
+            // su dung graphics path
             GraphicsPath path = new GraphicsPath();
             path.AddLine(p1, p2);
             return path.IsOutlineVisible(p, base.pen);
+        }
+
+        // vi khi click tung pixel rat kho
+        // nen xet them nhung diem lan can
+        public override bool isPointBelong(Point p)
+        {
+            List<Point> ps = new List<Point>();
+            //  X
+            // XXX
+            //  X
+            ps.Add(new Point(p.X, p.Y));
+            ps.Add(new Point(p.X - 1, p.Y));
+            ps.Add(new Point(p.X, p.Y - 1));
+            ps.Add(new Point(p.X, p.Y + 1));
+            ps.Add(new Point(p.X + 1, p.Y));
+
+            bool flag = false;
+            foreach (Point temp_p in ps)
+            {
+                flag |= isPointBelongPrecisely(temp_p);
+            }
+
+            return flag;
         }
 
         public override void changePen(Pen _pen)
