@@ -15,17 +15,18 @@ namespace _1612180_1612677
     {
         private Bitmap bitmap;
 
-        // Luu danh sach cac hinh
+        // luu danh sach cac hinh
         private List<MyShape> shapes = new List<MyShape>();
 
         private Point p1 = new Point();
         private Point p2 = new Point();
         private bool moving = false;
 
-        // 0 khong ve
-        // 1 line
-        // 2 rectangle
-        private int typeShape = 0;
+        private const int CLICK_SHAPE = -1;
+        private const int NO_SHAPE = 0;
+        private const int LINE_SHAPE = 1;
+        private const int REC_SHAPE = 2;
+        private int typeShape = NO_SHAPE;
 
         public FormMain()
         {
@@ -34,42 +35,85 @@ namespace _1612180_1612677
 
         private void buttonDrawRec_Click(object sender, EventArgs e)
         {
+            typeShape = REC_SHAPE;
         }
 
         private void pictureBoxMain_MouseDown(object sender, MouseEventArgs e)
         {
-            if (typeShape == 0)
-                return;
-            if (typeShape == 1)
+            switch (typeShape)
             {
-                p1.X = e.X;
-                p1.Y = e.Y;
-                moving = true;
+                case NO_SHAPE:
+                    break;
+
+                case LINE_SHAPE:
+                    p1.X = e.X;
+                    p1.Y = e.Y;
+                    moving = true;
+                    break;
+
+                default:
+                    break;
             }
         }
 
         private void pictureBoxMain_MouseUp(object sender, MouseEventArgs e)
         {
-            if (typeShape == 0)
-                return;
-            moving = false;
-            if (typeShape == 1)
+            switch (typeShape)
             {
-                MyShape myshape = new MyLine(bitmap, p1, p2);
-                shapes.Add(myshape);
-                myshape.draw();
-                pictureBoxMain.Refresh();
+                case CLICK_SHAPE:
+
+                    break;
+
+                case NO_SHAPE:
+                    break;
+
+                case LINE_SHAPE:
+                    // tha chuot ra
+                    moving = false;
+
+                    // draw
+                    MyShape myshape = new MyLine(bitmap, new Pen(Color.Red), p1, p2);
+                    myshape.draw();
+                    pictureBoxMain.Refresh();
+
+                    // them vao danh sach hinh
+                    shapes.Add(myshape);
+
+                    break;
             }
         }
 
         private void pictureBoxMain_MouseMove(object sender, MouseEventArgs e)
         {
-            if (typeShape == 0)
-                return;
-            if (typeShape == 1 && moving)
+            // kiem tra co dang di chuyen hay khong
+            if (!moving)
             {
-                p2.X = e.X;
-                p2.Y = e.Y;
+                return;
+            }
+
+            switch (typeShape)
+            {
+                case NO_SHAPE:
+                    break;
+
+                case LINE_SHAPE:
+                    // xoa doan thang cu
+                    MyShape myshape = new MyLine(bitmap, new Pen(Color.White), p1, p2);
+                    myshape.draw();
+                    pictureBoxMain.Refresh();
+
+                    // ve doan thang moi
+                    drawShapes();
+                    p2.X = e.X;
+                    p2.Y = e.Y;
+                    myshape = new MyLine(bitmap, new Pen(Color.Red), p1, p2);
+                    myshape.draw();
+                    pictureBoxMain.Refresh();
+
+                    break;
+
+                default:
+                    break;
             }
         }
 
@@ -83,7 +127,7 @@ namespace _1612180_1612677
 
         private void buttonDrawLine_Click(object sender, EventArgs e)
         {
-            typeShape = 1;
+            typeShape = LINE_SHAPE;
         }
 
         // xoa het anh trong pictureBox
@@ -93,6 +137,49 @@ namespace _1612180_1612677
             graphics.Clear(Color.White);
             graphics.Dispose();
             pictureBoxMain.Refresh();
+        }
+
+        private void buttonClear_Click(object sender, EventArgs e)
+        {
+            // xoa het danh sach cac hinh
+            shapes.Clear();
+
+            // xoa trong pictureBox
+            clear();
+        }
+
+        private void buttonClick_Click(object sender, EventArgs e)
+        {
+            typeShape = CLICK_SHAPE;
+        }
+
+        private void drawShapes()
+        {
+            foreach (MyShape shape in shapes)
+            {
+                shape.draw();
+            }
+            pictureBoxMain.Refresh();
+        }
+
+        private void pictureBoxMain_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (typeShape == CLICK_SHAPE)
+            {
+                p1.X = e.X;
+                p1.Y = e.Y;
+                int i;
+                for (i = shapes.Count - 1; i >= 0; --i)
+                {
+                    if (shapes[i].isPointBelong(p1))
+                    {
+                        shapes[i].changePen(new Pen(Color.Blue));
+                        break;
+                    }
+                }
+
+                drawShapes();
+            }
         }
     }
 }

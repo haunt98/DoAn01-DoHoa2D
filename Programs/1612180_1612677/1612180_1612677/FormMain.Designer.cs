@@ -37,6 +37,8 @@
             this.buttonDrawRectangle = new System.Windows.Forms.Button();
             this.buttonDrawLine = new System.Windows.Forms.Button();
             this.pictureBoxMain = new System.Windows.Forms.PictureBox();
+            this.buttonClear = new System.Windows.Forms.Button();
+            this.buttonClick = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMain)).BeginInit();
             this.SuspendLayout();
@@ -113,15 +115,38 @@
             this.pictureBoxMain.Size = new System.Drawing.Size(619, 374);
             this.pictureBoxMain.TabIndex = 3;
             this.pictureBoxMain.TabStop = false;
+            this.pictureBoxMain.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pictureBoxMain_MouseClick);
             this.pictureBoxMain.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureBoxMain_MouseDown);
             this.pictureBoxMain.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureBoxMain_MouseMove);
             this.pictureBoxMain.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pictureBoxMain_MouseUp);
+            // 
+            // buttonClear
+            // 
+            this.buttonClear.Location = new System.Drawing.Point(305, 1);
+            this.buttonClear.Name = "buttonClear";
+            this.buttonClear.Size = new System.Drawing.Size(75, 23);
+            this.buttonClear.TabIndex = 4;
+            this.buttonClear.Text = "Clear";
+            this.buttonClear.UseVisualStyleBackColor = true;
+            this.buttonClear.Click += new System.EventHandler(this.buttonClear_Click);
+            // 
+            // buttonClick
+            // 
+            this.buttonClick.Location = new System.Drawing.Point(407, 1);
+            this.buttonClick.Name = "buttonClick";
+            this.buttonClick.Size = new System.Drawing.Size(75, 23);
+            this.buttonClick.TabIndex = 5;
+            this.buttonClick.Text = "Click";
+            this.buttonClick.UseVisualStyleBackColor = true;
+            this.buttonClick.Click += new System.EventHandler(this.buttonClick_Click);
             // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(680, 432);
+            this.Controls.Add(this.buttonClick);
+            this.Controls.Add(this.buttonClear);
             this.Controls.Add(this.pictureBoxMain);
             this.Controls.Add(this.buttonDrawLine);
             this.Controls.Add(this.buttonDrawRectangle);
@@ -149,6 +174,8 @@
         private System.Windows.Forms.Button buttonDrawRectangle;
         private System.Windows.Forms.Button buttonDrawLine;
         private System.Windows.Forms.PictureBox pictureBoxMain;
+        private System.Windows.Forms.Button buttonClear;
+        private System.Windows.Forms.Button buttonClick;
     }
 }
 
