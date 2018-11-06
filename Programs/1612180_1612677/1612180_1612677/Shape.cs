@@ -31,34 +31,6 @@ namespace _1612180_1612677
             }
         }
 
-        // vi khi click tung pixel rat kho
-        // nen xet them nhung diem lan can
-        public override bool isPointBelong(Point p)
-        {
-            List<Point> ps = new List<Point>();
-            // XXX
-            // XXX
-            // XXX
-            ps.Add(new Point(p.X - 1, p.Y - 1));
-            ps.Add(new Point(p.X - 1, p.Y));
-            ps.Add(new Point(p.X - 1, p.Y + 1));
-            ps.Add(new Point(p.X, p.Y - 1));
-            ps.Add(new Point(p.X, p.Y));
-            ps.Add(new Point(p.X, p.Y + 1));
-            ps.Add(new Point(p.X + 1, p.Y - 1));
-            ps.Add(new Point(p.X + 1, p.Y));
-            ps.Add(new Point(p.X + 1, p.Y + 1));
-
-            bool flag = false;
-            foreach (Point temp_p in ps)
-            {
-                flag |= isPointBelongPrecisely(temp_p);
-            }
-
-            return flag;
-        }
-
-        // kiem tra chinh xac mot diem
         public override bool isPointBelongPrecisely(Point p)
         {
             // su dung graphics path
@@ -157,17 +129,41 @@ namespace _1612180_1612677
             penAttr = _penAttr;
         }
 
-        protected PenAttr penAttr { get; set; }
+        public PenAttr penAttr { get; set; }
 
         public virtual void draw()
         {
         }
 
-        public virtual bool isPointBelong(Point p)
+        // vi khi click tung pixel rat kho
+        // nen xet them nhung diem lan can
+        public bool isPointBelong(Point p)
         {
-            return false;
+            List<Point> ps = new List<Point>();
+            // XXX
+            // XXX
+            // XXX
+            ps.Add(new Point(p.X - 1, p.Y - 1));
+            ps.Add(new Point(p.X - 1, p.Y));
+            ps.Add(new Point(p.X - 1, p.Y + 1));
+            ps.Add(new Point(p.X, p.Y - 1));
+            ps.Add(new Point(p.X, p.Y));
+            ps.Add(new Point(p.X, p.Y + 1));
+            ps.Add(new Point(p.X + 1, p.Y - 1));
+            ps.Add(new Point(p.X + 1, p.Y));
+            ps.Add(new Point(p.X + 1, p.Y + 1));
+
+            bool flag = false;
+            foreach (Point temp_p in ps)
+            {
+                // chi can mot diem nam trong la nam trong
+                flag |= isPointBelongPrecisely(temp_p);
+            }
+
+            return flag;
         }
 
+        // kiem tra chinh xac mot diem
         public virtual bool isPointBelongPrecisely(Point p)
         {
             return false;

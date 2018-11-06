@@ -19,20 +19,20 @@ namespace _1612180_1612677
         private const int NO_SHAPE = 0;
         private const int REC_SHAPE = 2;
 
-        private int typeShape = NO_SHAPE;
-
         private Bitmap bitmap;
-        private bool isMouseDown = false;
 
+        // so thu tu cua hinh dang bi click
+        // shapes[clickedShape] la hinh dang bi click
+        private int clickedShape = -1;
+
+        private bool isMouseDown = false;
         private Point p1;
         private Point p2;
 
         // luu danh sach cac hinh
         private List<MyShape> shapes = new List<MyShape>();
 
-        // so thu tu cua hinh dang bi click
-        // shapes[clickedShape] la hinh dang bi click
-        private int clickedShape = -1;
+        private int typeShape = NO_SHAPE;
 
         public FormMain()
         {
@@ -113,6 +113,8 @@ namespace _1612180_1612677
                         break;
                     }
                 }
+
+                drawShapes();
             }
         }
 
