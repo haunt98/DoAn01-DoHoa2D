@@ -188,6 +188,7 @@ namespace _1612180_1612677
 
                     // them vao danh sach hinh
                     MyShape myshape = new MyLine(bitmap, new Pen(Color.Red), p1, p2);
+                    drawWrap(myshape);
                     shapes.Add(myshape);
                     break;
 
@@ -197,6 +198,7 @@ namespace _1612180_1612677
 
                     // them vao danh sach hinh
                     myshape = new MyRectangle(bitmap, new Pen(Color.Red), p1, p2);
+                    drawWrap(myshape);
                     shapes.Add(myshape);
                     break;
             }
