@@ -8,32 +8,6 @@ using System.Drawing.Drawing2D;
 
 namespace _1612180_1612677
 {
-    public abstract class MyShape
-    {
-        protected Bitmap bitmap;
-        protected Pen pen;
-
-        public MyShape(Bitmap _bitmap, Pen _pen)
-        {
-            bitmap = _bitmap;
-            pen = _pen;
-        }
-
-        public virtual void draw()
-        {
-        }
-
-        public virtual bool isPointBelong(Point p)
-        {
-            return false;
-        }
-
-        public virtual void changePen(Pen _pen)
-        {
-            pen = _pen;
-        }
-    }
-
     public class MyLine : MyShape
     {
         private Point p1;
@@ -47,18 +21,10 @@ namespace _1612180_1612677
 
         public override void draw()
         {
-            Graphics graphics = Graphics.FromImage(base.bitmap);
-            graphics.DrawLine(base.pen, p1, p2);
-            graphics.Dispose();
-        }
-
-        // kiem tra chinh xac mot diem
-        public bool isPointBelongPrecisely(Point p)
-        {
-            // su dung graphics path
-            GraphicsPath path = new GraphicsPath();
-            path.AddLine(p1, p2);
-            return path.IsOutlineVisible(p, base.pen);
+            using (Graphics graphics = Graphics.FromImage(base.bitmap))
+            {
+                graphics.DrawLine(base.pen, p1, p2);
+            }
         }
 
         // vi khi click tung pixel rat kho
@@ -84,9 +50,13 @@ namespace _1612180_1612677
             return flag;
         }
 
-        public override void changePen(Pen _pen)
+        // kiem tra chinh xac mot diem
+        public bool isPointBelongPrecisely(Point p)
         {
-            base.changePen(_pen);
+            // su dung graphics path
+            GraphicsPath path = new GraphicsPath();
+            path.AddLine(p1, p2);
+            return path.IsOutlineVisible(p, base.pen);
         }
     }
 
@@ -103,6 +73,71 @@ namespace _1612180_1612677
 
         public override void draw()
         {
+            using (Graphics graphics = Graphics.FromImage(base.bitmap))
+            {
+                // tim diem goc trai
+                Point mostLeft = new Point();
+                // p1  X
+                // X   p2
+                if (p1.X < p2.X && p1.Y < p2.Y)
+                {
+                    mostLeft.X = p1.X;
+                    mostLeft.Y = p1.Y;
+                }
+                // p2  X
+                // X   p1
+                else if (p2.X < p1.X && p2.Y < p1.Y)
+                {
+                    mostLeft.X = p2.X;
+                    mostLeft.Y = p2.Y;
+                }
+                // X   p2
+                // p1  X
+                else if (p1.Y < p2.Y)
+                {
+                    mostLeft.X = p2.X;
+                    mostLeft.Y = p1.Y;
+                }
+                // X   p1
+                // p2  X
+                else
+                {
+                    mostLeft.X = p1.X;
+                    mostLeft.Y = p2.Y;
+                }
+                int width = Math.Abs(p2.X - p1.X);
+                int height = Math.Abs(p2.Y - p1.Y);
+
+                // ve hcn
+                Rectangle rectangle = new Rectangle(mostLeft, new Size(width, height));
+                graphics.DrawRectangle(base.pen, rectangle);
+            }
+        }
+    }
+
+    public abstract class MyShape
+    {
+        protected Bitmap bitmap;
+        protected Pen pen;
+
+        public MyShape(Bitmap _bitmap, Pen _pen)
+        {
+            bitmap = _bitmap;
+            pen = _pen;
+        }
+
+        public void changePen(Pen _pen)
+        {
+            pen = _pen;
+        }
+
+        public virtual void draw()
+        {
+        }
+
+        public virtual bool isPointBelong(Point p)
+        {
+            return false;
         }
     }
 }
