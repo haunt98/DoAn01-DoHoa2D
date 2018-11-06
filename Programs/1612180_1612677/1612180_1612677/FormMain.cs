@@ -21,9 +21,9 @@ namespace _1612180_1612677
 
         private bool isMouseDown = false;
 
-        private Point p1 = new Point();
+        private Point p1;
 
-        private Point p2 = new Point();
+        private Point p2;
 
         // luu danh sach cac hinh
         private List<MyShape> shapes = new List<MyShape>();
@@ -65,7 +65,7 @@ namespace _1612180_1612677
             using (Graphics graphics = Graphics.FromImage(bitmap))
             {
                 graphics.Clear(Color.White);
-                pictureBoxMain.Refresh();
+                pictureBoxMain.Invalidate();
             }
         }
 
@@ -75,14 +75,14 @@ namespace _1612180_1612677
             {
                 shape.draw();
             }
-            pictureBoxMain.Refresh();
+            pictureBoxMain.Invalidate();
         }
 
-        // wrap draw and pictureBox refresh
+        // wrap draw and pictureBox Invalidate
         private void drawWrap(MyShape myshape)
         {
             myshape.draw();
-            pictureBoxMain.Refresh();
+            pictureBoxMain.Invalidate();
         }
 
         private void FormMain_Load(object sender, EventArgs e)
@@ -99,8 +99,7 @@ namespace _1612180_1612677
         {
             if (typeShape == CLICK_SHAPE)
             {
-                p1.X = e.X;
-                p1.Y = e.Y;
+                p1 = e.Location;
                 int i;
                 for (i = shapes.Count - 1; i >= 0; --i)
                 {
@@ -124,8 +123,7 @@ namespace _1612180_1612677
 
                 case LINE_SHAPE:
                 case REC_SHAPE:
-                    p1.X = e.X;
-                    p1.Y = e.Y;
+                    p1 = e.Location;
                     isMouseDown = true;
                     break;
 
@@ -154,8 +152,7 @@ namespace _1612180_1612677
 
                     // ve lai toan bo
                     drawShapes();
-                    p2.X = e.X;
-                    p2.Y = e.Y;
+                    p2 = e.Location;
                     myshape = new MyLine(bitmap, new Pen(Color.Red), p1, p2);
                     drawWrap(myshape);
                     break;
@@ -167,8 +164,7 @@ namespace _1612180_1612677
 
                     // ve lai toan bo
                     drawShapes();
-                    p2.X = e.X;
-                    p2.Y = e.Y;
+                    p2 = e.Location;
                     myshape = new MyRectangle(bitmap, new Pen(Color.Red), p1, p2);
                     drawWrap(myshape);
                     break;
