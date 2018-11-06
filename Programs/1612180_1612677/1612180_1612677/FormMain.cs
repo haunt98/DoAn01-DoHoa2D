@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Linq;
 using System.Text;
@@ -148,25 +149,33 @@ namespace _1612180_1612677
 
                 case LINE_SHAPE:
                     // xoa doan thang cu
-                    myshape = new MyLine(bitmap, new Pen(Color.White), p1, p2);
+                    myshape = new MyLine(bitmap,
+                        new PenAttr(Color.White, DashStyle.Solid, 1),
+                        p1, p2);
                     drawWrap(myshape);
 
                     // ve lai toan bo
                     drawShapes();
                     p2 = e.Location;
-                    myshape = new MyLine(bitmap, new Pen(Color.Red), p1, p2);
+                    myshape = new MyLine(bitmap,
+                        new PenAttr(Color.Red, DashStyle.Solid, 1),
+                        p1, p2);
                     drawWrap(myshape);
                     break;
 
                 case REC_SHAPE:
                     // xoa hcn cu
-                    myshape = new MyRectangle(bitmap, new Pen(Color.White), p1, p2);
+                    myshape = new MyRectangle(bitmap,
+                        new PenAttr(Color.White, DashStyle.Solid, 1),
+                        p1, p2);
                     drawWrap(myshape);
 
                     // ve lai toan bo
                     drawShapes();
                     p2 = e.Location;
-                    myshape = new MyRectangle(bitmap, new Pen(Color.Red), p1, p2);
+                    myshape = new MyRectangle(bitmap,
+                        new PenAttr(Color.Red, DashStyle.Solid, 1),
+                        p1, p2);
                     drawWrap(myshape);
                     break;
 
@@ -187,7 +196,9 @@ namespace _1612180_1612677
                     isMouseDown = false;
 
                     // them vao danh sach hinh
-                    MyShape myshape = new MyLine(bitmap, new Pen(Color.Red), p1, p2);
+                    MyShape myshape = new MyLine(bitmap,
+                        new PenAttr(Color.Red, DashStyle.Solid, 1),
+                        p1, p2);
                     drawWrap(myshape);
                     shapes.Add(myshape);
                     break;
@@ -197,7 +208,9 @@ namespace _1612180_1612677
                     isMouseDown = false;
 
                     // them vao danh sach hinh
-                    myshape = new MyRectangle(bitmap, new Pen(Color.Red), p1, p2);
+                    myshape = new MyRectangle(bitmap,
+                        new PenAttr(Color.Red, DashStyle.Solid, 1),
+                        p1, p2);
                     drawWrap(myshape);
                     shapes.Add(myshape);
                     break;

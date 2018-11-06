@@ -13,7 +13,8 @@ namespace _1612180_1612677
         private Point p1;
         private Point p2;
 
-        public MyLine(Bitmap _bitmap, Pen _pen, Point _p1, Point _p2) : base(_bitmap, _pen)
+        public MyLine(Bitmap _bitmap, PenAttr _penAttr, Point _p1, Point _p2) :
+            base(_bitmap, _penAttr)
         {
             p1 = new Point(_p1.X, _p1.Y);
             p2 = new Point(_p2.X, _p2.Y);
@@ -23,7 +24,10 @@ namespace _1612180_1612677
         {
             using (Graphics graphics = Graphics.FromImage(base.bitmap))
             {
-                graphics.DrawLine(base.pen, p1, p2);
+                using (Pen pen = new Pen(base.penAttr.color, base.penAttr.width))
+                {
+                    graphics.DrawLine(pen, p1, p2);
+                }
             }
         }
 
@@ -58,21 +62,27 @@ namespace _1612180_1612677
         public override bool isPointBelongPrecisely(Point p)
         {
             // su dung graphics path
-            GraphicsPath path = new GraphicsPath();
-            path.AddLine(p1, p2);
-            return path.IsOutlineVisible(p, base.pen);
+            using (GraphicsPath path = new GraphicsPath())
+            {
+                path.AddLine(p1, p2);
+                using (Pen pen = new Pen(base.penAttr.color, base.penAttr.width))
+                {
+                    return path.IsOutlineVisible(p, pen);
+                }
+            }
         }
     }
 
     public class MyRectangle : MyShape
     {
+        private int height;
+        private Point mostLeft = new Point();
         private Point p1;
         private Point p2;
-        private Point mostLeft = new Point();
         private int width;
-        private int height;
 
-        public MyRectangle(Bitmap _bitmap, Pen _pen, Point _p1, Point _p2) : base(_bitmap, _pen)
+        public MyRectangle(Bitmap _bitmap, PenAttr _penAttr, Point _p1, Point _p2) :
+            base(_bitmap, _penAttr)
         {
             p1 = new Point(_p1.X, _p1.Y);
             p2 = new Point(_p2.X, _p2.Y);
@@ -116,7 +126,10 @@ namespace _1612180_1612677
             {
                 // ve hcn
                 Rectangle rectangle = new Rectangle(mostLeft, new Size(width, height));
-                graphics.DrawRectangle(base.pen, rectangle);
+                using (Pen pen = new Pen(base.penAttr.color, base.penAttr.width))
+                {
+                    graphics.DrawRectangle(pen, rectangle);
+                }
             }
         }
 
@@ -125,7 +138,11 @@ namespace _1612180_1612677
             using (GraphicsPath path = new GraphicsPath())
             {
                 path.AddRectangle(new Rectangle(mostLeft, new Size(width, height)));
-                return path.IsOutlineVisible(p, base.pen);
+                using (Pen pen = new Pen(base.penAttr.color, base.penAttr.width))
+                {
+                    pen.DashStyle = base.penAttr.dashStyle;
+                    return path.IsOutlineVisible(p, pen);
+                }
             }
         }
     }
@@ -133,31 +150,42 @@ namespace _1612180_1612677
     public abstract class MyShape
     {
         protected Bitmap bitmap;
-        protected Pen pen;
 
-        public MyShape(Bitmap _bitmap, Pen _pen)
+        public MyShape(Bitmap _bitmap, PenAttr _penAttr)
         {
             bitmap = _bitmap;
-            pen = _pen;
+            penAttr = _penAttr;
         }
 
-        public void changePen(Pen _pen)
-        {
-            pen = _pen;
-        }
+        protected PenAttr penAttr { get; set; }
 
         public virtual void draw()
         {
-        }
-
-        public virtual bool isPointBelongPrecisely(Point p)
-        {
-            return false;
         }
 
         public virtual bool isPointBelong(Point p)
         {
             return false;
         }
+
+        public virtual bool isPointBelongPrecisely(Point p)
+        {
+            return false;
+        }
+    }
+
+    // Luu nhung thuoc tinh cua class Pen
+    public class PenAttr
+    {
+        public PenAttr(Color _color, DashStyle _dashStyle, int _width)
+        {
+            color = _color;
+            dashStyle = _dashStyle;
+            width = _width;
+        }
+
+        public Color color { get; set; }
+        public DashStyle dashStyle { get; set; }
+        public int width { get; set; }
     }
 }
