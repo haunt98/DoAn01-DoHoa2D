@@ -48,7 +48,7 @@ namespace _1612180_1612677
     public class MyRectangle : MyShape
     {
         private int height;
-        private Point mostLeft = new Point();
+        private Point mostLeft;
         private Point p1;
         private Point p2;
         private int width;
@@ -60,34 +60,7 @@ namespace _1612180_1612677
             p2 = new Point(_p2.X, _p2.Y);
 
             // tim diem goc trai
-            // p1  X
-            // X   p2
-            if (p1.X < p2.X && p1.Y < p2.Y)
-            {
-                mostLeft.X = p1.X;
-                mostLeft.Y = p1.Y;
-            }
-            // p2  X
-            // X   p1
-            else if (p2.X < p1.X && p2.Y < p1.Y)
-            {
-                mostLeft.X = p2.X;
-                mostLeft.Y = p2.Y;
-            }
-            // X   p2
-            // p1  X
-            else if (p1.Y < p2.Y)
-            {
-                mostLeft.X = p2.X;
-                mostLeft.Y = p1.Y;
-            }
-            // X   p1
-            // p2  X
-            else
-            {
-                mostLeft.X = p1.X;
-                mostLeft.Y = p2.Y;
-            }
+            mostLeft = new Point(Math.Min(p1.X, p2.X), Math.Min(p1.Y, p2.Y));
             width = Math.Abs(p2.X - p1.X);
             height = Math.Abs(p2.Y - p1.Y);
         }
