@@ -17,18 +17,21 @@ namespace _1612180_1612677
         private const int LINE_SHAPE = 1;
         private const int NO_SHAPE = 0;
         private const int REC_SHAPE = 2;
-        private Bitmap bitmap;
 
+        private int typeShape = NO_SHAPE;
+
+        private Bitmap bitmap;
         private bool isMouseDown = false;
 
         private Point p1;
-
         private Point p2;
 
         // luu danh sach cac hinh
         private List<MyShape> shapes = new List<MyShape>();
 
-        private int typeShape = NO_SHAPE;
+        // so thu tu cua hinh dang bi click
+        // shapes[clickedShape] la hinh dang bi click
+        private int clickedShape = -1;
 
         public FormMain()
         {
@@ -105,12 +108,10 @@ namespace _1612180_1612677
                 {
                     if (shapes[i].isPointBelong(p1))
                     {
-                        shapes[i].changePen(new Pen(Color.Blue));
+                        clickedShape = i;
                         break;
                     }
                 }
-
-                drawShapes();
             }
         }
 
