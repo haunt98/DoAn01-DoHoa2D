@@ -157,9 +157,6 @@ namespace _1612180_1612677
                 return;
             }
 
-            // shape ve trong luc move
-            MyShape oldShape;
-
             switch (typeShape)
             {
                 case NO_SHAPE:
@@ -167,12 +164,8 @@ namespace _1612180_1612677
 
                 case LINE_SHAPE:
                     // xoa cu
-                    oldShape = new MyLine(bitmap,
-                        new PenAttr(Color.White, DashStyle.Solid, 1),
-                        p_start, p_end);
-                    drawWrap(oldShape);
-
-                    // ve lai
+                    clearAll();
+                    // ve lai shape da co
                     drawShapes();
                     // ve moi
                     p_end = e.Location;
@@ -183,11 +176,7 @@ namespace _1612180_1612677
                     break;
 
                 case RECTANGLE_SHAPE:
-                    oldShape = new MyRectangle(bitmap,
-                        new PenAttr(Color.White, DashStyle.Solid, 1),
-                        p_start, p_end);
-                    drawWrap(oldShape);
-
+                    clearAll();
                     drawShapes();
                     p_end = e.Location;
                     justDrawShape = new MyRectangle(bitmap,
