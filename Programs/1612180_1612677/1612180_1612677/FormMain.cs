@@ -17,7 +17,7 @@ namespace _1612180_1612677
         private const int CLICK_SHAPE = -1;
         private const int LINE_SHAPE = 1;
         private const int NO_SHAPE = 0;
-        private const int REC_SHAPE = 2;
+        private const int RECTANGLE_SHAPE = 2;
 
         private Bitmap bitmap;
 
@@ -25,9 +25,20 @@ namespace _1612180_1612677
         // shapes[clickedShape] la hinh dang bi click
         private int clickedShape = -1;
 
+        // trai qua su kien MouseDown chua
         private bool isMouseDown = false;
-        private Point p1;
-        private Point p2;
+
+        // trai qua su kien MouseMove chua
+        private bool isMouseMove = false;
+
+        // luu shape vua ve
+        private MyShape justDrawShape = null;
+
+        // p_end luu vi tri khi MouseUp
+        private Point p_end;
+
+        // p_start luu vi tri khi MouseDown
+        private Point p_start;
 
         // luu danh sach cac hinh
         private List<MyShape> shapes = new List<MyShape>();
@@ -60,7 +71,7 @@ namespace _1612180_1612677
 
         private void buttonDrawRec_Click(object sender, EventArgs e)
         {
-            typeShape = REC_SHAPE;
+            typeShape = RECTANGLE_SHAPE;
         }
 
         // xoa het anh trong pictureBox
@@ -103,11 +114,11 @@ namespace _1612180_1612677
         {
             if (typeShape == CLICK_SHAPE)
             {
-                p1 = e.Location;
+                Point p = e.Location;
                 int i;
                 for (i = shapes.Count - 1; i >= 0; --i)
                 {
-                    if (shapes[i].isPointBelong(p1))
+                    if (shapes[i].isPointBelong(p))
                     {
                         clickedShape = i;
                         break;
@@ -126,8 +137,8 @@ namespace _1612180_1612677
                     break;
 
                 case LINE_SHAPE:
-                case REC_SHAPE:
-                    p1 = e.Location;
+                case RECTANGLE_SHAPE:
+                    p_start = e.Location;
                     isMouseDown = true;
                     break;
 
@@ -138,85 +149,68 @@ namespace _1612180_1612677
 
         private void pictureBoxMain_MouseMove(object sender, MouseEventArgs e)
         {
-            // kiem tra co dang di chuyen hay khong
+            // kiem tra MouseDown chua
             if (!isMouseDown)
             {
+                // MouseMove khong xay ra
+                isMouseMove = false;
                 return;
             }
-            MyShape myshape;
+
+            // shape ve trong luc move
+            MyShape oldShape;
+
             switch (typeShape)
             {
                 case NO_SHAPE:
                     break;
 
                 case LINE_SHAPE:
-                    // xoa doan thang cu
-                    myshape = new MyLine(bitmap,
+                    // xoa cu
+                    oldShape = new MyLine(bitmap,
                         new PenAttr(Color.White, DashStyle.Solid, 1),
-                        p1, p2);
-                    drawWrap(myshape);
+                        p_start, p_end);
+                    drawWrap(oldShape);
 
-                    // ve lai toan bo
+                    // ve lai
                     drawShapes();
-                    p2 = e.Location;
-                    myshape = new MyLine(bitmap,
+                    // ve moi
+                    p_end = e.Location;
+                    justDrawShape = new MyLine(bitmap,
                         new PenAttr(Color.Red, DashStyle.Solid, 1),
-                        p1, p2);
-                    drawWrap(myshape);
+                        p_start, p_end);
+                    drawWrap(justDrawShape);
                     break;
 
-                case REC_SHAPE:
-                    // xoa hcn cu
-                    myshape = new MyRectangle(bitmap,
+                case RECTANGLE_SHAPE:
+                    oldShape = new MyRectangle(bitmap,
                         new PenAttr(Color.White, DashStyle.Solid, 1),
-                        p1, p2);
-                    drawWrap(myshape);
+                        p_start, p_end);
+                    drawWrap(oldShape);
 
-                    // ve lai toan bo
                     drawShapes();
-                    p2 = e.Location;
-                    myshape = new MyRectangle(bitmap,
+                    p_end = e.Location;
+                    justDrawShape = new MyRectangle(bitmap,
                         new PenAttr(Color.Red, DashStyle.Solid, 1),
-                        p1, p2);
-                    drawWrap(myshape);
+                        p_start, p_end);
+                    drawWrap(justDrawShape);
                     break;
 
                 default:
                     break;
             }
+            // xay ra MouseMove
+            isMouseMove = true;
         }
 
         private void pictureBoxMain_MouseUp(object sender, MouseEventArgs e)
         {
-            switch (typeShape)
+            isMouseDown = false;
+            if (!isMouseMove)
             {
-                case NO_SHAPE:
-                    break;
-
-                case LINE_SHAPE:
-                    // tha chuot ra
-                    isMouseDown = false;
-
-                    // them vao danh sach hinh
-                    MyShape myshape = new MyLine(bitmap,
-                        new PenAttr(Color.Red, DashStyle.Solid, 1),
-                        p1, p2);
-                    drawWrap(myshape);
-                    shapes.Add(myshape);
-                    break;
-
-                case REC_SHAPE:
-                    // tha chuot ra
-                    isMouseDown = false;
-
-                    // them vao danh sach hinh
-                    myshape = new MyRectangle(bitmap,
-                        new PenAttr(Color.Red, DashStyle.Solid, 1),
-                        p1, p2);
-                    drawWrap(myshape);
-                    shapes.Add(myshape);
-                    break;
+                return;
             }
+            shapes.Add(justDrawShape);
         }
     }
 }
