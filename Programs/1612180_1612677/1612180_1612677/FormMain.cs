@@ -28,18 +28,23 @@ namespace _1612180_1612677
         // bitmap luu tam
         private Bitmap bitmap_temp;
 
-        // so thu tu cua hinh dang bi click
-        // shapes[clickedShape] la hinh dang bi click
-        //private int clickedShape = -1;
+        // hien thu tu shape dang nhan vao trong
+        private int clickedInsideShape;
 
-        // hien thu tu shape dang nhan
-        private int clickedShape = -1;
+        // hien thu tu shape dang nhan vao bien
+        private int clickedOutlineShape;
+
+        //luu bien filePath
+        private String filePath = "";
 
         // trai qua su kien MouseDown chua
         private bool isMouseDown = false;
 
         // trai qua su kien MouseMove chua
         private bool isMouseMove = false;
+
+        //trai qua su kien saveFile hay chua
+        private bool isSaveFile = false;
 
         // luu danh sach cac hinh
         private List<MyShape> myShapes = new List<MyShape>();
@@ -52,12 +57,6 @@ namespace _1612180_1612677
 
         // state luu trang thai hien tai
         private int state = NO_STATE;
-
-        //trai qua su kien saveFile hay chua
-        private bool isSaveFile = false;
-
-        //luu bien filePath
-        private String filePath = "";
 
         public FormMain()
         {
@@ -91,15 +90,28 @@ namespace _1612180_1612677
             state = RECTANGLE_STATE;
         }
 
+        // wrap fill and invalidate picture box
+        private void buttonFill_Click(object sender, EventArgs e)
+        {
+            if (state == SELECT_STATE)
+            {
+                if (clickedInsideShape < 0 || clickedInsideShape >= myShapes.Count)
+                    return;
+                myShapes[clickedInsideShape].brushAttr = getBrushAttr();
+                clearAllResetBitmap();
+                DrawAndFillShapes(bitmap);
+            }
+        }
+
         private void buttonReloadAfterChange_Click(object sender, EventArgs e)
         {
             if (state == SELECT_STATE)
             {
-                if (clickedShape < 0 || clickedShape >= myShapes.Count)
+                if (clickedOutlineShape < 0 || clickedOutlineShape >= myShapes.Count)
                     return;
-                myShapes[clickedShape].penAttr = getPenAttr();
+                myShapes[clickedOutlineShape].penAttr = getPenAttr();
                 clearAllResetBitmap();
-                drawShapes(bitmap);
+                DrawAndFillShapes(bitmap);
             }
         }
 
@@ -133,10 +145,12 @@ namespace _1612180_1612677
             }
         }
 
-        private void drawShapes(Bitmap _bitmap)
+        private void DrawAndFillShapes(Bitmap _bitmap)
         {
             foreach (MyShape myShape in myShapes)
             {
+                // fill truoc draw sau de ve vien
+                myShape.fill(_bitmap);
                 myShape.draw(_bitmap);
             }
             pictureBoxMain.Invalidate();
@@ -151,11 +165,8 @@ namespace _1612180_1612677
 
         private void fillWrap(MyShape myShape, Bitmap _bitmap)
         {
-            if (myShape.canFill())
-            {
-                myShape.fill(_bitmap);
-                pictureBoxMain.Invalidate();
-            }
+            myShape.fill(_bitmap);
+            pictureBoxMain.Invalidate();
         }
 
         private void FormMain_Load(object sender, EventArgs e)
@@ -168,11 +179,18 @@ namespace _1612180_1612677
             clearAllResetBitmap();
 
             // load ComboBox
-            loadComboBoxDashStyle();
+            loadComboBox();
 
             // default color dialog
             colorDialog.Color = Color.Black;
             buttonShowColor.BackColor = colorDialog.Color;
+        }
+
+        private BrushAttr getBrushAttr()
+        {
+            BrushAttr brushAttr = new BrushAttr(colorDialog.Color,
+                comboBoxBrushStyle.SelectedItem.ToString());
+            return brushAttr;
         }
 
         private PenAttr getPenAttr()
@@ -211,14 +229,19 @@ namespace _1612180_1612677
             return penAttr;
         }
 
-        private void loadComboBoxDashStyle()
+        private void loadComboBox()
         {
+            // Dash Style combo box
             comboBoxDashStyle.Items.Add("Dash");
             comboBoxDashStyle.Items.Add("DashDot");
             comboBoxDashStyle.Items.Add("DashDotDot");
             comboBoxDashStyle.Items.Add("Dot");
             comboBoxDashStyle.Items.Add("Solid");
             comboBoxDashStyle.SelectedIndex = comboBoxDashStyle.Items.IndexOf("Solid");
+
+            // Brush Style combo box
+            comboBoxBrushStyle.Items.Add("SolidBrush");
+            comboBoxBrushStyle.SelectedIndex = comboBoxBrushStyle.Items.IndexOf("SolidBrush");
         }
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
@@ -250,7 +273,7 @@ namespace _1612180_1612677
                     }
                     myShapes.Add(myshape);
                 }
-                drawShapes(bitmap);
+                DrawAndFillShapes(bitmap);
             }
         }
 
@@ -261,15 +284,31 @@ namespace _1612180_1612677
             {
                 Point p = e.Location;
 
-                clickedShape = -1;
+                // tim shape co diem nam tren
+                clickedOutlineShape = -1;
                 for (int i = myShapes.Count - 1; i >= 0; --i)
                 {
                     if (myShapes[i].isPointBelong(p))
                     {
-                        clickedShape = i;
+                        clickedOutlineShape = i;
                         break;
                     }
                 }
+
+                // tim shape co diem nam trong
+                clickedInsideShape = -1;
+                for (int i = myShapes.Count - 1; i >= 0; --i)
+                {
+                    if (myShapes[i].isPointInsidePrecisly(p))
+                    {
+                        clickedInsideShape = i;
+                        break;
+                    }
+                }
+
+                // chon shape nam ngoai cung
+                int clickedShape = clickedOutlineShape > clickedInsideShape ?
+                    clickedOutlineShape : clickedInsideShape;
                 switch (clickedShape)
                 {
                     // click khong trung
@@ -280,7 +319,11 @@ namespace _1612180_1612677
                     default:
                         bitmap_temp = (Bitmap)bitmap.Clone();
                         pictureBoxMain.Image = bitmap_temp;
-                        myShapes[clickedShape].drawEdgePoints(bitmap_temp);
+                        // dau tien fill, sau do draw vien, sau do draw edge
+                        MyShape myShape = myShapes[clickedShape].Clone();
+                        myShape.fill(bitmap_temp);
+                        myShape.draw(bitmap_temp);
+                        myShape.drawEdgePoints(bitmap_temp);
                         pictureBoxMain.Invalidate();
                         break;
                 }
@@ -410,6 +453,31 @@ namespace _1612180_1612677
             }
         }
 
+        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.InitialDirectory = @"C:\";
+            sfd.RestoreDirectory = true;
+            sfd.FileName = "Untitled.txt";
+            sfd.DefaultExt = "txt";
+            sfd.Filter = "Text files (*.txt)|*.txt";
+
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                Stream fileStream = sfd.OpenFile();
+
+                using (StreamWriter sWriter = new StreamWriter(fileStream, Encoding.ASCII))
+                {
+                    for (int i = 0; i < myShapes.Count; i++)
+                    {
+                        sWriter.WriteLine(myShapes[i].WriteData());
+                    }
+                    sWriter.Flush();
+                }
+                fileStream.Close();
+            }
+        }
+
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (!isSaveFile)
@@ -446,31 +514,6 @@ namespace _1612180_1612677
                         file.WriteLine(shape.WriteData());
                     }
                 }
-            }
-        }
-
-        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            SaveFileDialog sfd = new SaveFileDialog();
-            sfd.InitialDirectory = @"C:\";
-            sfd.RestoreDirectory = true;
-            sfd.FileName = "Untitled.txt";
-            sfd.DefaultExt = "txt";
-            sfd.Filter = "Text files (*.txt)|*.txt";
-
-            if (sfd.ShowDialog() == DialogResult.OK)
-            {
-                Stream fileStream = sfd.OpenFile();
-
-                using (StreamWriter sWriter = new StreamWriter(fileStream, Encoding.ASCII))
-                {
-                    for (int i = 0; i < myShapes.Count; i++)
-                    {
-                        sWriter.WriteLine(myShapes[i].WriteData());
-                    }
-                    sWriter.Flush();
-                }
-                fileStream.Close();
             }
         }
     }

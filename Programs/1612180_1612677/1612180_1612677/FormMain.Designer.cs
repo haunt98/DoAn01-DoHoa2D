@@ -46,6 +46,9 @@
             this.comboBoxDashStyle = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
             this.buttonReloadAfterChange = new System.Windows.Forms.Button();
+            this.buttonFill = new System.Windows.Forms.Button();
+            this.label3 = new System.Windows.Forms.Label();
+            this.comboBoxBrushStyle = new System.Windows.Forms.ComboBox();
             this.menuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMain)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPenWidth)).BeginInit();
@@ -74,21 +77,21 @@
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
             this.openToolStripMenuItem.Text = "Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
             this.saveToolStripMenuItem.Text = "Save";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
             // saveAsToolStripMenuItem
             // 
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
             this.saveAsToolStripMenuItem.Text = "Save as";
             this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
             // 
@@ -156,7 +159,7 @@
             // 
             // buttonShowColor
             // 
-            this.buttonShowColor.Location = new System.Drawing.Point(239, 69);
+            this.buttonShowColor.Location = new System.Drawing.Point(379, 36);
             this.buttonShowColor.Name = "buttonShowColor";
             this.buttonShowColor.Size = new System.Drawing.Size(75, 23);
             this.buttonShowColor.TabIndex = 8;
@@ -166,7 +169,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(320, 74);
+            this.label1.Location = new System.Drawing.Point(158, 74);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(57, 13);
             this.label1.TabIndex = 9;
@@ -174,7 +177,7 @@
             // 
             // numericUpDownPenWidth
             // 
-            this.numericUpDownPenWidth.Location = new System.Drawing.Point(383, 72);
+            this.numericUpDownPenWidth.Location = new System.Drawing.Point(232, 71);
             this.numericUpDownPenWidth.Minimum = new decimal(new int[] {
             1,
             0,
@@ -193,7 +196,7 @@
             // 
             this.comboBoxDashStyle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxDashStyle.FormattingEnabled = true;
-            this.comboBoxDashStyle.Location = new System.Drawing.Point(515, 71);
+            this.comboBoxDashStyle.Location = new System.Drawing.Point(379, 72);
             this.comboBoxDashStyle.Name = "comboBoxDashStyle";
             this.comboBoxDashStyle.Size = new System.Drawing.Size(91, 21);
             this.comboBoxDashStyle.TabIndex = 11;
@@ -201,7 +204,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(451, 76);
+            this.label2.Location = new System.Drawing.Point(315, 75);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(58, 13);
             this.label2.TabIndex = 12;
@@ -209,7 +212,7 @@
             // 
             // buttonReloadAfterChange
             // 
-            this.buttonReloadAfterChange.Location = new System.Drawing.Point(612, 69);
+            this.buttonReloadAfterChange.Location = new System.Drawing.Point(485, 72);
             this.buttonReloadAfterChange.Name = "buttonReloadAfterChange";
             this.buttonReloadAfterChange.Size = new System.Drawing.Size(118, 23);
             this.buttonReloadAfterChange.TabIndex = 13;
@@ -217,11 +220,42 @@
             this.buttonReloadAfterChange.UseVisualStyleBackColor = true;
             this.buttonReloadAfterChange.Click += new System.EventHandler(this.buttonReloadAfterChange_Click);
             // 
+            // buttonFill
+            // 
+            this.buttonFill.Location = new System.Drawing.Point(679, 36);
+            this.buttonFill.Name = "buttonFill";
+            this.buttonFill.Size = new System.Drawing.Size(75, 23);
+            this.buttonFill.TabIndex = 14;
+            this.buttonFill.Text = "Fill";
+            this.buttonFill.UseVisualStyleBackColor = true;
+            this.buttonFill.Click += new System.EventHandler(this.buttonFill_Click);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(473, 41);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(60, 13);
+            this.label3.TabIndex = 15;
+            this.label3.Text = "Brush Style";
+            // 
+            // comboBoxBrushStyle
+            // 
+            this.comboBoxBrushStyle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxBrushStyle.FormattingEnabled = true;
+            this.comboBoxBrushStyle.Location = new System.Drawing.Point(551, 41);
+            this.comboBoxBrushStyle.Name = "comboBoxBrushStyle";
+            this.comboBoxBrushStyle.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxBrushStyle.TabIndex = 16;
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(788, 432);
+            this.Controls.Add(this.comboBoxBrushStyle);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.buttonFill);
             this.Controls.Add(this.buttonReloadAfterChange);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.comboBoxDashStyle);
@@ -269,6 +303,9 @@
         private System.Windows.Forms.ComboBox comboBoxDashStyle;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button buttonReloadAfterChange;
+        private System.Windows.Forms.Button buttonFill;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.ComboBox comboBoxBrushStyle;
     }
 }
 

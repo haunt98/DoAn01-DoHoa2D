@@ -279,7 +279,7 @@ namespace _1612180_1612677
 
         public override void fill(Bitmap _bitmap)
         {
-            if (brushAttr == null)
+            if (brushAttr == null || !canFill())
                 return;
             switch (brushAttr.typeBrush)
             {
@@ -317,6 +317,15 @@ namespace _1612180_1612677
                     pen.DashStyle = penAttr.dashStyle;
                     return path.IsOutlineVisible(p, pen);
                 }
+            }
+        }
+
+        public override bool isPointInsidePrecisly(Point p)
+        {
+            using (GraphicsPath path = new GraphicsPath())
+            {
+                path.AddRectangle(new Rectangle(mostLeft, new Size(width, height)));
+                return path.IsVisible(p);
             }
         }
 
@@ -479,6 +488,11 @@ namespace _1612180_1612677
 
         // kiem tra chinh xac mot diem
         public abstract bool isPointBelongPrecisely(Point p);
+
+        public virtual bool isPointInsidePrecisly(Point p)
+        {
+            return false;
+        }
 
         // Doc data
         public abstract void ReadData(String data);
