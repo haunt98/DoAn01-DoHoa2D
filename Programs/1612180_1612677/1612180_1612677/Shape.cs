@@ -8,55 +8,6 @@ using System.Drawing.Drawing2D;
 
 namespace _1612180_1612677
 {
-    public class MyLine : MyShape
-    {
-        private Point p_end;
-        private Point p_start;
-
-        public MyLine(PenAttr _penAttr, Point _p_start, Point _p_end) :
-            base(_penAttr)
-        {
-            p_start = new Point(_p_start.X, _p_start.Y);
-            p_end = new Point(_p_end.X, _p_end.Y);
-        }
-
-        public MyLine(MyLine myLine) :
-            base(myLine)
-        {
-            p_start = new Point(myLine.p_start.X, myLine.p_start.Y);
-            p_end = new Point(myLine.p_end.X, myLine.p_end.Y);
-        }
-
-        public override MyShape Clone()
-        {
-            return new MyLine(this);
-        }
-
-        public override void draw(Bitmap _bitmap)
-        {
-            using (Graphics graphics = Graphics.FromImage(_bitmap))
-            {
-                using (Pen pen = new Pen(base.penAttr.color, base.penAttr.width))
-                {
-                    graphics.DrawLine(pen, p_start, p_end);
-                }
-            }
-        }
-
-        public override bool isPointBelongPrecisely(Point p)
-        {
-            // su dung graphics path
-            using (GraphicsPath path = new GraphicsPath())
-            {
-                path.AddLine(p_start, p_end);
-                using (Pen pen = new Pen(base.penAttr.color, base.penAttr.width))
-                {
-                    return path.IsOutlineVisible(p, pen);
-                }
-            }
-        }
-    }
-
     public class MyEllipse : MyShape
     {
         private int height;
@@ -108,6 +59,94 @@ namespace _1612180_1612677
                 }
             }
         }
+
+        public override void ReadDataFromString(string data)
+        {
+        }
+
+        public override string WriteData()
+        {
+            return "";
+        }
+    }
+
+    public class MyLine : MyShape
+    {
+        private Point p_end;
+        private Point p_start;
+
+        public MyLine(PenAttr _penAttr, Point _p_start, Point _p_end) :
+            base(_penAttr)
+        {
+            p_start = new Point(_p_start.X, _p_start.Y);
+            p_end = new Point(_p_end.X, _p_end.Y);
+        }
+
+        public MyLine() :
+            base()
+        {
+            p_start = Point.Empty;
+            p_end = Point.Empty;
+        }
+
+        public MyLine(MyLine myLine) :
+            base(myLine)
+        {
+            p_start = new Point(myLine.p_start.X, myLine.p_start.Y);
+            p_end = new Point(myLine.p_end.X, myLine.p_end.Y);
+        }
+
+        public override MyShape Clone()
+        {
+            return new MyLine(this);
+        }
+
+        public override void draw(Bitmap _bitmap)
+        {
+            using (Graphics graphics = Graphics.FromImage(_bitmap))
+            {
+                using (Pen pen = new Pen(base.penAttr.color, base.penAttr.width))
+                {
+                    graphics.DrawLine(pen, p_start, p_end);
+                }
+            }
+        }
+
+        public override bool isPointBelongPrecisely(Point p)
+        {
+            // su dung graphics path
+            using (GraphicsPath path = new GraphicsPath())
+            {
+                path.AddLine(p_start, p_end);
+                using (Pen pen = new Pen(base.penAttr.color, base.penAttr.width))
+                {
+                    return path.IsOutlineVisible(p, pen);
+                }
+            }
+        }
+
+        public override void ReadDataFromString(string data)
+        {
+            //doc string co dang "1 xstart ystart xend yend"
+            String[] result = data.Split(' ');
+            p_start = new Point(Int32.Parse(result[1]), Int32.Parse(result[2]));
+            p_end = new Point(Int32.Parse(result[3]), Int32.Parse(result[4]));
+            //base.penAttr = new PenAttr(result[5], result[6], result[7]);
+        }
+
+        public override string WriteData()
+        {
+            //in ra string co dang 1 xstart ystart xend yend
+            String result = "1 ";
+            result += p_start.X.ToString() + " ";
+            result += p_start.Y.ToString() + " ";
+            result += p_end.X.ToString() + " ";
+            result += p_end.Y.ToString() + " ";
+            result += base.penAttr.color.ToString() + " " +
+                base.penAttr.dashStyle.ToString() + " " +
+                base.penAttr.width.ToString();
+            return result;
+        }
     }
 
     public class MyRectangle : MyShape
@@ -131,6 +170,12 @@ namespace _1612180_1612677
             mostLeft = new Point(myRectangle.mostLeft.X, myRectangle.mostLeft.Y);
             width = myRectangle.width;
             height = myRectangle.height;
+        }
+
+        public MyRectangle() :
+            base()
+        {
+            mostLeft = Point.Empty;
         }
 
         public override MyShape Clone()
@@ -163,6 +208,26 @@ namespace _1612180_1612677
                 }
             }
         }
+
+        public override void ReadDataFromString(string data)
+        {
+            // doc string co dang "2 xstart ystart xend yend"
+            String[] result = data.Split(' ');
+            mostLeft = new Point(Int32.Parse(result[1]), Int32.Parse(result[2]));
+            height = Int32.Parse(result[3]);
+            width = Int32.Parse(result[4]);
+        }
+
+        public override string WriteData()
+        {
+            // in ra string co dang "2 x y height width"
+            String result = "2 ";
+            result += mostLeft.X.ToString() + " ";
+            result += mostLeft.Y.ToString() + " ";
+            result += height.ToString() + " ";
+            result += width.ToString();
+            return result;
+        }
     }
 
     public abstract class MyShape
@@ -170,6 +235,11 @@ namespace _1612180_1612677
         public MyShape(PenAttr _penAttr)
         {
             penAttr = _penAttr;
+        }
+
+        public MyShape()
+        {
+            penAttr = null;
         }
 
         public MyShape(MyShape myShape)
@@ -180,6 +250,34 @@ namespace _1612180_1612677
         public PenAttr penAttr { get; set; }
 
         public abstract MyShape Clone();
+
+        public DashStyle ConvertDashStypeToInt(String dashStyle)
+        {
+            DashStyle result = DashStyle.Solid;
+            switch (dashStyle)
+            {
+                case "Dash":
+                    result = DashStyle.Dash;
+                    break;
+
+                case "DashDot":
+                    result = DashStyle.DashDot;
+                    break;
+
+                case "DashDotDot":
+                    result = DashStyle.DashDotDot;
+                    break;
+
+                case "Dot":
+                    result = DashStyle.Dot;
+                    break;
+
+                case "Solid":
+                    result = DashStyle.Solid;
+                    break;
+            }
+            return result;
+        }
 
         public abstract void draw(Bitmap _bitmap);
 
@@ -213,6 +311,12 @@ namespace _1612180_1612677
 
         // kiem tra chinh xac mot diem
         public abstract bool isPointBelongPrecisely(Point p);
+
+        // Doc data
+        public abstract void ReadDataFromString(String data);
+
+        // Viet data
+        public abstract String WriteData();
     }
 
     // Luu nhung thuoc tinh cua class Pen

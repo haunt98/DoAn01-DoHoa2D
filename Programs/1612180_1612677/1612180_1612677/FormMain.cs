@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -43,7 +44,7 @@ namespace _1612180_1612677
         private Point p_start;
 
         // luu danh sach cac hinh
-        private List<MyShape> shapes = new List<MyShape>();
+        private List<MyShape> myShapes = new List<MyShape>();
 
         private int state = NO_STATE;
 
@@ -61,7 +62,7 @@ namespace _1612180_1612677
         private void buttonClearAll_Click(object sender, EventArgs e)
         {
             // xoa het danh sach cac hinh
-            shapes.Clear();
+            myShapes.Clear();
 
             // xoa trong pictureBox
             clearAllResetBitmap();
@@ -147,9 +148,9 @@ namespace _1612180_1612677
                 Point p = e.Location;
                 // hien thu tu shape dang nhan
                 int clickedShape = -1;
-                for (int i = shapes.Count - 1; i >= 0; --i)
+                for (int i = myShapes.Count - 1; i >= 0; --i)
                 {
-                    if (shapes[i].isPointBelong(p))
+                    if (myShapes[i].isPointBelong(p))
                     {
                         clickedShape = i;
                         break;
@@ -165,7 +166,7 @@ namespace _1612180_1612677
                     default:
                         bitmap_temp = (Bitmap)bitmap.Clone();
                         pictureBoxMain.Image = bitmap_temp;
-                        MyShape myShape = shapes[clickedShape].Clone();
+                        MyShape myShape = myShapes[clickedShape].Clone();
                         myShape.penAttr.color = Color.Blue;
                         myShape.draw(bitmap_temp);
                         break;
@@ -268,7 +269,7 @@ namespace _1612180_1612677
                         new PenAttr(Color.Red, DashStyle.Solid, 1),
                         p_start, p_end);
                     drawWrap(myLine, bitmap);
-                    shapes.Add(myLine);
+                    myShapes.Add(myLine);
                     break;
 
                 case RECTANGLE_STATE:
@@ -278,7 +279,7 @@ namespace _1612180_1612677
                         new PenAttr(Color.Red, DashStyle.Solid, 1),
                         p_start, p_end);
                     drawWrap(myRectangle, bitmap);
-                    shapes.Add(myRectangle);
+                    myShapes.Add(myRectangle);
                     break;
 
                 case ELLIPSE_STATE:
@@ -288,12 +289,59 @@ namespace _1612180_1612677
                         new PenAttr(Color.Red, DashStyle.Solid, 1),
                         p_start, p_end);
                     drawWrap(myEllipse, bitmap);
-                    shapes.Add(myEllipse);
+                    myShapes.Add(myEllipse);
                     break;
 
                 default:
                     break;
             }
+        }
+
+        private void drawShapes(Bitmap _bitmap)
+        {
+            foreach (MyShape myShape in myShapes)
+            {
+                myShape.draw(_bitmap);
+            }
+            pictureBoxMain.Invalidate();
+        }
+
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            myShapes.Clear();
+            MyShape myshape = null;
+            String filepath = @"D:\\text.txt";
+            String[] lines = System.IO.File.ReadAllLines(filepath);
+            foreach (string line in lines)
+            {
+                if (line[0] == '1')
+                {
+                    myshape = new MyLine();
+                    myshape.ReadDataFromString(line);
+                }
+                else if (line[0] == '2')
+                {
+                    myshape = new MyRectangle();
+                    myshape.ReadDataFromString(line);
+                }
+                myShapes.Add(myshape);
+            }
+            //drawShapes(bitmap);
+        }
+
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            String filepath = @"D:\\text.txt";
+            FileStream fs = new FileStream(filepath, FileMode.Create);//Tạo file mới tên là test.txt
+            using (StreamWriter sWriter = new StreamWriter(fs, Encoding.ASCII))
+            {
+                for (int i = 0; i < myShapes.Count; i++)
+                {
+                    sWriter.WriteLine(myShapes[i].WriteData());
+                }
+                sWriter.Flush();
+            }
+            fs.Close();
         }
     }
 }
