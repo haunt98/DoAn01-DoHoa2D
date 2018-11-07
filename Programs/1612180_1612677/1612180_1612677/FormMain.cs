@@ -19,7 +19,11 @@ namespace _1612180_1612677
         private const int NO_SHAPE = 0;
         private const int RECTANGLE_SHAPE = 2;
 
+        // bitmap hien thi trong pictureBox
         private Bitmap bitmap;
+
+        // bitmap luu tam
+        private Bitmap bitmap_temp;
 
         // so thu tu cua hinh dang bi click
         // shapes[clickedShape] la hinh dang bi click
@@ -30,9 +34,6 @@ namespace _1612180_1612677
 
         // trai qua su kien MouseMove chua
         private bool isMouseMove = false;
-
-        // luu shape vua ve
-        private MyShape justDrawShape = null;
 
         // p_end luu vi tri khi MouseUp
         private Point p_end;
@@ -84,19 +85,10 @@ namespace _1612180_1612677
             }
         }
 
-        private void drawShapes()
-        {
-            foreach (MyShape shape in shapes)
-            {
-                shape.draw();
-            }
-            pictureBoxMain.Invalidate();
-        }
-
         // wrap draw and pictureBox Invalidate
-        private void drawWrap(MyShape myshape)
+        private void drawWrap(MyShape myshape, Bitmap _bitmap)
         {
-            myshape.draw();
+            myshape.draw(_bitmap);
             pictureBoxMain.Invalidate();
         }
 
@@ -124,8 +116,6 @@ namespace _1612180_1612677
                         break;
                     }
                 }
-
-                drawShapes();
             }
         }
 
@@ -156,50 +146,77 @@ namespace _1612180_1612677
                 isMouseMove = false;
                 return;
             }
+            // xay ra MouseMove
+            isMouseMove = true;
 
+            // ve tren bitmap_temp
             switch (typeShape)
             {
                 case NO_SHAPE:
                     break;
 
                 case LINE_SHAPE:
-                    // xoa cu
-                    clearAll();
-                    // ve lai shape da co
-                    drawShapes();
-                    // ve moi
+                    bitmap_temp = (Bitmap)bitmap.Clone();
+                    pictureBoxMain.Image = bitmap_temp;
                     p_end = e.Location;
-                    justDrawShape = new MyLine(bitmap,
+                    MyShape myLine = new MyLine(
                         new PenAttr(Color.Red, DashStyle.Solid, 1),
                         p_start, p_end);
-                    drawWrap(justDrawShape);
+                    drawWrap(myLine, bitmap_temp);
                     break;
 
                 case RECTANGLE_SHAPE:
-                    clearAll();
-                    drawShapes();
+                    bitmap_temp = (Bitmap)bitmap.Clone();
+                    pictureBoxMain.Image = bitmap_temp;
                     p_end = e.Location;
-                    justDrawShape = new MyRectangle(bitmap,
+                    MyShape myRectangle = new MyRectangle(
                         new PenAttr(Color.Red, DashStyle.Solid, 1),
                         p_start, p_end);
-                    drawWrap(justDrawShape);
+                    drawWrap(myRectangle, bitmap_temp);
                     break;
 
                 default:
                     break;
             }
-            // xay ra MouseMove
-            isMouseMove = true;
         }
 
         private void pictureBoxMain_MouseUp(object sender, MouseEventArgs e)
         {
             isMouseDown = false;
+            // khong xay ra MouseMove thi khong lam gi ca
             if (!isMouseMove)
             {
                 return;
             }
-            shapes.Add(justDrawShape);
+            isMouseMove = false;
+
+            // ve tren bitmap
+            switch (typeShape)
+            {
+                case NO_SHAPE:
+                    break;
+
+                case LINE_SHAPE:
+                    pictureBoxMain.Image = bitmap;
+                    p_end = e.Location;
+                    MyShape myLine = new MyLine(
+                        new PenAttr(Color.Red, DashStyle.Solid, 1),
+                        p_start, p_end);
+                    drawWrap(myLine, bitmap);
+                    break;
+
+                case RECTANGLE_SHAPE:
+                    pictureBoxMain.Image = bitmap;
+                    p_end = e.Location;
+                    MyShape myRectangle = new MyRectangle(
+                        new PenAttr(Color.Red, DashStyle.Solid, 1),
+                        p_start, p_end);
+                    drawWrap(myRectangle, bitmap);
+                    break;
+
+                default:
+                    break;
+            }
         }
     }
 }

@@ -13,16 +13,16 @@ namespace _1612180_1612677
         private Point p1;
         private Point p2;
 
-        public MyLine(Bitmap _bitmap, PenAttr _penAttr, Point _p1, Point _p2) :
-            base(_bitmap, _penAttr)
+        public MyLine(PenAttr _penAttr, Point _p1, Point _p2) :
+            base(_penAttr)
         {
             p1 = new Point(_p1.X, _p1.Y);
             p2 = new Point(_p2.X, _p2.Y);
         }
 
-        public override void draw()
+        public override void draw(Bitmap bitmap)
         {
-            using (Graphics graphics = Graphics.FromImage(base.bitmap))
+            using (Graphics graphics = Graphics.FromImage(bitmap))
             {
                 using (Pen pen = new Pen(base.penAttr.color, base.penAttr.width))
                 {
@@ -53,8 +53,8 @@ namespace _1612180_1612677
         private Point p2;
         private int width;
 
-        public MyRectangle(Bitmap _bitmap, PenAttr _penAttr, Point _p1, Point _p2) :
-            base(_bitmap, _penAttr)
+        public MyRectangle(PenAttr _penAttr, Point _p1, Point _p2) :
+            base(_penAttr)
         {
             p1 = new Point(_p1.X, _p1.Y);
             p2 = new Point(_p2.X, _p2.Y);
@@ -65,9 +65,9 @@ namespace _1612180_1612677
             height = Math.Abs(p2.Y - p1.Y);
         }
 
-        public override void draw()
+        public override void draw(Bitmap bitmap)
         {
-            using (Graphics graphics = Graphics.FromImage(base.bitmap))
+            using (Graphics graphics = Graphics.FromImage(bitmap))
             {
                 // ve hcn
                 Rectangle rectangle = new Rectangle(mostLeft, new Size(width, height));
@@ -94,17 +94,14 @@ namespace _1612180_1612677
 
     public abstract class MyShape
     {
-        protected Bitmap bitmap;
-
-        public MyShape(Bitmap _bitmap, PenAttr _penAttr)
+        public MyShape(PenAttr _penAttr)
         {
-            bitmap = _bitmap;
             penAttr = _penAttr;
         }
 
         public PenAttr penAttr { get; set; }
 
-        public virtual void draw()
+        public virtual void draw(Bitmap bitmap)
         {
         }
 
