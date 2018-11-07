@@ -14,6 +14,7 @@ namespace _1612180_1612677
 {
     public partial class FormMain : Form
     {
+        private const int ELLIPSE_STATE = 3;
         private const int LINE_STATE = 1;
         private const int NO_STATE = 0;
         private const int RECTANGLE_STATE = 2;
@@ -58,6 +59,14 @@ namespace _1612180_1612677
 
             // xoa trong pictureBox
             clearAllResetBitmap();
+
+            // reset state
+            state = NO_STATE;
+        }
+
+        private void buttonDrawEll_Click(object sender, EventArgs e)
+        {
+            state = ELLIPSE_STATE;
         }
 
         private void buttonDrawLine_Click(object sender, EventArgs e)
@@ -154,6 +163,7 @@ namespace _1612180_1612677
 
                 case LINE_STATE:
                 case RECTANGLE_STATE:
+                case ELLIPSE_STATE:
                     p_start = e.Location;
                     isMouseDown = true;
                     break;
@@ -201,6 +211,16 @@ namespace _1612180_1612677
                     drawWrap(myRectangle, bitmap_temp);
                     break;
 
+                case ELLIPSE_STATE:
+                    bitmap_temp = (Bitmap)bitmap.Clone();
+                    pictureBoxMain.Image = bitmap_temp;
+                    p_end = e.Location;
+                    MyShape myEllipse = new MyEllipse(
+                        new PenAttr(Color.Red, DashStyle.Solid, 1),
+                        p_start, p_end);
+                    drawWrap(myEllipse, bitmap_temp);
+                    break;
+
                 default:
                     break;
             }
@@ -240,6 +260,16 @@ namespace _1612180_1612677
                         p_start, p_end);
                     drawWrap(myRectangle, bitmap);
                     shapes.Add(myRectangle);
+                    break;
+
+                case ELLIPSE_STATE:
+                    pictureBoxMain.Image = bitmap;
+                    p_end = e.Location;
+                    MyShape myEllipse = new MyEllipse(
+                        new PenAttr(Color.Red, DashStyle.Solid, 1),
+                        p_start, p_end);
+                    drawWrap(myEllipse, bitmap);
+                    shapes.Add(myEllipse);
                     break;
 
                 default:

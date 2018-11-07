@@ -57,9 +57,58 @@ namespace _1612180_1612677
         }
     }
 
-    //public class MyEllipse : MyShape
-    //{
-    //}
+    public class MyEllipse : MyShape
+    {
+        private int height;
+        private Point mostLeft;
+        private int width;
+
+        public MyEllipse(PenAttr _penAttr, Point p_start, Point p_end) :
+            base(_penAttr)
+        {
+            mostLeft = new Point(Math.Min(p_start.X, p_end.X), Math.Min(p_start.Y, p_end.Y));
+            width = Math.Abs(p_start.X - p_end.X);
+            height = Math.Abs(p_start.Y - p_end.Y);
+        }
+
+        public MyEllipse(MyEllipse myEllipse) :
+            base(myEllipse)
+        {
+            mostLeft = new Point(myEllipse.mostLeft.X, myEllipse.mostLeft.Y);
+            width = myEllipse.width;
+            height = myEllipse.height;
+        }
+
+        public override MyShape Clone()
+        {
+            return new MyEllipse(this);
+        }
+
+        public override void draw(Bitmap _bitmap)
+        {
+            using (Graphics graphics = Graphics.FromImage(_bitmap))
+            {
+                Rectangle rectangle = new Rectangle(mostLeft, new Size(width, height));
+                using (Pen pen = new Pen(base.penAttr.color, base.penAttr.width))
+                {
+                    graphics.DrawEllipse(pen, rectangle);
+                }
+            }
+        }
+
+        public override bool isPointBelongPrecisely(Point p)
+        {
+            using (GraphicsPath path = new GraphicsPath())
+            {
+                path.AddEllipse(new Rectangle(mostLeft, new Size(width, height)));
+                using (Pen pen = new Pen(base.penAttr.color, base.penAttr.width))
+                {
+                    pen.DashStyle = base.penAttr.dashStyle;
+                    return path.IsOutlineVisible(p, pen);
+                }
+            }
+        }
+    }
 
     public class MyRectangle : MyShape
     {

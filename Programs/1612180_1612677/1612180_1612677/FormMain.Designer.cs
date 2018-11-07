@@ -39,6 +39,7 @@
             this.pictureBoxMain = new System.Windows.Forms.PictureBox();
             this.buttonClearAll = new System.Windows.Forms.Button();
             this.buttonSelect = new System.Windows.Forms.Button();
+            this.buttonDrawEll = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMain)).BeginInit();
             this.SuspendLayout();
@@ -122,7 +123,7 @@
             // 
             // buttonClearAll
             // 
-            this.buttonClearAll.Location = new System.Drawing.Point(362, 1);
+            this.buttonClearAll.Location = new System.Drawing.Point(381, 1);
             this.buttonClearAll.Name = "buttonClearAll";
             this.buttonClearAll.Size = new System.Drawing.Size(75, 23);
             this.buttonClearAll.TabIndex = 4;
@@ -132,7 +133,7 @@
             // 
             // buttonSelect
             // 
-            this.buttonSelect.Location = new System.Drawing.Point(443, 1);
+            this.buttonSelect.Location = new System.Drawing.Point(462, 1);
             this.buttonSelect.Name = "buttonSelect";
             this.buttonSelect.Size = new System.Drawing.Size(75, 23);
             this.buttonSelect.TabIndex = 5;
@@ -140,11 +141,22 @@
             this.buttonSelect.UseVisualStyleBackColor = true;
             this.buttonSelect.Click += new System.EventHandler(this.buttonSelect_Click);
             // 
+            // buttonDrawEll
+            // 
+            this.buttonDrawEll.Location = new System.Drawing.Point(285, 0);
+            this.buttonDrawEll.Name = "buttonDrawEll";
+            this.buttonDrawEll.Size = new System.Drawing.Size(75, 23);
+            this.buttonDrawEll.TabIndex = 6;
+            this.buttonDrawEll.Text = "Draw Ellipse";
+            this.buttonDrawEll.UseVisualStyleBackColor = true;
+            this.buttonDrawEll.Click += new System.EventHandler(this.buttonDrawEll_Click);
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(680, 432);
+            this.Controls.Add(this.buttonDrawEll);
             this.Controls.Add(this.buttonSelect);
             this.Controls.Add(this.buttonClearAll);
             this.Controls.Add(this.pictureBoxMain);
@@ -176,6 +188,7 @@
         private System.Windows.Forms.PictureBox pictureBoxMain;
         private System.Windows.Forms.Button buttonClearAll;
         private System.Windows.Forms.Button buttonSelect;
+        private System.Windows.Forms.Button buttonDrawEll;
     }
 }
 
