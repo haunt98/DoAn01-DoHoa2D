@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -40,19 +40,27 @@
             this.buttonClearAll = new System.Windows.Forms.Button();
             this.buttonSelect = new System.Windows.Forms.Button();
             this.buttonDrawEll = new System.Windows.Forms.Button();
-            this.menuStrip1.SuspendLayout();
+            this.colorDialog = new System.Windows.Forms.ColorDialog();
+            this.buttonChooseColor = new System.Windows.Forms.Button();
+            this.buttonShowColor = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
+            this.numericUpDownPenWidth = new System.Windows.Forms.NumericUpDown();
+            this.comboBoxDashStyle = new System.Windows.Forms.ComboBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.menuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMain)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPenWidth)).BeginInit();
             this.SuspendLayout();
             // 
-            // menuStrip1
+            // menuStrip
             // 
-            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem});
-            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
-            this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(680, 24);
-            this.menuStrip1.TabIndex = 0;
-            this.menuStrip1.Text = "menuStrip1";
+            this.menuStrip.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip.Name = "menuStrip";
+            this.menuStrip.Size = new System.Drawing.Size(788, 24);
+            this.menuStrip.TabIndex = 0;
+            this.menuStrip.Text = "menuStrip1";
             // 
             // fileToolStripMenuItem
             // 
@@ -91,7 +99,7 @@
             // 
             // buttonDrawRectangle
             // 
-            this.buttonDrawRectangle.Location = new System.Drawing.Point(182, 1);
+            this.buttonDrawRectangle.Location = new System.Drawing.Point(12, 65);
             this.buttonDrawRectangle.Name = "buttonDrawRectangle";
             this.buttonDrawRectangle.Size = new System.Drawing.Size(96, 23);
             this.buttonDrawRectangle.TabIndex = 1;
@@ -101,7 +109,7 @@
             // 
             // buttonDrawLine
             // 
-            this.buttonDrawLine.Location = new System.Drawing.Point(89, 1);
+            this.buttonDrawLine.Location = new System.Drawing.Point(12, 36);
             this.buttonDrawLine.Name = "buttonDrawLine";
             this.buttonDrawLine.Size = new System.Drawing.Size(75, 23);
             this.buttonDrawLine.TabIndex = 2;
@@ -111,9 +119,9 @@
             // 
             // pictureBoxMain
             // 
-            this.pictureBoxMain.Location = new System.Drawing.Point(12, 46);
+            this.pictureBoxMain.Location = new System.Drawing.Point(120, 98);
             this.pictureBoxMain.Name = "pictureBoxMain";
-            this.pictureBoxMain.Size = new System.Drawing.Size(619, 374);
+            this.pictureBoxMain.Size = new System.Drawing.Size(656, 313);
             this.pictureBoxMain.TabIndex = 3;
             this.pictureBoxMain.TabStop = false;
             this.pictureBoxMain.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pictureBoxMain_MouseClick);
@@ -123,7 +131,7 @@
             // 
             // buttonClearAll
             // 
-            this.buttonClearAll.Location = new System.Drawing.Point(381, 1);
+            this.buttonClearAll.Location = new System.Drawing.Point(182, 36);
             this.buttonClearAll.Name = "buttonClearAll";
             this.buttonClearAll.Size = new System.Drawing.Size(75, 23);
             this.buttonClearAll.TabIndex = 4;
@@ -133,7 +141,7 @@
             // 
             // buttonSelect
             // 
-            this.buttonSelect.Location = new System.Drawing.Point(462, 1);
+            this.buttonSelect.Location = new System.Drawing.Point(276, 36);
             this.buttonSelect.Name = "buttonSelect";
             this.buttonSelect.Size = new System.Drawing.Size(75, 23);
             this.buttonSelect.TabIndex = 5;
@@ -143,7 +151,7 @@
             // 
             // buttonDrawEll
             // 
-            this.buttonDrawEll.Location = new System.Drawing.Point(285, 0);
+            this.buttonDrawEll.Location = new System.Drawing.Point(12, 98);
             this.buttonDrawEll.Name = "buttonDrawEll";
             this.buttonDrawEll.Size = new System.Drawing.Size(75, 23);
             this.buttonDrawEll.TabIndex = 6;
@@ -151,25 +159,96 @@
             this.buttonDrawEll.UseVisualStyleBackColor = true;
             this.buttonDrawEll.Click += new System.EventHandler(this.buttonDrawEll_Click);
             // 
+            // buttonChooseColor
+            // 
+            this.buttonChooseColor.Location = new System.Drawing.Point(182, 69);
+            this.buttonChooseColor.Name = "buttonChooseColor";
+            this.buttonChooseColor.Size = new System.Drawing.Size(82, 23);
+            this.buttonChooseColor.TabIndex = 7;
+            this.buttonChooseColor.Text = "Choose Color";
+            this.buttonChooseColor.UseVisualStyleBackColor = true;
+            this.buttonChooseColor.Click += new System.EventHandler(this.buttonChooseColor_Click);
+            // 
+            // buttonShowColor
+            // 
+            this.buttonShowColor.Enabled = false;
+            this.buttonShowColor.Location = new System.Drawing.Point(276, 69);
+            this.buttonShowColor.Name = "buttonShowColor";
+            this.buttonShowColor.Size = new System.Drawing.Size(75, 23);
+            this.buttonShowColor.TabIndex = 8;
+            this.buttonShowColor.UseVisualStyleBackColor = true;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(366, 74);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(57, 13);
+            this.label1.TabIndex = 9;
+            this.label1.Text = "Pen Width";
+            // 
+            // numericUpDownPenWidth
+            // 
+            this.numericUpDownPenWidth.Location = new System.Drawing.Point(429, 69);
+            this.numericUpDownPenWidth.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownPenWidth.Name = "numericUpDownPenWidth";
+            this.numericUpDownPenWidth.Size = new System.Drawing.Size(62, 20);
+            this.numericUpDownPenWidth.TabIndex = 10;
+            this.numericUpDownPenWidth.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // comboBoxDashStyle
+            // 
+            this.comboBoxDashStyle.Enabled = false;
+            this.comboBoxDashStyle.FormattingEnabled = true;
+            this.comboBoxDashStyle.Location = new System.Drawing.Point(576, 66);
+            this.comboBoxDashStyle.Name = "comboBoxDashStyle";
+            this.comboBoxDashStyle.Size = new System.Drawing.Size(91, 21);
+            this.comboBoxDashStyle.TabIndex = 11;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(512, 71);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(58, 13);
+            this.label2.TabIndex = 12;
+            this.label2.Text = "Dash Style";
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(680, 432);
+            this.ClientSize = new System.Drawing.Size(788, 432);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.comboBoxDashStyle);
+            this.Controls.Add(this.numericUpDownPenWidth);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.buttonShowColor);
+            this.Controls.Add(this.buttonChooseColor);
             this.Controls.Add(this.buttonDrawEll);
             this.Controls.Add(this.buttonSelect);
             this.Controls.Add(this.buttonClearAll);
             this.Controls.Add(this.pictureBoxMain);
             this.Controls.Add(this.buttonDrawLine);
             this.Controls.Add(this.buttonDrawRectangle);
-            this.Controls.Add(this.menuStrip1);
-            this.MainMenuStrip = this.menuStrip1;
+            this.Controls.Add(this.menuStrip);
+            this.DoubleBuffered = true;
+            this.MainMenuStrip = this.menuStrip;
             this.Name = "FormMain";
             this.Text = "Paint2D";
             this.Load += new System.EventHandler(this.FormMain_Load);
-            this.menuStrip1.ResumeLayout(false);
-            this.menuStrip1.PerformLayout();
+            this.menuStrip.ResumeLayout(false);
+            this.menuStrip.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMain)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPenWidth)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -177,7 +256,7 @@
 
         #endregion
 
-        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.MenuStrip menuStrip;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
@@ -189,6 +268,13 @@
         private System.Windows.Forms.Button buttonClearAll;
         private System.Windows.Forms.Button buttonSelect;
         private System.Windows.Forms.Button buttonDrawEll;
+        private System.Windows.Forms.ColorDialog colorDialog;
+        private System.Windows.Forms.Button buttonChooseColor;
+        private System.Windows.Forms.Button buttonShowColor;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.NumericUpDown numericUpDownPenWidth;
+        private System.Windows.Forms.ComboBox comboBoxDashStyle;
+        private System.Windows.Forms.Label label2;
     }
 }
 

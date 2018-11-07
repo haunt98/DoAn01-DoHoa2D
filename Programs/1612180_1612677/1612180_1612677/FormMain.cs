@@ -52,6 +52,12 @@ namespace _1612180_1612677
             InitializeComponent();
         }
 
+        private void buttonChooseColor_Click(object sender, EventArgs e)
+        {
+            colorDialog.ShowDialog();
+            buttonShowColor.BackColor = colorDialog.Color;
+        }
+
         private void buttonClearAll_Click(object sender, EventArgs e)
         {
             // xoa het danh sach cac hinh
@@ -103,6 +109,16 @@ namespace _1612180_1612677
             }
         }
 
+        private void loadComboBoxDashStyle()
+        {
+            comboBoxDashStyle.Items.Add("Dash");
+            comboBoxDashStyle.Items.Add("DashDot");
+            comboBoxDashStyle.Items.Add("DashDotDot");
+            comboBoxDashStyle.Items.Add("Dot");
+            comboBoxDashStyle.Items.Add("Solid");
+            comboBoxDashStyle.SelectedIndex = 0;
+        }
+
         // wrap draw and pictureBox Invalidate
         private void drawWrap(MyShape myshape, Bitmap _bitmap)
         {
@@ -118,6 +134,9 @@ namespace _1612180_1612677
                 PixelFormat.Format24bppRgb);
             pictureBoxMain.Image = bitmap;
             clearAllResetBitmap();
+
+            // load ComboBox
+            loadComboBoxDashStyle();
         }
 
         // MouseClick xay ra khi click va tha cung 1 object
