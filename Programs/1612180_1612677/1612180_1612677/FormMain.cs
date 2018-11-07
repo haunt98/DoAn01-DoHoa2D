@@ -198,36 +198,32 @@ namespace _1612180_1612677
             MyShape myshape = null;
             String filepath = null;
             OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "TXT| *.txt";
+            ofd.Filter = "Text files (*.txt)|*.txt";
             if (ofd.ShowDialog() == DialogResult.OK)
             {
                 filepath = ofd.FileName;
-            }
-            else
-            {
-                return;
-            }
-            String[] lines = System.IO.File.ReadAllLines(filepath);
-            foreach (string line in lines)
-            {
-                if (line[0] == '1')
+                String[] lines = System.IO.File.ReadAllLines(filepath);
+                foreach (string line in lines)
                 {
-                    myshape = new MyLine();
-                    myshape.ReadData(line);
+                    if (line[0] == '1')
+                    {
+                        myshape = new MyLine();
+                        myshape.ReadData(line);
+                    }
+                    else if (line[0] == '2')
+                    {
+                        myshape = new MyRectangle();
+                        myshape.ReadData(line);
+                    }
+                    else if (line[0] == '3')
+                    {
+                        myshape = new MyEllipse();
+                        myshape.ReadData(line);
+                    }
+                    myShapes.Add(myshape);
                 }
-                else if (line[0] == '2')
-                {
-                    myshape = new MyRectangle();
-                    myshape.ReadData(line);
-                }
-                else if (line[0] == '3')
-                {
-                    myshape = new MyEllipse();
-                    myshape.ReadData(line);
-                }
-                myShapes.Add(myshape);
+                drawShapes(bitmap);
             }
-            drawShapes(bitmap);
         }
 
         // MouseClick xay ra khi click va tha cung 1 object
@@ -391,9 +387,9 @@ namespace _1612180_1612677
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.InitialDirectory = @"C:\";
             sfd.RestoreDirectory = true;
-            sfd.FileName = "*.txt";
+            sfd.FileName = "Untitled.txt";
             sfd.DefaultExt = "txt";
-            sfd.Filter = "txt files (*txt)|*.txt";
+            sfd.Filter = "Text files (*.txt)|*.txt";
 
             if (sfd.ShowDialog() == DialogResult.OK)
             {
@@ -408,9 +404,9 @@ namespace _1612180_1612677
                 }
                 fileStream.Close();
             }
-            else
-            {
-            }
+            //else
+            //{
+            //}
         }
     }
 }
