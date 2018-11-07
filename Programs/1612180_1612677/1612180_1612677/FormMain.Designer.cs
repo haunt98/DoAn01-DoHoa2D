@@ -41,7 +41,6 @@
             this.buttonSelect = new System.Windows.Forms.Button();
             this.buttonDrawEll = new System.Windows.Forms.Button();
             this.colorDialog = new System.Windows.Forms.ColorDialog();
-            this.buttonChooseColor = new System.Windows.Forms.Button();
             this.buttonShowColor = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.numericUpDownPenWidth = new System.Windows.Forms.NumericUpDown();
@@ -162,24 +161,14 @@
             this.buttonDrawEll.UseVisualStyleBackColor = true;
             this.buttonDrawEll.Click += new System.EventHandler(this.buttonDrawEll_Click);
             // 
-            // buttonChooseColor
-            // 
-            this.buttonChooseColor.Location = new System.Drawing.Point(142, 65);
-            this.buttonChooseColor.Name = "buttonChooseColor";
-            this.buttonChooseColor.Size = new System.Drawing.Size(82, 23);
-            this.buttonChooseColor.TabIndex = 7;
-            this.buttonChooseColor.Text = "Choose Color";
-            this.buttonChooseColor.UseVisualStyleBackColor = true;
-            this.buttonChooseColor.Click += new System.EventHandler(this.buttonChooseColor_Click);
-            // 
             // buttonShowColor
             // 
-            this.buttonShowColor.Enabled = false;
             this.buttonShowColor.Location = new System.Drawing.Point(239, 69);
             this.buttonShowColor.Name = "buttonShowColor";
             this.buttonShowColor.Size = new System.Drawing.Size(75, 23);
             this.buttonShowColor.TabIndex = 8;
             this.buttonShowColor.UseVisualStyleBackColor = true;
+            this.buttonShowColor.Click += new System.EventHandler(this.buttonShowColor_Click);
             // 
             // label1
             // 
@@ -246,7 +235,6 @@
             this.Controls.Add(this.numericUpDownPenWidth);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.buttonShowColor);
-            this.Controls.Add(this.buttonChooseColor);
             this.Controls.Add(this.buttonDrawEll);
             this.Controls.Add(this.buttonSelect);
             this.Controls.Add(this.buttonClearAll);
@@ -283,7 +271,6 @@
         private System.Windows.Forms.Button buttonSelect;
         private System.Windows.Forms.Button buttonDrawEll;
         private System.Windows.Forms.ColorDialog colorDialog;
-        private System.Windows.Forms.Button buttonChooseColor;
         private System.Windows.Forms.Button buttonShowColor;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.NumericUpDown numericUpDownPenWidth;

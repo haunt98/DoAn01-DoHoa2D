@@ -48,6 +48,7 @@ namespace _1612180_1612677
                 Rectangle rectangle = new Rectangle(mostLeft, new Size(width, height));
                 using (Pen pen = new Pen(base.penAttr.color, base.penAttr.width))
                 {
+                    pen.DashStyle = base.penAttr.dashStyle;
                     graphics.DrawEllipse(pen, rectangle);
                 }
             }
@@ -167,6 +168,7 @@ namespace _1612180_1612677
                 path.AddLine(p_start, p_end);
                 using (Pen pen = new Pen(base.penAttr.color, base.penAttr.width))
                 {
+                    pen.DashStyle = base.penAttr.dashStyle;
                     return path.IsOutlineVisible(p, pen);
                 }
             }

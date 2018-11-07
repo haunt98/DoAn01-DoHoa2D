@@ -56,12 +56,6 @@ namespace _1612180_1612677
             InitializeComponent();
         }
 
-        private void buttonChooseColor_Click(object sender, EventArgs e)
-        {
-            colorDialog.ShowDialog();
-            buttonShowColor.BackColor = colorDialog.Color;
-        }
-
         private void buttonClearAll_Click(object sender, EventArgs e)
         {
             // xoa het danh sach cac hinh
@@ -415,6 +409,12 @@ namespace _1612180_1612677
                 clearAllResetBitmap();
                 drawShapes(bitmap);
             }
+        }
+
+        private void buttonShowColor_Click(object sender, EventArgs e)
+        {
+            colorDialog.ShowDialog();
+            buttonShowColor.BackColor = colorDialog.Color;
         }
     }
 }
