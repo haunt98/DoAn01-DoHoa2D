@@ -19,6 +19,7 @@ namespace _1612180_1612677
         private const int LINE_STATE = 1;
         private const int NO_STATE = 0;
         private const int RECTANGLE_STATE = 2;
+
         private const int SELECT_STATE = -1;
 
         // bitmap hien thi chinh trong pictureBox
@@ -49,7 +50,14 @@ namespace _1612180_1612677
         // p_start luu vi tri khi MouseDown
         private Point p_start;
 
+        // state luu trang thai hien tai
         private int state = NO_STATE;
+
+        //trai qua su kien saveFile hay chua
+        private bool isSaveFile = false;
+
+        //luu bien filePath
+        private String filePath = "";
 
         public FormMain()
         {
@@ -83,9 +91,27 @@ namespace _1612180_1612677
             state = RECTANGLE_STATE;
         }
 
+        private void buttonReloadAfterChange_Click(object sender, EventArgs e)
+        {
+            if (state == SELECT_STATE)
+            {
+                if (clickedShape < 0 || clickedShape >= myShapes.Count)
+                    return;
+                myShapes[clickedShape].penAttr = getPenAttr();
+                clearAllResetBitmap();
+                drawShapes(bitmap);
+            }
+        }
+
         private void buttonSelect_Click(object sender, EventArgs e)
         {
             state = SELECT_STATE;
+        }
+
+        private void buttonShowColor_Click(object sender, EventArgs e)
+        {
+            colorDialog.ShowDialog();
+            buttonShowColor.BackColor = colorDialog.Color;
         }
 
         // xoa het anh trong pictureBox
@@ -121,6 +147,15 @@ namespace _1612180_1612677
         {
             myshape.draw(_bitmap);
             pictureBoxMain.Invalidate();
+        }
+
+        private void fillWrap(MyShape myShape, Bitmap _bitmap)
+        {
+            if (myShape.canFill())
+            {
+                myShape.fill(_bitmap);
+                pictureBoxMain.Invalidate();
+            }
         }
 
         private void FormMain_Load(object sender, EventArgs e)
@@ -377,6 +412,45 @@ namespace _1612180_1612677
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (!isSaveFile)
+            {
+                SaveFileDialog sfd = new SaveFileDialog();
+                sfd.InitialDirectory = @"C:\";
+                sfd.RestoreDirectory = true;
+                sfd.FileName = "Untitled.txt";
+                sfd.DefaultExt = "txt";
+                sfd.Filter = "Text files (*.txt)|*.txt";
+
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    Stream fileStream = sfd.OpenFile();
+                    filePath = sfd.FileName;
+                    using (StreamWriter sWriter = new StreamWriter(fileStream, Encoding.ASCII))
+                    {
+                        for (int i = 0; i < myShapes.Count; i++)
+                        {
+                            sWriter.WriteLine(myShapes[i].WriteData());
+                        }
+                        sWriter.Flush();
+                    }
+                    fileStream.Close();
+                }
+                isSaveFile = true;
+            }
+            else
+            {
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(filePath))
+                {
+                    foreach (MyShape shape in myShapes)
+                    {
+                        file.WriteLine(shape.WriteData());
+                    }
+                }
+            }
+        }
+
+        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.InitialDirectory = @"C:\";
             sfd.RestoreDirectory = true;
@@ -387,6 +461,7 @@ namespace _1612180_1612677
             if (sfd.ShowDialog() == DialogResult.OK)
             {
                 Stream fileStream = sfd.OpenFile();
+
                 using (StreamWriter sWriter = new StreamWriter(fileStream, Encoding.ASCII))
                 {
                     for (int i = 0; i < myShapes.Count; i++)
@@ -397,24 +472,6 @@ namespace _1612180_1612677
                 }
                 fileStream.Close();
             }
-        }
-
-        private void buttonReloadAfterChange_Click(object sender, EventArgs e)
-        {
-            if (state == SELECT_STATE)
-            {
-                if (clickedShape < 0 || clickedShape >= myShapes.Count)
-                    return;
-                myShapes[clickedShape].penAttr = getPenAttr();
-                clearAllResetBitmap();
-                drawShapes(bitmap);
-            }
-        }
-
-        private void buttonShowColor_Click(object sender, EventArgs e)
-        {
-            colorDialog.ShowDialog();
-            buttonShowColor.BackColor = colorDialog.Color;
         }
     }
 }

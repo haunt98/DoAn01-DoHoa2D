@@ -8,6 +8,24 @@ using System.Drawing.Drawing2D;
 
 namespace _1612180_1612677
 {
+    public class BrushAttr
+    {
+        public BrushAttr(Color _color, String _typeBrush)
+        {
+            color = _color;
+            typeBrush = _typeBrush;
+        }
+
+        public BrushAttr(BrushAttr brushAttr)
+        {
+            color = brushAttr.color;
+            typeBrush = brushAttr.typeBrush;
+        }
+
+        public Color color { get; set; }
+        public String typeBrush { get; set; }
+    }
+
     public class MyEllipse : MyShape
     {
         private int height;
@@ -46,9 +64,9 @@ namespace _1612180_1612677
             using (Graphics graphics = Graphics.FromImage(_bitmap))
             {
                 Rectangle rectangle = new Rectangle(mostLeft, new Size(width, height));
-                using (Pen pen = new Pen(base.penAttr.color, base.penAttr.width))
+                using (Pen pen = new Pen(penAttr.color, penAttr.width))
                 {
-                    pen.DashStyle = base.penAttr.dashStyle;
+                    pen.DashStyle = penAttr.dashStyle;
                     graphics.DrawEllipse(pen, rectangle);
                 }
             }
@@ -69,9 +87,9 @@ namespace _1612180_1612677
             using (GraphicsPath path = new GraphicsPath())
             {
                 path.AddEllipse(new Rectangle(mostLeft, new Size(width, height)));
-                using (Pen pen = new Pen(base.penAttr.color, base.penAttr.width))
+                using (Pen pen = new Pen(penAttr.color, penAttr.width))
                 {
-                    pen.DashStyle = base.penAttr.dashStyle;
+                    pen.DashStyle = penAttr.dashStyle;
                     return path.IsOutlineVisible(p, pen);
                 }
             }
@@ -91,7 +109,7 @@ namespace _1612180_1612677
             DashStyle dashStyleFromFile = ConvertDashStypeFromString(result[6]);
             int widthFromFile = Int32.Parse(result[7]);
 
-            base.penAttr = new PenAttr(colorFromFile, dashStyleFromFile, widthFromFile);
+            penAttr = new PenAttr(colorFromFile, dashStyleFromFile, widthFromFile);
         }
 
         public override string WriteData()
@@ -102,9 +120,9 @@ namespace _1612180_1612677
             result += mostLeft.Y.ToString() + " ";
             result += height.ToString() + " ";
             result += width.ToString() + " ";
-            result += base.penAttr.color.ToArgb().ToString() + " " +
-               base.penAttr.dashStyle.ToString() + " " +
-               base.penAttr.width.ToString();
+            result += penAttr.color.ToArgb().ToString() + " " +
+                penAttr.dashStyle.ToString() + " " +
+                penAttr.width.ToString();
             return result;
         }
     }
@@ -144,9 +162,9 @@ namespace _1612180_1612677
         {
             using (Graphics graphics = Graphics.FromImage(_bitmap))
             {
-                using (Pen pen = new Pen(base.penAttr.color, base.penAttr.width))
+                using (Pen pen = new Pen(penAttr.color, penAttr.width))
                 {
-                    pen.DashStyle = base.penAttr.dashStyle;
+                    pen.DashStyle = penAttr.dashStyle;
                     graphics.DrawLine(pen, p_start, p_end);
                 }
             }
@@ -166,9 +184,9 @@ namespace _1612180_1612677
             using (GraphicsPath path = new GraphicsPath())
             {
                 path.AddLine(p_start, p_end);
-                using (Pen pen = new Pen(base.penAttr.color, base.penAttr.width))
+                using (Pen pen = new Pen(penAttr.color, penAttr.width))
                 {
-                    pen.DashStyle = base.penAttr.dashStyle;
+                    pen.DashStyle = penAttr.dashStyle;
                     return path.IsOutlineVisible(p, pen);
                 }
             }
@@ -186,7 +204,7 @@ namespace _1612180_1612677
             DashStyle dashStyleFromFile = ConvertDashStypeFromString(result[6]);
             int widthFromFile = Int32.Parse(result[7]);
 
-            base.penAttr = new PenAttr(colorFromFile, dashStyleFromFile, widthFromFile);
+            penAttr = new PenAttr(colorFromFile, dashStyleFromFile, widthFromFile);
         }
 
         public override string WriteData()
@@ -197,9 +215,9 @@ namespace _1612180_1612677
             result += p_start.Y.ToString() + " ";
             result += p_end.X.ToString() + " ";
             result += p_end.Y.ToString() + " ";
-            result += base.penAttr.color.ToArgb().ToString() + " " +
-                base.penAttr.dashStyle.ToString() + " " +
-                base.penAttr.width.ToString();
+            result += penAttr.color.ToArgb().ToString() + " " +
+                penAttr.dashStyle.ToString() + " " +
+                penAttr.width.ToString();
             return result;
         }
     }
@@ -217,6 +235,8 @@ namespace _1612180_1612677
             mostLeft = new Point(Math.Min(p_start.X, p_end.X), Math.Min(p_start.Y, p_end.Y));
             width = Math.Abs(p_start.X - p_end.X);
             height = Math.Abs(p_start.Y - p_end.Y);
+            // mac dinh to mau trang
+            brushAttr = new BrushAttr(Color.White, "SolidBrush");
         }
 
         public MyRectangle(MyRectangle myRectangle) :
@@ -233,6 +253,11 @@ namespace _1612180_1612677
             mostLeft = Point.Empty;
         }
 
+        public override bool canFill()
+        {
+            return true;
+        }
+
         public override MyShape Clone()
         {
             return new MyRectangle(this);
@@ -244,11 +269,31 @@ namespace _1612180_1612677
             {
                 // ve hcn
                 Rectangle rectangle = new Rectangle(mostLeft, new Size(width, height));
-                using (Pen pen = new Pen(base.penAttr.color, base.penAttr.width))
+                using (Pen pen = new Pen(penAttr.color, penAttr.width))
                 {
-                    pen.DashStyle = base.penAttr.dashStyle;
+                    pen.DashStyle = penAttr.dashStyle;
                     graphics.DrawRectangle(pen, rectangle);
                 }
+            }
+        }
+
+        public override void fill(Bitmap _bitmap)
+        {
+            if (brushAttr == null)
+                return;
+            switch (brushAttr.typeBrush)
+            {
+                case "SolidBrush":
+                    using (Graphics graphics = Graphics.FromImage(_bitmap))
+                    using (Brush brush = new SolidBrush(brushAttr.color))
+                    {
+                        Rectangle rectangle = new Rectangle(mostLeft, new Size(width, height));
+                        graphics.FillRectangle(brush, rectangle);
+                    }
+                    break;
+
+                default:
+                    break;
             }
         }
 
@@ -267,9 +312,9 @@ namespace _1612180_1612677
             using (GraphicsPath path = new GraphicsPath())
             {
                 path.AddRectangle(new Rectangle(mostLeft, new Size(width, height)));
-                using (Pen pen = new Pen(base.penAttr.color, base.penAttr.width))
+                using (Pen pen = new Pen(penAttr.color, penAttr.width))
                 {
-                    pen.DashStyle = base.penAttr.dashStyle;
+                    pen.DashStyle = penAttr.dashStyle;
                     return path.IsOutlineVisible(p, pen);
                 }
             }
@@ -288,7 +333,7 @@ namespace _1612180_1612677
             DashStyle dashStyleFromFile = ConvertDashStypeFromString(result[6]);
             int widthFromFile = Int32.Parse(result[7]);
 
-            base.penAttr = new PenAttr(colorFromFile, dashStyleFromFile, widthFromFile);
+            penAttr = new PenAttr(colorFromFile, dashStyleFromFile, widthFromFile);
         }
 
         public override string WriteData()
@@ -299,9 +344,9 @@ namespace _1612180_1612677
             result += mostLeft.Y.ToString() + " ";
             result += height.ToString() + " ";
             result += width.ToString() + " ";
-            result += base.penAttr.color.ToArgb().ToString() + " " +
-               base.penAttr.dashStyle.ToString() + " " +
-               base.penAttr.width.ToString();
+            result += penAttr.color.ToArgb().ToString() + " " +
+                penAttr.dashStyle.ToString() + " " +
+                penAttr.width.ToString();
             return result;
         }
     }
@@ -310,20 +355,36 @@ namespace _1612180_1612677
     {
         public MyShape(PenAttr _penAttr)
         {
-            penAttr = _penAttr;
+            penAttr = new PenAttr(_penAttr);
+            brushAttr = null;
+        }
+
+        public MyShape(PenAttr _penAttr, BrushAttr _brushAttr)
+        {
+            penAttr = new PenAttr(_penAttr);
+            brushAttr = new BrushAttr(_brushAttr);
         }
 
         public MyShape()
         {
             penAttr = null;
+            brushAttr = null;
         }
 
         public MyShape(MyShape myShape)
         {
             penAttr = new PenAttr(myShape.penAttr);
+            brushAttr = new BrushAttr(myShape.brushAttr);
         }
 
+        public BrushAttr brushAttr { get; set; }
         public PenAttr penAttr { get; set; }
+
+        // co the to mau duoc
+        public virtual bool canFill()
+        {
+            return false;
+        }
 
         public abstract MyShape Clone();
 
@@ -378,6 +439,11 @@ namespace _1612180_1612677
                     graphics.DrawRectangle(pen, rectangle);
                 }
             }
+        }
+
+        // to mau
+        public virtual void fill(Bitmap _bitmap)
+        {
         }
 
         // edge vi du nhu 4 dinh hcn, diem dau va diem cuoi cua doan thang
