@@ -103,18 +103,6 @@ namespace _1612180_1612677
             }
         }
 
-        private void buttonReloadAfterChange_Click(object sender, EventArgs e)
-        {
-            if (state == SELECT_STATE)
-            {
-                if (clickedOutlineShape < 0 || clickedOutlineShape >= myShapes.Count)
-                    return;
-                myShapes[clickedOutlineShape].penAttr = getPenAttr();
-                clearAllResetBitmap();
-                DrawAndFillShapes(bitmap);
-            }
-        }
-
         private void buttonSelect_Click(object sender, EventArgs e)
         {
             state = SELECT_STATE;
@@ -124,6 +112,16 @@ namespace _1612180_1612677
         {
             colorDialog.ShowDialog();
             buttonShowColor.BackColor = colorDialog.Color;
+
+            // reload lai mau sac cho vien cua shape
+            if (state == SELECT_STATE)
+            {
+                if (clickedOutlineShape < 0 || clickedOutlineShape >= myShapes.Count)
+                    return;
+                myShapes[clickedOutlineShape].penAttr = getPenAttr();
+                clearAllResetBitmap();
+                DrawAndFillShapes(bitmap);
+            }
         }
 
         // xoa het anh trong pictureBox

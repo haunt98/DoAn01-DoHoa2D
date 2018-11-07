@@ -45,7 +45,6 @@
             this.numericUpDownPenWidth = new System.Windows.Forms.NumericUpDown();
             this.comboBoxDashStyle = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.buttonReloadAfterChange = new System.Windows.Forms.Button();
             this.buttonFill = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.comboBoxBrushStyle = new System.Windows.Forms.ComboBox();
@@ -117,9 +116,9 @@
             // 
             // pictureBoxMain
             // 
-            this.pictureBoxMain.Location = new System.Drawing.Point(120, 98);
+            this.pictureBoxMain.Location = new System.Drawing.Point(120, 129);
             this.pictureBoxMain.Name = "pictureBoxMain";
-            this.pictureBoxMain.Size = new System.Drawing.Size(656, 313);
+            this.pictureBoxMain.Size = new System.Drawing.Size(656, 282);
             this.pictureBoxMain.TabIndex = 3;
             this.pictureBoxMain.TabStop = false;
             this.pictureBoxMain.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pictureBoxMain_MouseClick);
@@ -210,16 +209,6 @@
             this.label2.TabIndex = 12;
             this.label2.Text = "Dash Style";
             // 
-            // buttonReloadAfterChange
-            // 
-            this.buttonReloadAfterChange.Location = new System.Drawing.Point(485, 72);
-            this.buttonReloadAfterChange.Name = "buttonReloadAfterChange";
-            this.buttonReloadAfterChange.Size = new System.Drawing.Size(118, 23);
-            this.buttonReloadAfterChange.TabIndex = 13;
-            this.buttonReloadAfterChange.Text = "Reload After Change";
-            this.buttonReloadAfterChange.UseVisualStyleBackColor = true;
-            this.buttonReloadAfterChange.Click += new System.EventHandler(this.buttonReloadAfterChange_Click);
-            // 
             // buttonFill
             // 
             this.buttonFill.Location = new System.Drawing.Point(679, 36);
@@ -256,7 +245,6 @@
             this.Controls.Add(this.comboBoxBrushStyle);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.buttonFill);
-            this.Controls.Add(this.buttonReloadAfterChange);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.comboBoxDashStyle);
             this.Controls.Add(this.numericUpDownPenWidth);
@@ -302,7 +290,6 @@
         private System.Windows.Forms.NumericUpDown numericUpDownPenWidth;
         private System.Windows.Forms.ComboBox comboBoxDashStyle;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Button buttonReloadAfterChange;
         private System.Windows.Forms.Button buttonFill;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ComboBox comboBoxBrushStyle;
