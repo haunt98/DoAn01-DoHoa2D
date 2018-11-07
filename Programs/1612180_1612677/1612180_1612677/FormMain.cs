@@ -194,15 +194,14 @@ namespace _1612180_1612677
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            myShapes.Clear();
-            MyShape myshape = null;
-            String filepath = null;
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = "Text files (*.txt)|*.txt";
             if (ofd.ShowDialog() == DialogResult.OK)
             {
-                filepath = ofd.FileName;
+                myShapes.Clear();
+                String filepath = ofd.FileName;
                 String[] lines = System.IO.File.ReadAllLines(filepath);
+                MyShape myshape = null;
                 foreach (string line in lines)
                 {
                     if (line[0] == '1')
@@ -404,9 +403,6 @@ namespace _1612180_1612677
                 }
                 fileStream.Close();
             }
-            //else
-            //{
-            //}
         }
     }
 }
