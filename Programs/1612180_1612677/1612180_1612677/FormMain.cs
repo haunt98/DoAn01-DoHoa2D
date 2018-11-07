@@ -19,7 +19,7 @@ namespace _1612180_1612677
         private const int NO_SHAPE = 0;
         private const int RECTANGLE_SHAPE = 2;
 
-        // bitmap hien thi trong pictureBox
+        // bitmap hien thi chinh trong pictureBox
         private Bitmap bitmap;
 
         // bitmap luu tam
@@ -57,7 +57,7 @@ namespace _1612180_1612677
             shapes.Clear();
 
             // xoa trong pictureBox
-            clearAll();
+            clearAllResetBitmap();
         }
 
         private void buttonSelect_Click(object sender, EventArgs e)
@@ -76,11 +76,20 @@ namespace _1612180_1612677
         }
 
         // xoa het anh trong pictureBox
-        private void clearAll()
+        private void clearAllResetBitmap()
         {
             using (Graphics graphics = Graphics.FromImage(bitmap))
             {
                 graphics.Clear(Color.White);
+                if (bitmap_temp != null)
+                {
+                    using (Graphics graphics_temp = Graphics.FromImage(bitmap_temp))
+                    {
+                        graphics_temp.Clear(Color.White);
+                    }
+                }
+                // reset to primary bitmap
+                pictureBoxMain.Image = bitmap;
                 pictureBoxMain.Invalidate();
             }
         }
@@ -99,7 +108,7 @@ namespace _1612180_1612677
                 pictureBoxMain.Height,
                 PixelFormat.Format24bppRgb);
             pictureBoxMain.Image = bitmap;
-            clearAll();
+            clearAllResetBitmap();
         }
 
         // MouseClick xay ra khi click va tha cung 1 object
