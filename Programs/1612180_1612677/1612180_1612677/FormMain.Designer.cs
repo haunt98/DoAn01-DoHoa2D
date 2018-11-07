@@ -48,9 +48,17 @@
             this.buttonFill = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.comboBoxBrushStyle = new System.Windows.Forms.ComboBox();
+            this.buttonDrawChar = new System.Windows.Forms.Button();
+            this.label4 = new System.Windows.Forms.Label();
+            this.textBoxChar = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.comboBoxFont = new System.Windows.Forms.ComboBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.numericUpDownFontSize = new System.Windows.Forms.NumericUpDown();
             this.menuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMain)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPenWidth)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFontSize)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip
@@ -237,11 +245,78 @@
             this.comboBoxBrushStyle.Size = new System.Drawing.Size(121, 21);
             this.comboBoxBrushStyle.TabIndex = 16;
             // 
+            // buttonDrawChar
+            // 
+            this.buttonDrawChar.Location = new System.Drawing.Point(13, 139);
+            this.buttonDrawChar.Name = "buttonDrawChar";
+            this.buttonDrawChar.Size = new System.Drawing.Size(95, 23);
+            this.buttonDrawChar.TabIndex = 17;
+            this.buttonDrawChar.Text = "Draw Character";
+            this.buttonDrawChar.UseVisualStyleBackColor = true;
+            this.buttonDrawChar.Click += new System.EventHandler(this.buttonDrawChar_Click);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(169, 108);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(28, 13);
+            this.label4.TabIndex = 18;
+            this.label4.Text = "Text";
+            // 
+            // textBoxChar
+            // 
+            this.textBoxChar.Location = new System.Drawing.Point(214, 103);
+            this.textBoxChar.Name = "textBoxChar";
+            this.textBoxChar.Size = new System.Drawing.Size(100, 20);
+            this.textBoxChar.TabIndex = 19;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(345, 107);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(28, 13);
+            this.label5.TabIndex = 20;
+            this.label5.Text = "Font";
+            // 
+            // comboBoxFont
+            // 
+            this.comboBoxFont.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxFont.FormattingEnabled = true;
+            this.comboBoxFont.Location = new System.Drawing.Point(394, 99);
+            this.comboBoxFont.Name = "comboBoxFont";
+            this.comboBoxFont.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxFont.TabIndex = 21;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(533, 103);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(51, 13);
+            this.label6.TabIndex = 22;
+            this.label6.Text = "Font Size";
+            // 
+            // numericUpDownFontSize
+            // 
+            this.numericUpDownFontSize.Location = new System.Drawing.Point(602, 103);
+            this.numericUpDownFontSize.Name = "numericUpDownFontSize";
+            this.numericUpDownFontSize.Size = new System.Drawing.Size(46, 20);
+            this.numericUpDownFontSize.TabIndex = 23;
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(788, 432);
+            this.Controls.Add(this.numericUpDownFontSize);
+            this.Controls.Add(this.label6);
+            this.Controls.Add(this.comboBoxFont);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.textBoxChar);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.buttonDrawChar);
             this.Controls.Add(this.comboBoxBrushStyle);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.buttonFill);
@@ -266,6 +341,7 @@
             this.menuStrip.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMain)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPenWidth)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFontSize)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -293,6 +369,13 @@
         private System.Windows.Forms.Button buttonFill;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ComboBox comboBoxBrushStyle;
+        private System.Windows.Forms.Button buttonDrawChar;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.TextBox textBoxChar;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.ComboBox comboBoxFont;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.NumericUpDown numericUpDownFontSize;
     }
 }
 

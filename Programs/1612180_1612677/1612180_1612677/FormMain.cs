@@ -15,11 +15,11 @@ namespace _1612180_1612677
 {
     public partial class FormMain : Form
     {
+        private const int CHARACTER_STATE = 4;
         private const int ELLIPSE_STATE = 3;
         private const int LINE_STATE = 1;
         private const int NO_STATE = 0;
         private const int RECTANGLE_STATE = 2;
-
         private const int SELECT_STATE = -1;
 
         // bitmap hien thi chinh trong pictureBox
@@ -73,6 +73,11 @@ namespace _1612180_1612677
 
             // reset state
             state = NO_STATE;
+        }
+
+        private void buttonDrawChar_Click(object sender, EventArgs e)
+        {
+            state = CHARACTER_STATE;
         }
 
         private void buttonDrawEll_Click(object sender, EventArgs e)
@@ -240,6 +245,15 @@ namespace _1612180_1612677
             // Brush Style combo box
             comboBoxBrushStyle.Items.Add("SolidBrush");
             comboBoxBrushStyle.SelectedIndex = comboBoxBrushStyle.Items.IndexOf("SolidBrush");
+
+            // Font Style combo box
+            foreach (FontFamily font in FontFamily.Families)
+            {
+                comboBoxFont.Items.Add(font.Name.ToString());
+            }
+            comboBoxFont.SelectedItem = FontFamily.Families[1].Name.ToString();
+            //set value of font size
+            numericUpDownFontSize.Value = 12;
         }
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
@@ -325,6 +339,15 @@ namespace _1612180_1612677
                         pictureBoxMain.Invalidate();
                         break;
                 }
+            }
+            else if (state == CHARACTER_STATE)
+            {
+                p_end = e.Location;
+                MyCharater myCharater = new MyCharater(getPenAttr(), textBoxChar.Text, p_end,
+                    comboBoxFont.SelectedText.ToString(),
+                    Convert.ToInt32(Math.Round(numericUpDownFontSize.Value, 0)));
+                drawWrap(myCharater, bitmap);
+                myShapes.Add(myCharater);
             }
         }
 

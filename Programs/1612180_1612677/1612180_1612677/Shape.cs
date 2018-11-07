@@ -522,4 +522,76 @@ namespace _1612180_1612677
         public DashStyle dashStyle { get; set; }
         public int width { get; set; }
     }
+
+    public class MyCharater : MyShape
+    {
+        private String text;
+        private Point mostLeft;
+        private String font;
+        private int size;
+
+        public MyCharater() : base()
+        {
+            mostLeft = Point.Empty;
+        }
+
+        public MyCharater(PenAttr _penAttr, String _text, Point p_start, String _font, int _size) :
+            base(_penAttr)
+        {
+            mostLeft = new Point(p_start.X, p_start.Y);
+            text = _text;
+            font = _font;
+            size = _size;
+        }
+
+        public MyCharater(MyCharater myCharactor) :
+            base(myCharactor)
+        {
+            mostLeft = new Point(myCharactor.mostLeft.X, myCharactor.mostLeft.Y);
+            font = myCharactor.font;
+            size = myCharactor.size;
+        }
+
+        public override MyShape Clone()
+        {
+            return new MyCharater(this);
+        }
+
+        public override void draw(Bitmap _bitmap)
+        {
+            using (Graphics graphics = Graphics.FromImage(_bitmap))
+            {
+                // ve charactor
+                using (Pen pen = new Pen(base.penAttr.color, base.penAttr.width))
+                {
+                    pen.DashStyle = base.penAttr.dashStyle;
+                    graphics.DrawString(text, new Font(font, size, FontStyle.Regular), new SolidBrush(Color.Red), mostLeft);
+                }
+            }
+        }
+
+        public override List<Point> getEdgePoints()
+        {
+            List<Point> edgePoints = new List<Point>();
+            edgePoints.Add(new Point(mostLeft.X, mostLeft.Y));
+            edgePoints.Add(new Point(mostLeft.X, mostLeft.Y + size));
+            edgePoints.Add(new Point(mostLeft.X + size, mostLeft.Y));
+            edgePoints.Add(new Point(mostLeft.X + size, mostLeft.Y + size));
+            return edgePoints;
+        }
+
+        public override bool isPointBelongPrecisely(Point p)
+        {
+            return false;
+        }
+
+        public override void ReadData(string data)
+        {
+        }
+
+        public override string WriteData()
+        {
+            return null;
+        }
+    }
 }
