@@ -166,9 +166,8 @@ namespace _1612180_1612677
                     default:
                         bitmap_temp = (Bitmap)bitmap.Clone();
                         pictureBoxMain.Image = bitmap_temp;
-                        MyShape myShape = myShapes[clickedShape].Clone();
-                        myShape.penAttr.color = Color.Blue;
-                        myShape.draw(bitmap_temp);
+                        myShapes[clickedShape].drawEdgePoints(bitmap_temp);
+                        pictureBoxMain.Invalidate();
                         break;
                 }
             }

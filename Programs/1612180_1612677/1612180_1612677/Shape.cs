@@ -47,6 +47,16 @@ namespace _1612180_1612677
             }
         }
 
+        public override List<Point> getEdgePoints()
+        {
+            List<Point> edgePoints = new List<Point>();
+            edgePoints.Add(new Point(mostLeft.X, mostLeft.Y));
+            edgePoints.Add(new Point(mostLeft.X, mostLeft.Y + height));
+            edgePoints.Add(new Point(mostLeft.X + width, mostLeft.Y));
+            edgePoints.Add(new Point(mostLeft.X + width, mostLeft.Y + height));
+            return edgePoints;
+        }
+
         public override bool isPointBelongPrecisely(Point p)
         {
             using (GraphicsPath path = new GraphicsPath())
@@ -125,6 +135,14 @@ namespace _1612180_1612677
             }
         }
 
+        public override List<Point> getEdgePoints()
+        {
+            List<Point> edgePoints = new List<Point>();
+            edgePoints.Add(new Point(p_start.X, p_start.Y));
+            edgePoints.Add(new Point(p_end.X, p_end.Y));
+            return edgePoints;
+        }
+
         public override void ReadDataFromString(string data)
         {
             //doc string co dang "1 xstart ystart xend yend"
@@ -194,6 +212,16 @@ namespace _1612180_1612677
                     graphics.DrawRectangle(pen, rectangle);
                 }
             }
+        }
+
+        public override List<Point> getEdgePoints()
+        {
+            List<Point> edgePoints = new List<Point>();
+            edgePoints.Add(new Point(mostLeft.X, mostLeft.Y));
+            edgePoints.Add(new Point(mostLeft.X, mostLeft.Y + height));
+            edgePoints.Add(new Point(mostLeft.X + width, mostLeft.Y));
+            edgePoints.Add(new Point(mostLeft.X + width, mostLeft.Y + height));
+            return edgePoints;
         }
 
         public override bool isPointBelongPrecisely(Point p)
@@ -280,6 +308,26 @@ namespace _1612180_1612677
         }
 
         public abstract void draw(Bitmap _bitmap);
+
+        // edge vi du nhu 4 dinh hcn, diem dau va diem cuoi cua doan thang
+        public abstract List<Point> getEdgePoints();
+
+        public void drawEdgePoints(Bitmap _bitmap)
+        {
+            List<Point> edgePoints = getEdgePoints();
+            using (Graphics graphics = Graphics.FromImage(_bitmap))
+            using (Brush brush = new SolidBrush(Color.White))
+            using (Pen pen = new Pen(Color.Black, 1))
+            {
+                foreach (Point p in edgePoints)
+                {
+                    Point p_mostLeft = new Point(p.X - 2, p.Y - 2);
+                    Rectangle rectangle = new Rectangle(p_mostLeft, new Size(4, 4));
+                    graphics.FillRectangle(brush, rectangle);
+                    graphics.DrawRectangle(pen, rectangle);
+                }
+            }
+        }
 
         // vi khi click tung pixel rat kho
         // nen xet them nhung diem lan can

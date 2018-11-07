@@ -208,7 +208,7 @@
             // 
             // comboBoxDashStyle
             // 
-            this.comboBoxDashStyle.Enabled = false;
+            this.comboBoxDashStyle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxDashStyle.FormattingEnabled = true;
             this.comboBoxDashStyle.Location = new System.Drawing.Point(576, 66);
             this.comboBoxDashStyle.Name = "comboBoxDashStyle";
