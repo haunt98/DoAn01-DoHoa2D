@@ -14,10 +14,10 @@ namespace _1612180_1612677
 {
     public partial class FormMain : Form
     {
-        private const int CLICK_SHAPE = -1;
-        private const int LINE_SHAPE = 1;
-        private const int NO_SHAPE = 0;
-        private const int RECTANGLE_SHAPE = 2;
+        private const int SELECT_STATE = -1;
+        private const int LINE_STATE = 1;
+        private const int NO_STATE = 0;
+        private const int RECTANGLE_STATE = 2;
 
         // bitmap hien thi chinh trong pictureBox
         private Bitmap bitmap;
@@ -44,7 +44,7 @@ namespace _1612180_1612677
         // luu danh sach cac hinh
         private List<MyShape> shapes = new List<MyShape>();
 
-        private int typeShape = NO_SHAPE;
+        private int state = NO_STATE;
 
         public FormMain()
         {
@@ -62,17 +62,17 @@ namespace _1612180_1612677
 
         private void buttonSelect_Click(object sender, EventArgs e)
         {
-            typeShape = CLICK_SHAPE;
+            state = SELECT_STATE;
         }
 
         private void buttonDrawLine_Click(object sender, EventArgs e)
         {
-            typeShape = LINE_SHAPE;
+            state = LINE_STATE;
         }
 
         private void buttonDrawRec_Click(object sender, EventArgs e)
         {
-            typeShape = RECTANGLE_SHAPE;
+            state = RECTANGLE_STATE;
         }
 
         // xoa het anh trong pictureBox
@@ -114,7 +114,7 @@ namespace _1612180_1612677
         // MouseClick xay ra khi click va tha cung 1 object
         private void pictureBoxMain_MouseClick(object sender, MouseEventArgs e)
         {
-            if (typeShape == CLICK_SHAPE)
+            if (state == SELECT_STATE)
             {
                 Point p = e.Location;
                 for (int i = shapes.Count - 1; i >= 0; --i)
@@ -145,13 +145,13 @@ namespace _1612180_1612677
 
         private void pictureBoxMain_MouseDown(object sender, MouseEventArgs e)
         {
-            switch (typeShape)
+            switch (state)
             {
-                case NO_SHAPE:
+                case NO_STATE:
                     break;
 
-                case LINE_SHAPE:
-                case RECTANGLE_SHAPE:
+                case LINE_STATE:
+                case RECTANGLE_STATE:
                     p_start = e.Location;
                     isMouseDown = true;
                     break;
@@ -174,12 +174,12 @@ namespace _1612180_1612677
             isMouseMove = true;
 
             // ve tren bitmap_temp
-            switch (typeShape)
+            switch (state)
             {
-                case NO_SHAPE:
+                case NO_STATE:
                     break;
 
-                case LINE_SHAPE:
+                case LINE_STATE:
                     bitmap_temp = (Bitmap)bitmap.Clone();
                     pictureBoxMain.Image = bitmap_temp;
                     p_end = e.Location;
@@ -189,7 +189,7 @@ namespace _1612180_1612677
                     drawWrap(myLine, bitmap_temp);
                     break;
 
-                case RECTANGLE_SHAPE:
+                case RECTANGLE_STATE:
                     bitmap_temp = (Bitmap)bitmap.Clone();
                     pictureBoxMain.Image = bitmap_temp;
                     p_end = e.Location;
@@ -215,12 +215,12 @@ namespace _1612180_1612677
             isMouseMove = false;
 
             // ve tren bitmap
-            switch (typeShape)
+            switch (state)
             {
-                case NO_SHAPE:
+                case NO_STATE:
                     break;
 
-                case LINE_SHAPE:
+                case LINE_STATE:
                     pictureBoxMain.Image = bitmap;
                     p_end = e.Location;
                     MyShape myLine = new MyLine(
@@ -230,7 +230,7 @@ namespace _1612180_1612677
                     shapes.Add(myLine);
                     break;
 
-                case RECTANGLE_SHAPE:
+                case RECTANGLE_STATE:
                     pictureBoxMain.Image = bitmap;
                     p_end = e.Location;
                     MyShape myRectangle = new MyRectangle(

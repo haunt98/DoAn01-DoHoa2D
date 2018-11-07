@@ -90,11 +90,11 @@
             // 
             // buttonDrawRectangle
             // 
-            this.buttonDrawRectangle.Location = new System.Drawing.Point(203, 1);
+            this.buttonDrawRectangle.Location = new System.Drawing.Point(182, 1);
             this.buttonDrawRectangle.Name = "buttonDrawRectangle";
-            this.buttonDrawRectangle.Size = new System.Drawing.Size(75, 23);
+            this.buttonDrawRectangle.Size = new System.Drawing.Size(96, 23);
             this.buttonDrawRectangle.TabIndex = 1;
-            this.buttonDrawRectangle.Text = "DrawRec";
+            this.buttonDrawRectangle.Text = "Draw Rectangle";
             this.buttonDrawRectangle.UseVisualStyleBackColor = true;
             this.buttonDrawRectangle.Click += new System.EventHandler(this.buttonDrawRec_Click);
             // 
@@ -104,7 +104,7 @@
             this.buttonDrawLine.Name = "buttonDrawLine";
             this.buttonDrawLine.Size = new System.Drawing.Size(75, 23);
             this.buttonDrawLine.TabIndex = 2;
-            this.buttonDrawLine.Text = "DrawLine";
+            this.buttonDrawLine.Text = "Draw Line";
             this.buttonDrawLine.UseVisualStyleBackColor = true;
             this.buttonDrawLine.Click += new System.EventHandler(this.buttonDrawLine_Click);
             // 
@@ -122,7 +122,7 @@
             // 
             // buttonClearAll
             // 
-            this.buttonClearAll.Location = new System.Drawing.Point(305, 1);
+            this.buttonClearAll.Location = new System.Drawing.Point(362, 1);
             this.buttonClearAll.Name = "buttonClearAll";
             this.buttonClearAll.Size = new System.Drawing.Size(75, 23);
             this.buttonClearAll.TabIndex = 4;
@@ -132,7 +132,7 @@
             // 
             // buttonSelect
             // 
-            this.buttonSelect.Location = new System.Drawing.Point(407, 1);
+            this.buttonSelect.Location = new System.Drawing.Point(443, 1);
             this.buttonSelect.Name = "buttonSelect";
             this.buttonSelect.Size = new System.Drawing.Size(75, 23);
             this.buttonSelect.TabIndex = 5;
