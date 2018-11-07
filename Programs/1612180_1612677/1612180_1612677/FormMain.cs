@@ -146,6 +146,42 @@ namespace _1612180_1612677
             buttonShowColor.BackColor = colorDialog.Color;
         }
 
+        private PenAttr getPenAttr()
+        {
+            PenAttr penAttr = null;
+            switch (comboBoxDashStyle.SelectedItem.ToString())
+            {
+                case "Dash":
+                    penAttr = new PenAttr(colorDialog.Color, DashStyle.Dash,
+                        Convert.ToInt32(Math.Round(numericUpDownPenWidth.Value, 0)));
+                    break;
+
+                case "DashDot":
+                    penAttr = new PenAttr(colorDialog.Color, DashStyle.DashDot,
+                        Convert.ToInt32(Math.Round(numericUpDownPenWidth.Value, 0)));
+                    break;
+
+                case "DashDotDot":
+                    penAttr = new PenAttr(colorDialog.Color, DashStyle.DashDotDot,
+                        Convert.ToInt32(Math.Round(numericUpDownPenWidth.Value, 0)));
+                    break;
+
+                case "Dot":
+                    penAttr = new PenAttr(colorDialog.Color, DashStyle.Dot,
+                        Convert.ToInt32(Math.Round(numericUpDownPenWidth.Value, 0)));
+                    break;
+
+                case "Solid":
+                    penAttr = new PenAttr(colorDialog.Color, DashStyle.Solid,
+                        Convert.ToInt32(Math.Round(numericUpDownPenWidth.Value, 0)));
+                    break;
+
+                default:
+                    break;
+            }
+            return penAttr;
+        }
+
         private void loadComboBoxDashStyle()
         {
             comboBoxDashStyle.Items.Add("Dash");
@@ -160,23 +196,38 @@ namespace _1612180_1612677
         {
             myShapes.Clear();
             MyShape myshape = null;
-            String filepath = @"D:\\text.txt";
+            String filepath = null;
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "TXT| *.txt";
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                filepath = ofd.FileName;
+            }
+            else
+            {
+                return;
+            }
             String[] lines = System.IO.File.ReadAllLines(filepath);
             foreach (string line in lines)
             {
                 if (line[0] == '1')
                 {
                     myshape = new MyLine();
-                    myshape.ReadDataFromString(line);
+                    myshape.ReadData(line);
                 }
                 else if (line[0] == '2')
                 {
                     myshape = new MyRectangle();
-                    myshape.ReadDataFromString(line);
+                    myshape.ReadData(line);
+                }
+                else if (line[0] == '3')
+                {
+                    myshape = new MyEllipse();
+                    myshape.ReadData(line);
                 }
                 myShapes.Add(myshape);
             }
-            //drawShapes(bitmap);
+            drawShapes(bitmap);
         }
 
         // MouseClick xay ra khi click va tha cung 1 object
@@ -337,53 +388,29 @@ namespace _1612180_1612677
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            String filepath = @"D:\\text.txt";
-            FileStream fs = new FileStream(filepath, FileMode.Create);//Tạo file mới tên là test.txt
-            using (StreamWriter sWriter = new StreamWriter(fs, Encoding.ASCII))
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.InitialDirectory = @"C:\";
+            sfd.RestoreDirectory = true;
+            sfd.FileName = "*.txt";
+            sfd.DefaultExt = "txt";
+            sfd.Filter = "txt files (*txt)|*.txt";
+
+            if (sfd.ShowDialog() == DialogResult.OK)
             {
-                for (int i = 0; i < myShapes.Count; i++)
+                Stream fileStream = sfd.OpenFile();
+                using (StreamWriter sWriter = new StreamWriter(fileStream, Encoding.ASCII))
                 {
-                    sWriter.WriteLine(myShapes[i].WriteData());
+                    for (int i = 0; i < myShapes.Count; i++)
+                    {
+                        sWriter.WriteLine(myShapes[i].WriteData());
+                    }
+                    sWriter.Flush();
                 }
-                sWriter.Flush();
+                fileStream.Close();
             }
-            fs.Close();
-        }
-
-        private PenAttr getPenAttr()
-        {
-            PenAttr penAttr = null;
-            switch (comboBoxDashStyle.SelectedItem.ToString())
+            else
             {
-                case "Dash":
-                    penAttr = new PenAttr(colorDialog.Color, DashStyle.Dash,
-                        Convert.ToInt32(Math.Round(numericUpDownPenWidth.Value, 0)));
-                    break;
-
-                case "DashDot":
-                    penAttr = new PenAttr(colorDialog.Color, DashStyle.DashDot,
-                        Convert.ToInt32(Math.Round(numericUpDownPenWidth.Value, 0)));
-                    break;
-
-                case "DashDotDot":
-                    penAttr = new PenAttr(colorDialog.Color, DashStyle.DashDotDot,
-                        Convert.ToInt32(Math.Round(numericUpDownPenWidth.Value, 0)));
-                    break;
-
-                case "Dot":
-                    penAttr = new PenAttr(colorDialog.Color, DashStyle.Dot,
-                        Convert.ToInt32(Math.Round(numericUpDownPenWidth.Value, 0)));
-                    break;
-
-                case "Solid":
-                    penAttr = new PenAttr(colorDialog.Color, DashStyle.Solid,
-                        Convert.ToInt32(Math.Round(numericUpDownPenWidth.Value, 0)));
-                    break;
-
-                default:
-                    break;
             }
-            return penAttr;
         }
     }
 }

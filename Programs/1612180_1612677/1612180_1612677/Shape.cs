@@ -22,6 +22,12 @@ namespace _1612180_1612677
             height = Math.Abs(p_start.Y - p_end.Y);
         }
 
+        public MyEllipse() :
+            base()
+        {
+            mostLeft = Point.Empty;
+        }
+
         public MyEllipse(MyEllipse myEllipse) :
             base(myEllipse)
         {
@@ -70,13 +76,35 @@ namespace _1612180_1612677
             }
         }
 
-        public override void ReadDataFromString(string data)
+        public override void ReadData(string data)
         {
+            // doc string co dang "3 x y  height  width color dashStype width"
+
+            String[] result = data.Split(' ');
+            mostLeft = new Point(Int32.Parse(result[1]), Int32.Parse(result[2]));
+            height = Int32.Parse(result[3]);
+            width = Int32.Parse(result[4]);
+
+            //doc du lieu penAttr tu file
+            Color colorFromFile = ConvertColorFromString(result[5]);
+            DashStyle dashStyleFromFile = ConvertDashStypeFromString(result[6]);
+            int widthFromFile = Int32.Parse(result[7]);
+
+            base.penAttr = new PenAttr(colorFromFile, dashStyleFromFile, widthFromFile);
         }
 
         public override string WriteData()
         {
-            return "";
+            // in ra string co dang "3 x y  height  width color dashStype width"
+            String result = "3 ";
+            result += mostLeft.X.ToString() + " ";
+            result += mostLeft.Y.ToString() + " ";
+            result += height.ToString() + " ";
+            result += width.ToString() + " ";
+            result += base.penAttr.color.ToArgb().ToString() + " " +
+               base.penAttr.dashStyle.ToString() + " " +
+               base.penAttr.width.ToString();
+            return result;
         }
     }
 
@@ -122,6 +150,14 @@ namespace _1612180_1612677
             }
         }
 
+        public override List<Point> getEdgePoints()
+        {
+            List<Point> edgePoints = new List<Point>();
+            edgePoints.Add(new Point(p_start.X, p_start.Y));
+            edgePoints.Add(new Point(p_end.X, p_end.Y));
+            return edgePoints;
+        }
+
         public override bool isPointBelongPrecisely(Point p)
         {
             // su dung graphics path
@@ -135,21 +171,19 @@ namespace _1612180_1612677
             }
         }
 
-        public override List<Point> getEdgePoints()
+        public override void ReadData(string data)
         {
-            List<Point> edgePoints = new List<Point>();
-            edgePoints.Add(new Point(p_start.X, p_start.Y));
-            edgePoints.Add(new Point(p_end.X, p_end.Y));
-            return edgePoints;
-        }
-
-        public override void ReadDataFromString(string data)
-        {
-            //doc string co dang "1 xstart ystart xend yend"
+            //doc string co dang "1 xstart ystart xend yend color dashStype width"
             String[] result = data.Split(' ');
             p_start = new Point(Int32.Parse(result[1]), Int32.Parse(result[2]));
             p_end = new Point(Int32.Parse(result[3]), Int32.Parse(result[4]));
-            //base.penAttr = new PenAttr(result[5], result[6], result[7]);
+
+            //doc du lieu penAtt tu file
+            Color colorFromFile = ConvertColorFromString(result[5]);
+            DashStyle dashStyleFromFile = ConvertDashStypeFromString(result[6]);
+            int widthFromFile = Int32.Parse(result[7]);
+
+            base.penAttr = new PenAttr(colorFromFile, dashStyleFromFile, widthFromFile);
         }
 
         public override string WriteData()
@@ -160,7 +194,7 @@ namespace _1612180_1612677
             result += p_start.Y.ToString() + " ";
             result += p_end.X.ToString() + " ";
             result += p_end.Y.ToString() + " ";
-            result += base.penAttr.color.ToString() + " " +
+            result += base.penAttr.color.ToArgb().ToString() + " " +
                 base.penAttr.dashStyle.ToString() + " " +
                 base.penAttr.width.ToString();
             return result;
@@ -237,23 +271,33 @@ namespace _1612180_1612677
             }
         }
 
-        public override void ReadDataFromString(string data)
+        public override void ReadData(string data)
         {
-            // doc string co dang "2 xstart ystart xend yend"
+            // doc string co dang "2 x y  height  width color dashStype width"
             String[] result = data.Split(' ');
             mostLeft = new Point(Int32.Parse(result[1]), Int32.Parse(result[2]));
             height = Int32.Parse(result[3]);
             width = Int32.Parse(result[4]);
+
+            //doc du lieu penAttr tu file
+            Color colorFromFile = ConvertColorFromString(result[5]);
+            DashStyle dashStyleFromFile = ConvertDashStypeFromString(result[6]);
+            int widthFromFile = Int32.Parse(result[7]);
+
+            base.penAttr = new PenAttr(colorFromFile, dashStyleFromFile, widthFromFile);
         }
 
         public override string WriteData()
         {
-            // in ra string co dang "2 x y height width"
+            // in ra string co dang "2 x y  height  width color dashStype width"
             String result = "2 ";
             result += mostLeft.X.ToString() + " ";
             result += mostLeft.Y.ToString() + " ";
             result += height.ToString() + " ";
-            result += width.ToString();
+            result += width.ToString() + " ";
+            result += base.penAttr.color.ToArgb().ToString() + " " +
+               base.penAttr.dashStyle.ToString() + " " +
+               base.penAttr.width.ToString();
             return result;
         }
     }
@@ -279,7 +323,13 @@ namespace _1612180_1612677
 
         public abstract MyShape Clone();
 
-        public DashStyle ConvertDashStypeToInt(String dashStyle)
+        public Color ConvertColorFromString(String data)
+        {
+            Color result = Color.FromArgb(Int32.Parse(data));
+            return result;
+        }
+
+        public DashStyle ConvertDashStypeFromString(String dashStyle)
         {
             DashStyle result = DashStyle.Solid;
             switch (dashStyle)
@@ -309,9 +359,6 @@ namespace _1612180_1612677
 
         public abstract void draw(Bitmap _bitmap);
 
-        // edge vi du nhu 4 dinh hcn, diem dau va diem cuoi cua doan thang
-        public abstract List<Point> getEdgePoints();
-
         public void drawEdgePoints(Bitmap _bitmap)
         {
             List<Point> edgePoints = getEdgePoints();
@@ -328,6 +375,9 @@ namespace _1612180_1612677
                 }
             }
         }
+
+        // edge vi du nhu 4 dinh hcn, diem dau va diem cuoi cua doan thang
+        public abstract List<Point> getEdgePoints();
 
         // vi khi click tung pixel rat kho
         // nen xet them nhung diem lan can
@@ -361,7 +411,7 @@ namespace _1612180_1612677
         public abstract bool isPointBelongPrecisely(Point p);
 
         // Doc data
-        public abstract void ReadDataFromString(String data);
+        public abstract void ReadData(String data);
 
         // Viet data
         public abstract String WriteData();
