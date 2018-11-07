@@ -14,10 +14,10 @@ namespace _1612180_1612677
 {
     public partial class FormMain : Form
     {
-        private const int SELECT_STATE = -1;
         private const int LINE_STATE = 1;
         private const int NO_STATE = 0;
         private const int RECTANGLE_STATE = 2;
+        private const int SELECT_STATE = -1;
 
         // bitmap hien thi chinh trong pictureBox
         private Bitmap bitmap;
@@ -27,7 +27,7 @@ namespace _1612180_1612677
 
         // so thu tu cua hinh dang bi click
         // shapes[clickedShape] la hinh dang bi click
-        private int clickedShape = -1;
+        //private int clickedShape = -1;
 
         // trai qua su kien MouseDown chua
         private bool isMouseDown = false;
@@ -60,11 +60,6 @@ namespace _1612180_1612677
             clearAllResetBitmap();
         }
 
-        private void buttonSelect_Click(object sender, EventArgs e)
-        {
-            state = SELECT_STATE;
-        }
-
         private void buttonDrawLine_Click(object sender, EventArgs e)
         {
             state = LINE_STATE;
@@ -73,6 +68,11 @@ namespace _1612180_1612677
         private void buttonDrawRec_Click(object sender, EventArgs e)
         {
             state = RECTANGLE_STATE;
+        }
+
+        private void buttonSelect_Click(object sender, EventArgs e)
+        {
+            state = SELECT_STATE;
         }
 
         // xoa het anh trong pictureBox
@@ -117,6 +117,8 @@ namespace _1612180_1612677
             if (state == SELECT_STATE)
             {
                 Point p = e.Location;
+                // hien thu tu shape dang nhan
+                int clickedShape = -1;
                 for (int i = shapes.Count - 1; i >= 0; --i)
                 {
                     if (shapes[i].isPointBelong(p))

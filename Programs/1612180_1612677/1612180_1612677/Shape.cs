@@ -10,21 +10,21 @@ namespace _1612180_1612677
 {
     public class MyLine : MyShape
     {
-        private Point p1;
-        private Point p2;
+        private Point p_end;
+        private Point p_start;
 
-        public MyLine(PenAttr _penAttr, Point _p1, Point _p2) :
+        public MyLine(PenAttr _penAttr, Point _p_start, Point _p_end) :
             base(_penAttr)
         {
-            p1 = new Point(_p1.X, _p1.Y);
-            p2 = new Point(_p2.X, _p2.Y);
+            p_start = new Point(_p_start.X, _p_start.Y);
+            p_end = new Point(_p_end.X, _p_end.Y);
         }
 
         public MyLine(MyLine myLine) :
             base(myLine)
         {
-            p1 = new Point(myLine.p1.X, myLine.p1.Y);
-            p2 = new Point(myLine.p2.X, myLine.p2.Y);
+            p_start = new Point(myLine.p_start.X, myLine.p_start.Y);
+            p_end = new Point(myLine.p_end.X, myLine.p_end.Y);
         }
 
         public override MyShape Clone()
@@ -32,13 +32,13 @@ namespace _1612180_1612677
             return new MyLine(this);
         }
 
-        public override void draw(Bitmap bitmap)
+        public override void draw(Bitmap _bitmap)
         {
-            using (Graphics graphics = Graphics.FromImage(bitmap))
+            using (Graphics graphics = Graphics.FromImage(_bitmap))
             {
                 using (Pen pen = new Pen(base.penAttr.color, base.penAttr.width))
                 {
-                    graphics.DrawLine(pen, p1, p2);
+                    graphics.DrawLine(pen, p_start, p_end);
                 }
             }
         }
@@ -48,7 +48,7 @@ namespace _1612180_1612677
             // su dung graphics path
             using (GraphicsPath path = new GraphicsPath())
             {
-                path.AddLine(p1, p2);
+                path.AddLine(p_start, p_end);
                 using (Pen pen = new Pen(base.penAttr.color, base.penAttr.width))
                 {
                     return path.IsOutlineVisible(p, pen);
@@ -57,31 +57,28 @@ namespace _1612180_1612677
         }
     }
 
+    //public class MyEllipse : MyShape
+    //{
+    //}
+
     public class MyRectangle : MyShape
     {
         private int height;
         private Point mostLeft;
-        private Point p1;
-        private Point p2;
         private int width;
 
-        public MyRectangle(PenAttr _penAttr, Point _p1, Point _p2) :
+        public MyRectangle(PenAttr _penAttr, Point p_start, Point p_end) :
             base(_penAttr)
         {
-            p1 = new Point(_p1.X, _p1.Y);
-            p2 = new Point(_p2.X, _p2.Y);
-
             // tim diem goc trai
-            mostLeft = new Point(Math.Min(p1.X, p2.X), Math.Min(p1.Y, p2.Y));
-            width = Math.Abs(p2.X - p1.X);
-            height = Math.Abs(p2.Y - p1.Y);
+            mostLeft = new Point(Math.Min(p_start.X, p_end.X), Math.Min(p_start.Y, p_end.Y));
+            width = Math.Abs(p_start.X - p_end.X);
+            height = Math.Abs(p_start.Y - p_end.Y);
         }
 
         public MyRectangle(MyRectangle myRectangle) :
             base(myRectangle)
         {
-            p1 = new Point(myRectangle.p1.X, myRectangle.p1.Y);
-            p2 = new Point(myRectangle.p2.X, myRectangle.p2.Y);
             mostLeft = new Point(myRectangle.mostLeft.X, myRectangle.mostLeft.Y);
             width = myRectangle.width;
             height = myRectangle.height;
@@ -92,9 +89,9 @@ namespace _1612180_1612677
             return new MyRectangle(this);
         }
 
-        public override void draw(Bitmap bitmap)
+        public override void draw(Bitmap _bitmap)
         {
-            using (Graphics graphics = Graphics.FromImage(bitmap))
+            using (Graphics graphics = Graphics.FromImage(_bitmap))
             {
                 // ve hcn
                 Rectangle rectangle = new Rectangle(mostLeft, new Size(width, height));
@@ -135,7 +132,7 @@ namespace _1612180_1612677
 
         public abstract MyShape Clone();
 
-        public abstract void draw(Bitmap bitmap);
+        public abstract void draw(Bitmap _bitmap);
 
         // vi khi click tung pixel rat kho
         // nen xet them nhung diem lan can
