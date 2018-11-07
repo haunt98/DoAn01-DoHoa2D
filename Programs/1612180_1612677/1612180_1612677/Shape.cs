@@ -145,6 +145,7 @@ namespace _1612180_1612677
             {
                 using (Pen pen = new Pen(base.penAttr.color, base.penAttr.width))
                 {
+                    pen.DashStyle = base.penAttr.dashStyle;
                     graphics.DrawLine(pen, p_start, p_end);
                 }
             }
@@ -243,6 +244,7 @@ namespace _1612180_1612677
                 Rectangle rectangle = new Rectangle(mostLeft, new Size(width, height));
                 using (Pen pen = new Pen(base.penAttr.color, base.penAttr.width))
                 {
+                    pen.DashStyle = base.penAttr.dashStyle;
                     graphics.DrawRectangle(pen, rectangle);
                 }
             }

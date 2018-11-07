@@ -404,5 +404,17 @@ namespace _1612180_1612677
                 fileStream.Close();
             }
         }
+
+        private void buttonReloadAfterChange_Click(object sender, EventArgs e)
+        {
+            if (state == SELECT_STATE)
+            {
+                if (clickedShape < 0 || clickedShape >= myShapes.Count)
+                    return;
+                myShapes[clickedShape].penAttr = getPenAttr();
+                clearAllResetBitmap();
+                drawShapes(bitmap);
+            }
+        }
     }
 }
