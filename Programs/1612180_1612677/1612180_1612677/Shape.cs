@@ -20,6 +20,18 @@ namespace _1612180_1612677
             p2 = new Point(_p2.X, _p2.Y);
         }
 
+        public MyLine(MyLine myLine) :
+            base(myLine)
+        {
+            p1 = new Point(myLine.p1.X, myLine.p1.Y);
+            p2 = new Point(myLine.p2.X, myLine.p2.Y);
+        }
+
+        public override MyShape Clone()
+        {
+            return new MyLine(this);
+        }
+
         public override void draw(Bitmap bitmap)
         {
             using (Graphics graphics = Graphics.FromImage(bitmap))
@@ -65,6 +77,21 @@ namespace _1612180_1612677
             height = Math.Abs(p2.Y - p1.Y);
         }
 
+        public MyRectangle(MyRectangle myRectangle) :
+            base(myRectangle)
+        {
+            p1 = new Point(myRectangle.p1.X, myRectangle.p1.Y);
+            p2 = new Point(myRectangle.p2.X, myRectangle.p2.Y);
+            mostLeft = new Point(myRectangle.mostLeft.X, myRectangle.mostLeft.Y);
+            width = myRectangle.width;
+            height = myRectangle.height;
+        }
+
+        public override MyShape Clone()
+        {
+            return new MyRectangle(this);
+        }
+
         public override void draw(Bitmap bitmap)
         {
             using (Graphics graphics = Graphics.FromImage(bitmap))
@@ -99,11 +126,16 @@ namespace _1612180_1612677
             penAttr = _penAttr;
         }
 
+        public MyShape(MyShape myShape)
+        {
+            penAttr = new PenAttr(myShape.penAttr);
+        }
+
         public PenAttr penAttr { get; set; }
 
-        public virtual void draw(Bitmap bitmap)
-        {
-        }
+        public abstract MyShape Clone();
+
+        public abstract void draw(Bitmap bitmap);
 
         // vi khi click tung pixel rat kho
         // nen xet them nhung diem lan can
@@ -134,10 +166,7 @@ namespace _1612180_1612677
         }
 
         // kiem tra chinh xac mot diem
-        public virtual bool isPointBelongPrecisely(Point p)
-        {
-            return false;
-        }
+        public abstract bool isPointBelongPrecisely(Point p);
     }
 
     // Luu nhung thuoc tinh cua class Pen
@@ -148,6 +177,13 @@ namespace _1612180_1612677
             color = _color;
             dashStyle = _dashStyle;
             width = _width;
+        }
+
+        public PenAttr(PenAttr penAttr)
+        {
+            color = penAttr.color;
+            dashStyle = penAttr.dashStyle;
+            width = penAttr.width;
         }
 
         public Color color { get; set; }

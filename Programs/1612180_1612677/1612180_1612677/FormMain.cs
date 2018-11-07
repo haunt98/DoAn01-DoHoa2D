@@ -60,7 +60,7 @@ namespace _1612180_1612677
             clearAll();
         }
 
-        private void buttonClick_Click(object sender, EventArgs e)
+        private void buttonSelect_Click(object sender, EventArgs e)
         {
             typeShape = CLICK_SHAPE;
         }
@@ -102,19 +102,34 @@ namespace _1612180_1612677
             clearAll();
         }
 
+        // MouseClick xay ra khi click va tha cung 1 object
         private void pictureBoxMain_MouseClick(object sender, MouseEventArgs e)
         {
             if (typeShape == CLICK_SHAPE)
             {
                 Point p = e.Location;
-                int i;
-                for (i = shapes.Count - 1; i >= 0; --i)
+                for (int i = shapes.Count - 1; i >= 0; --i)
                 {
                     if (shapes[i].isPointBelong(p))
                     {
                         clickedShape = i;
                         break;
                     }
+                }
+                switch (clickedShape)
+                {
+                    // click khong trung
+                    case -1:
+                        pictureBoxMain.Image = bitmap;
+                        break;
+                    // click trung
+                    default:
+                        bitmap_temp = (Bitmap)bitmap.Clone();
+                        pictureBoxMain.Image = bitmap_temp;
+                        MyShape myShape = shapes[clickedShape].Clone();
+                        myShape.penAttr.color = Color.Blue;
+                        myShape.draw(bitmap_temp);
+                        break;
                 }
             }
         }
@@ -203,6 +218,7 @@ namespace _1612180_1612677
                         new PenAttr(Color.Red, DashStyle.Solid, 1),
                         p_start, p_end);
                     drawWrap(myLine, bitmap);
+                    shapes.Add(myLine);
                     break;
 
                 case RECTANGLE_SHAPE:
@@ -212,6 +228,7 @@ namespace _1612180_1612677
                         new PenAttr(Color.Red, DashStyle.Solid, 1),
                         p_start, p_end);
                     drawWrap(myRectangle, bitmap);
+                    shapes.Add(myRectangle);
                     break;
 
                 default:

@@ -38,7 +38,7 @@
             this.buttonDrawLine = new System.Windows.Forms.Button();
             this.pictureBoxMain = new System.Windows.Forms.PictureBox();
             this.buttonClearAll = new System.Windows.Forms.Button();
-            this.buttonClick = new System.Windows.Forms.Button();
+            this.buttonSelect = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMain)).BeginInit();
             this.SuspendLayout();
@@ -130,22 +130,22 @@
             this.buttonClearAll.UseVisualStyleBackColor = true;
             this.buttonClearAll.Click += new System.EventHandler(this.buttonClearAll_Click);
             // 
-            // buttonClick
+            // buttonSelect
             // 
-            this.buttonClick.Location = new System.Drawing.Point(407, 1);
-            this.buttonClick.Name = "buttonClick";
-            this.buttonClick.Size = new System.Drawing.Size(75, 23);
-            this.buttonClick.TabIndex = 5;
-            this.buttonClick.Text = "Click";
-            this.buttonClick.UseVisualStyleBackColor = true;
-            this.buttonClick.Click += new System.EventHandler(this.buttonClick_Click);
+            this.buttonSelect.Location = new System.Drawing.Point(407, 1);
+            this.buttonSelect.Name = "buttonSelect";
+            this.buttonSelect.Size = new System.Drawing.Size(75, 23);
+            this.buttonSelect.TabIndex = 5;
+            this.buttonSelect.Text = "Select";
+            this.buttonSelect.UseVisualStyleBackColor = true;
+            this.buttonSelect.Click += new System.EventHandler(this.buttonSelect_Click);
             // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(680, 432);
-            this.Controls.Add(this.buttonClick);
+            this.Controls.Add(this.buttonSelect);
             this.Controls.Add(this.buttonClearAll);
             this.Controls.Add(this.pictureBoxMain);
             this.Controls.Add(this.buttonDrawLine);
@@ -175,7 +175,7 @@
         private System.Windows.Forms.Button buttonDrawLine;
         private System.Windows.Forms.PictureBox pictureBoxMain;
         private System.Windows.Forms.Button buttonClearAll;
-        private System.Windows.Forms.Button buttonClick;
+        private System.Windows.Forms.Button buttonSelect;
     }
 }
 
