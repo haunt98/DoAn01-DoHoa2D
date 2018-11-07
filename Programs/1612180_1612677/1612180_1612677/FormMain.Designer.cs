@@ -47,6 +47,7 @@
             this.numericUpDownPenWidth = new System.Windows.Forms.NumericUpDown();
             this.comboBoxDashStyle = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
+            this.buttonReloadAfterChange = new System.Windows.Forms.Button();
             this.menuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMain)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPenWidth)).BeginInit();
@@ -163,7 +164,7 @@
             // 
             // buttonChooseColor
             // 
-            this.buttonChooseColor.Location = new System.Drawing.Point(182, 69);
+            this.buttonChooseColor.Location = new System.Drawing.Point(142, 65);
             this.buttonChooseColor.Name = "buttonChooseColor";
             this.buttonChooseColor.Size = new System.Drawing.Size(82, 23);
             this.buttonChooseColor.TabIndex = 7;
@@ -174,7 +175,7 @@
             // buttonShowColor
             // 
             this.buttonShowColor.Enabled = false;
-            this.buttonShowColor.Location = new System.Drawing.Point(276, 69);
+            this.buttonShowColor.Location = new System.Drawing.Point(239, 69);
             this.buttonShowColor.Name = "buttonShowColor";
             this.buttonShowColor.Size = new System.Drawing.Size(75, 23);
             this.buttonShowColor.TabIndex = 8;
@@ -183,7 +184,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(366, 74);
+            this.label1.Location = new System.Drawing.Point(320, 74);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(57, 13);
             this.label1.TabIndex = 9;
@@ -191,7 +192,7 @@
             // 
             // numericUpDownPenWidth
             // 
-            this.numericUpDownPenWidth.Location = new System.Drawing.Point(429, 69);
+            this.numericUpDownPenWidth.Location = new System.Drawing.Point(383, 72);
             this.numericUpDownPenWidth.Minimum = new decimal(new int[] {
             1,
             0,
@@ -210,7 +211,7 @@
             // 
             this.comboBoxDashStyle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxDashStyle.FormattingEnabled = true;
-            this.comboBoxDashStyle.Location = new System.Drawing.Point(576, 66);
+            this.comboBoxDashStyle.Location = new System.Drawing.Point(515, 71);
             this.comboBoxDashStyle.Name = "comboBoxDashStyle";
             this.comboBoxDashStyle.Size = new System.Drawing.Size(91, 21);
             this.comboBoxDashStyle.TabIndex = 11;
@@ -218,17 +219,27 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(512, 71);
+            this.label2.Location = new System.Drawing.Point(451, 76);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(58, 13);
             this.label2.TabIndex = 12;
             this.label2.Text = "Dash Style";
+            // 
+            // buttonReloadAfterChange
+            // 
+            this.buttonReloadAfterChange.Location = new System.Drawing.Point(612, 69);
+            this.buttonReloadAfterChange.Name = "buttonReloadAfterChange";
+            this.buttonReloadAfterChange.Size = new System.Drawing.Size(118, 23);
+            this.buttonReloadAfterChange.TabIndex = 13;
+            this.buttonReloadAfterChange.Text = "Reload After Change";
+            this.buttonReloadAfterChange.UseVisualStyleBackColor = true;
             // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(788, 432);
+            this.Controls.Add(this.buttonReloadAfterChange);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.comboBoxDashStyle);
             this.Controls.Add(this.numericUpDownPenWidth);
@@ -277,6 +288,7 @@
         private System.Windows.Forms.NumericUpDown numericUpDownPenWidth;
         private System.Windows.Forms.ComboBox comboBoxDashStyle;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Button buttonReloadAfterChange;
     }
 }
 

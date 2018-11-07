@@ -31,20 +31,23 @@ namespace _1612180_1612677
         // shapes[clickedShape] la hinh dang bi click
         //private int clickedShape = -1;
 
+        // hien thu tu shape dang nhan
+        private int clickedShape = -1;
+
         // trai qua su kien MouseDown chua
         private bool isMouseDown = false;
 
         // trai qua su kien MouseMove chua
         private bool isMouseMove = false;
 
+        // luu danh sach cac hinh
+        private List<MyShape> myShapes = new List<MyShape>();
+
         // p_end luu vi tri khi MouseUp
         private Point p_end;
 
         // p_start luu vi tri khi MouseDown
         private Point p_start;
-
-        // luu danh sach cac hinh
-        private List<MyShape> myShapes = new List<MyShape>();
 
         private int state = NO_STATE;
 
@@ -110,14 +113,13 @@ namespace _1612180_1612677
             }
         }
 
-        private void loadComboBoxDashStyle()
+        private void drawShapes(Bitmap _bitmap)
         {
-            comboBoxDashStyle.Items.Add("Dash");
-            comboBoxDashStyle.Items.Add("DashDot");
-            comboBoxDashStyle.Items.Add("DashDotDot");
-            comboBoxDashStyle.Items.Add("Dot");
-            comboBoxDashStyle.Items.Add("Solid");
-            comboBoxDashStyle.SelectedIndex = 0;
+            foreach (MyShape myShape in myShapes)
+            {
+                myShape.draw(_bitmap);
+            }
+            pictureBoxMain.Invalidate();
         }
 
         // wrap draw and pictureBox Invalidate
@@ -138,6 +140,43 @@ namespace _1612180_1612677
 
             // load ComboBox
             loadComboBoxDashStyle();
+
+            // default color dialog
+            colorDialog.Color = Color.Black;
+            buttonShowColor.BackColor = colorDialog.Color;
+        }
+
+        private void loadComboBoxDashStyle()
+        {
+            comboBoxDashStyle.Items.Add("Dash");
+            comboBoxDashStyle.Items.Add("DashDot");
+            comboBoxDashStyle.Items.Add("DashDotDot");
+            comboBoxDashStyle.Items.Add("Dot");
+            comboBoxDashStyle.Items.Add("Solid");
+            comboBoxDashStyle.SelectedIndex = comboBoxDashStyle.Items.IndexOf("Solid");
+        }
+
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            myShapes.Clear();
+            MyShape myshape = null;
+            String filepath = @"D:\\text.txt";
+            String[] lines = System.IO.File.ReadAllLines(filepath);
+            foreach (string line in lines)
+            {
+                if (line[0] == '1')
+                {
+                    myshape = new MyLine();
+                    myshape.ReadDataFromString(line);
+                }
+                else if (line[0] == '2')
+                {
+                    myshape = new MyRectangle();
+                    myshape.ReadDataFromString(line);
+                }
+                myShapes.Add(myshape);
+            }
+            //drawShapes(bitmap);
         }
 
         // MouseClick xay ra khi click va tha cung 1 object
@@ -146,8 +185,8 @@ namespace _1612180_1612677
             if (state == SELECT_STATE)
             {
                 Point p = e.Location;
-                // hien thu tu shape dang nhan
-                int clickedShape = -1;
+
+                clickedShape = -1;
                 for (int i = myShapes.Count - 1; i >= 0; --i)
                 {
                     if (myShapes[i].isPointBelong(p))
@@ -215,7 +254,7 @@ namespace _1612180_1612677
                     pictureBoxMain.Image = bitmap_temp;
                     p_end = e.Location;
                     MyShape myLine = new MyLine(
-                        new PenAttr(Color.Red, DashStyle.Solid, 1),
+                        getPenAttr(),
                         p_start, p_end);
                     drawWrap(myLine, bitmap_temp);
                     break;
@@ -225,7 +264,7 @@ namespace _1612180_1612677
                     pictureBoxMain.Image = bitmap_temp;
                     p_end = e.Location;
                     MyShape myRectangle = new MyRectangle(
-                        new PenAttr(Color.Red, DashStyle.Solid, 1),
+                        getPenAttr(),
                         p_start, p_end);
                     drawWrap(myRectangle, bitmap_temp);
                     break;
@@ -235,7 +274,7 @@ namespace _1612180_1612677
                     pictureBoxMain.Image = bitmap_temp;
                     p_end = e.Location;
                     MyShape myEllipse = new MyEllipse(
-                        new PenAttr(Color.Red, DashStyle.Solid, 1),
+                        getPenAttr(),
                         p_start, p_end);
                     drawWrap(myEllipse, bitmap_temp);
                     break;
@@ -265,7 +304,7 @@ namespace _1612180_1612677
                     pictureBoxMain.Image = bitmap;
                     p_end = e.Location;
                     MyShape myLine = new MyLine(
-                        new PenAttr(Color.Red, DashStyle.Solid, 1),
+                        getPenAttr(),
                         p_start, p_end);
                     drawWrap(myLine, bitmap);
                     myShapes.Add(myLine);
@@ -275,7 +314,7 @@ namespace _1612180_1612677
                     pictureBoxMain.Image = bitmap;
                     p_end = e.Location;
                     MyShape myRectangle = new MyRectangle(
-                        new PenAttr(Color.Red, DashStyle.Solid, 1),
+                        getPenAttr(),
                         p_start, p_end);
                     drawWrap(myRectangle, bitmap);
                     myShapes.Add(myRectangle);
@@ -285,7 +324,7 @@ namespace _1612180_1612677
                     pictureBoxMain.Image = bitmap;
                     p_end = e.Location;
                     MyShape myEllipse = new MyEllipse(
-                        new PenAttr(Color.Red, DashStyle.Solid, 1),
+                        getPenAttr(),
                         p_start, p_end);
                     drawWrap(myEllipse, bitmap);
                     myShapes.Add(myEllipse);
@@ -294,38 +333,6 @@ namespace _1612180_1612677
                 default:
                     break;
             }
-        }
-
-        private void drawShapes(Bitmap _bitmap)
-        {
-            foreach (MyShape myShape in myShapes)
-            {
-                myShape.draw(_bitmap);
-            }
-            pictureBoxMain.Invalidate();
-        }
-
-        private void openToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            myShapes.Clear();
-            MyShape myshape = null;
-            String filepath = @"D:\\text.txt";
-            String[] lines = System.IO.File.ReadAllLines(filepath);
-            foreach (string line in lines)
-            {
-                if (line[0] == '1')
-                {
-                    myshape = new MyLine();
-                    myshape.ReadDataFromString(line);
-                }
-                else if (line[0] == '2')
-                {
-                    myshape = new MyRectangle();
-                    myshape.ReadDataFromString(line);
-                }
-                myShapes.Add(myshape);
-            }
-            //drawShapes(bitmap);
         }
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
@@ -341,6 +348,42 @@ namespace _1612180_1612677
                 sWriter.Flush();
             }
             fs.Close();
+        }
+
+        private PenAttr getPenAttr()
+        {
+            PenAttr penAttr = null;
+            switch (comboBoxDashStyle.SelectedItem.ToString())
+            {
+                case "Dash":
+                    penAttr = new PenAttr(colorDialog.Color, DashStyle.Dash,
+                        Convert.ToInt32(Math.Round(numericUpDownPenWidth.Value, 0)));
+                    break;
+
+                case "DashDot":
+                    penAttr = new PenAttr(colorDialog.Color, DashStyle.DashDot,
+                        Convert.ToInt32(Math.Round(numericUpDownPenWidth.Value, 0)));
+                    break;
+
+                case "DashDotDot":
+                    penAttr = new PenAttr(colorDialog.Color, DashStyle.DashDotDot,
+                        Convert.ToInt32(Math.Round(numericUpDownPenWidth.Value, 0)));
+                    break;
+
+                case "Dot":
+                    penAttr = new PenAttr(colorDialog.Color, DashStyle.Dot,
+                        Convert.ToInt32(Math.Round(numericUpDownPenWidth.Value, 0)));
+                    break;
+
+                case "Solid":
+                    penAttr = new PenAttr(colorDialog.Color, DashStyle.Solid,
+                        Convert.ToInt32(Math.Round(numericUpDownPenWidth.Value, 0)));
+                    break;
+
+                default:
+                    break;
+            }
+            return penAttr;
         }
     }
 }
