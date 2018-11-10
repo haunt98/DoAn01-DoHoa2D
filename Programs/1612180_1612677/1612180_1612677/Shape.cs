@@ -18,7 +18,13 @@ namespace _1612180_1612677
 
         public BrushAttr(BrushAttr brushAttr)
         {
-            if (brushAttr != null)
+            // mac dinh la mau trang
+            if (brushAttr == null)
+            {
+                color = Color.White;
+                typeBrush = "SolidBrush";
+            }
+            else
             {
                 color = brushAttr.color;
                 typeBrush = brushAttr.typeBrush;
@@ -41,6 +47,8 @@ namespace _1612180_1612677
             mostLeft = new Point(Math.Min(p_start.X, p_end.X), Math.Min(p_start.Y, p_end.Y));
             width = Math.Abs(p_start.X - p_end.X);
             height = Math.Abs(p_start.Y - p_end.Y);
+            // mac dinh to mau trang
+            brushAttr = new BrushAttr(Color.White, "SolidBrush");
         }
 
         public MyEllipse() :
@@ -55,6 +63,7 @@ namespace _1612180_1612677
             mostLeft = new Point(myEllipse.mostLeft.X, myEllipse.mostLeft.Y);
             width = myEllipse.width;
             height = myEllipse.height;
+            brushAttr = new BrushAttr(myEllipse.brushAttr);
         }
 
         public override MyShape Clone()
@@ -135,6 +144,31 @@ namespace _1612180_1612677
             {
                 path.AddEllipse(new Rectangle(mostLeft, new Size(width, height)));
                 return path.IsVisible(p);
+            }
+        }
+
+        public override bool canFill()
+        {
+            return true;
+        }
+
+        public override void fill(Bitmap _bitmap)
+        {
+            if (brushAttr == null || !canFill())
+                return;
+            switch (brushAttr.typeBrush)
+            {
+                case "SolidBrush":
+                    using (Graphics graphics = Graphics.FromImage(_bitmap))
+                    using (Brush brush = new SolidBrush(brushAttr.color))
+                    {
+                        Rectangle rectangle = new Rectangle(mostLeft, new Size(width, height));
+                        graphics.FillEllipse(brush, rectangle);
+                    }
+                    break;
+
+                default:
+                    break;
             }
         }
     }
@@ -257,6 +291,7 @@ namespace _1612180_1612677
             mostLeft = new Point(myRectangle.mostLeft.X, myRectangle.mostLeft.Y);
             width = myRectangle.width;
             height = myRectangle.height;
+            brushAttr = new BrushAttr(myRectangle.brushAttr);
         }
 
         public MyRectangle() :
@@ -488,31 +523,15 @@ namespace _1612180_1612677
         public bool isPointBelong(Point p)
         {
             List<Point> ps = new List<Point>();
-            // XXXXX
-            // XXXXX
-            // XXpXX
-            // XXXXX
-            // XXXXX
-            ps.Add(new Point(p.X - 2, p.Y - 2));
-            ps.Add(new Point(p.X - 2, p.Y - 1));
-            ps.Add(new Point(p.X - 2, p.Y));
-            ps.Add(new Point(p.X - 2, p.Y + 1));
-            ps.Add(new Point(p.X - 2, p.Y + 2));
-            ps.Add(new Point(p.X - 1, p.Y - 2));
-            ps.Add(new Point(p.X - 1, p.Y - 1));
-            ps.Add(new Point(p.X - 1, p.Y));
-            ps.Add(new Point(p.X - 1, p.Y + 1));
-            ps.Add(new Point(p.X - 1, p.Y + 2));
-            ps.Add(new Point(p.X, p.Y - 2));
-            ps.Add(new Point(p.X, p.Y - 1));
-            ps.Add(new Point(p.X, p.Y));
-            ps.Add(new Point(p.X, p.Y + 1));
-            ps.Add(new Point(p.X, p.Y + 2));
-            ps.Add(new Point(p.X + 1, p.Y - 2));
-            ps.Add(new Point(p.X + 1, p.Y - 1));
-            ps.Add(new Point(p.X + 1, p.Y));
-            ps.Add(new Point(p.X + 1, p.Y + 1));
-            ps.Add(new Point(p.X + 1, p.Y + 2));
+            // lay nhung pixel xung quanh
+            int clickRange = 5;
+            for (int i = -clickRange; i <= clickRange; ++i)
+            {
+                for (int j = -clickRange; j <= clickRange; ++j)
+                {
+                    ps.Add(new Point(p.X + i, p.Y + j));
+                }
+            }
 
             bool flag = false;
             foreach (Point temp_p in ps)

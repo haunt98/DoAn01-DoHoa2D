@@ -197,6 +197,7 @@
             0,
             0,
             0});
+            this.numericUpDownPenWidth.ValueChanged += new System.EventHandler(this.reloadPenWidthDashStyle);
             // 
             // comboBoxDashStyle
             // 
@@ -206,6 +207,7 @@
             this.comboBoxDashStyle.Name = "comboBoxDashStyle";
             this.comboBoxDashStyle.Size = new System.Drawing.Size(91, 21);
             this.comboBoxDashStyle.TabIndex = 11;
+            this.comboBoxDashStyle.SelectedIndexChanged += new System.EventHandler(this.reloadPenWidthDashStyle);
             // 
             // label2
             // 

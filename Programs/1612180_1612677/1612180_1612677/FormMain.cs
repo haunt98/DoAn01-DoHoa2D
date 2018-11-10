@@ -557,5 +557,42 @@ namespace _1612180_1612677
                 }
             }
         }
+
+        private void reloadPenWidthDashStyle(object sender, EventArgs e)
+        {
+            if (state == SELECT_STATE)
+            {
+                int clickedShape = clickedInsideShape > clickedOutlineShape
+                    ? clickedInsideShape : clickedOutlineShape;
+
+                // chua click shape nao ca
+                if (clickedShape == -1)
+                    return;
+
+                // click vien cua shape
+                if (clickedShape == clickedOutlineShape)
+                {
+                    myShapes[clickedShape].penAttr = getPenAttr();
+
+                    // tao bitmap temp va reset bitmap
+                    Bitmap btemp = (Bitmap)bitmap.Clone();
+                    clearAllResetBitmap();
+                    bitmap_temp = (Bitmap)btemp.Clone();
+                    pictureBoxMain.Image = bitmap_temp;
+
+                    // ve trong bitmap real
+                    DrawAndFillShapes(bitmap);
+
+                    // ve trong bitmap temp
+                    // dau tien fill, sau do draw vien, sau do draw edge
+                    MyShape myShape = myShapes[clickedShape].Clone();
+                    fillWrap(myShape, bitmap_temp);
+                    drawWrap(myShape, bitmap_temp);
+                    myShape.drawEdgePoints(bitmap_temp);
+
+                    pictureBoxMain.Invalidate();
+                }
+            }
+        }
     }
 }
