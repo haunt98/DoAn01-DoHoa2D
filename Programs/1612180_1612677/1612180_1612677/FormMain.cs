@@ -79,7 +79,8 @@ namespace _1612180_1612677
             if (state != SELECT_STATE || selectShape.Count == 0)
                 return;
 
-            foreach (int select_temp in selectShape)
+            // sap xep selectShape theo giam dan roi moi xoa
+            foreach (int select_temp in selectShape.OrderByDescending(i => i))
             {
                 myShapes.RemoveAt(select_temp);
             }
@@ -437,6 +438,29 @@ namespace _1612180_1612677
             // van con mouse down
             else
             {
+                // nhung hinh ve nhieu diem
+                // nhu da giac, hinh binh hanh
+                // can ve them luc mouse down nhung chua hoan thanh da giac
+                // ve tren bitmap_temp
+                bitmap_temp = (Bitmap)bitmap_primary.Clone();
+                pictureBoxMain.Image = bitmap_temp;
+
+                // tao shape
+                MyShape myShape = null;
+                switch (state)
+                {
+                    case POLYGON_STATE:
+                        myShape = new MyPolygon(getPenAttr(), clickedPoints);
+                        break;
+
+                    default:
+                        break;
+                }
+                if (myShape != null)
+                {
+                    myShape.draw(bitmap_temp, pictureBoxMain);
+                    myShape.drawEdgePoints(bitmap_temp, pictureBoxMain);
+                }
                 isMouseDown = true;
             }
         }
