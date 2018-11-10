@@ -14,7 +14,6 @@ namespace _1612180_1612677
         private int height;
         private Point mostLeft;
         private int width;
-        public FontAttr fontAttr { get; set; }
 
         public MyCharater() : base()
         {
@@ -36,6 +35,8 @@ namespace _1612180_1612677
             height = myCharacter.height;
             fontAttr = new FontAttr(myCharacter.fontAttr);
         }
+
+        public FontAttr fontAttr { get; set; }
 
         private void getHeightAndWidthOfChar(Graphics graphics, Font font)
         {
@@ -77,6 +78,10 @@ namespace _1612180_1612677
                 graphics.DrawString(fontAttr.text, font, brush, mostLeft);
                 pictureBox.Invalidate();
             }
+        }
+
+        public override void drawInsidePoint(Bitmap _bitmap, Point p, PictureBox pictureBox)
+        {
         }
 
         public override List<Point> getEdgePoints()
@@ -148,10 +153,6 @@ namespace _1612180_1612677
             result += LengthOfFont(fontAttr.fontFamily).ToString() + " ";
             result += fontAttr.fontFamily;
             return result;
-        }
-
-        public override void drawInsidePoint(Bitmap _bitmap, Point p, PictureBox pictureBox)
-        {
         }
     }
 
@@ -294,6 +295,80 @@ namespace _1612180_1612677
         }
     }
 
+    public class MyHinhBinhHanh : MyShape
+    {
+        private List<Point> points;
+
+        public MyHinhBinhHanh(PenAttr _penAttr, List<Point> _points) :
+            base(_penAttr)
+        {
+            points = new List<Point>(_points);
+        }
+
+        public MyHinhBinhHanh() :
+            base()
+        {
+            points = new List<Point>();
+        }
+
+        public MyHinhBinhHanh(MyHinhBinhHanh myHinhBinhHanh) :
+            base(myHinhBinhHanh)
+        {
+            points = new List<Point>(myHinhBinhHanh.points);
+        }
+
+        public static bool isClickedPointsCanDrawShape(List<Point> _points)
+        {
+            // hinh binh hanh ve bang 3 diem
+            return _points.Count == 3;
+        }
+
+        public override MyShape Clone()
+        {
+            return new MyHinhBinhHanh(this);
+        }
+
+        public override void draw(Bitmap _bitmap, PictureBox pictureBox)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void drawEdgePoints(Bitmap _bitmap, PictureBox pictureBox)
+        {
+            base.drawEdgePoints(_bitmap, pictureBox);
+        }
+
+        public override void fill(Bitmap _bitmap, PictureBox pictureBox)
+        {
+            base.fill(_bitmap, pictureBox);
+        }
+
+        public override List<Point> getEdgePoints()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool isPointBelongPrecisely(Point p)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool isPointInsidePrecisly(Point p)
+        {
+            return base.isPointInsidePrecisly(p);
+        }
+
+        public override void ReadData(string data)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override string WriteData()
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     public class MyLine : MyShape
     {
         private Point p_end;
@@ -403,7 +478,7 @@ namespace _1612180_1612677
         public MyPolygon() :
             base()
         {
-            points = null;
+            points = new List<Point>();
         }
 
         public MyPolygon(MyPolygon myPolygon) :
