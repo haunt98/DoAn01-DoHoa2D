@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Windows.Forms;
 
 namespace _1612180_1612677
 {
@@ -35,20 +36,175 @@ namespace _1612180_1612677
         public String typeBrush { get; set; }
     }
 
+    public class MyCharater : MyShape
+    {
+        private String font;
+        private int height;
+        private Point mostLeft;
+        private int size;
+        private String text;
+        private int width;
+
+        public MyCharater() : base()
+        {
+            mostLeft = Point.Empty;
+        }
+
+        public MyCharater(PenAttr _penAttr, String _text, List<Point> _points, String _font, int _size) :
+            base(_penAttr)
+        {
+            mostLeft = new Point(_points[0].X, _points[0].Y);
+            text = _text;
+            font = _font;
+            size = _size;
+        }
+
+        public MyCharater(MyCharater myCharactor) :
+            base(myCharactor)
+        {
+            mostLeft = new Point(myCharactor.mostLeft.X, myCharactor.mostLeft.Y);
+            font = myCharactor.font;
+            size = myCharactor.size;
+        }
+
+        private void getHeightAndWidthOfChar(Graphics graphics, String _text, Font _font)
+        {
+            //get height and width of text
+            width = (int)graphics.MeasureString(text, _font).Width;
+            height = (int)graphics.MeasureString(text, _font).Height;
+        }
+
+        private int LengthOfFont(string font)
+        {
+            if (font.IndexOf(' ') >= 0)
+            {
+                String[] result = font.Split(' ');
+                return result.Length;
+            }
+            return 0;
+        }
+
+        public static bool isClickedPointsCanDrawShape(List<Point> _points)
+        {
+            return _points.Count == 1;
+        }
+
+        public override MyShape Clone()
+        {
+            return new MyCharater(this);
+        }
+
+        public override void draw(Bitmap _bitmap, PictureBox pictureBox)
+        {
+            using (Graphics graphics = Graphics.FromImage(_bitmap))
+            using (Pen pen = new Pen(base.penAttr.color, base.penAttr.width))
+            {
+                pen.DashStyle = base.penAttr.dashStyle;
+                Font f = new Font(font, size, FontStyle.Regular);
+                getHeightAndWidthOfChar(graphics, text, f);
+                //draw
+                graphics.DrawString(text, f, new SolidBrush(base.penAttr.color), mostLeft);
+                pictureBox.Invalidate();
+            }
+        }
+
+        public override List<Point> getEdgePoints()
+        {
+            List<Point> edgePoints = new List<Point>();
+            edgePoints.Add(new Point(mostLeft.X, mostLeft.Y));
+            return edgePoints;
+        }
+
+        public void getHeightAndWidth(Bitmap bitmap)
+        {
+            Graphics graphics = Graphics.FromImage(bitmap);
+            Font f = new Font(font, size, FontStyle.Regular);
+            width = (int)graphics.MeasureString(text, f).Width;
+            height = (int)graphics.MeasureString(text, f).Height;
+        }
+
+        public override bool isPointBelongPrecisely(Point p)
+        {
+            // mac dinh cac vien khong thuoc
+            return false;
+        }
+
+        public override bool isPointInsidePrecisly(Point p)
+        {
+            using (GraphicsPath path = new GraphicsPath())
+            {
+                path.AddRectangle(new Rectangle(mostLeft, new Size(width, height)));
+                return path.IsVisible(p);
+            }
+        }
+
+        public override void ReadData(string data)
+        {
+            // in ra string co dang "4 x y text size height  width color dashStyle width font"
+            String[] result = data.Split(' ');
+            mostLeft = new Point(Int32.Parse(result[1]), Int32.Parse(result[2]));
+            text = result[3];
+            size = Int32.Parse(result[4]);
+            height = Int32.Parse(result[5]);
+            width = Int32.Parse(result[6]);
+
+            // doc du lieu penAttr tu file
+            Color colorShape = ConvertColorFromString(result[7]);
+            DashStyle dashStyleFromFile = ConvertDashStypeFromString(result[8]);
+            int widthFromFile = Int32.Parse(result[9]);
+
+            for (int i = 0; i < Int32.Parse(result[10]); i++)
+            {
+                font += result[11 + i] + " ";
+            }
+
+            font = font.Remove(font.Length - 1);
+            penAttr = new PenAttr(colorShape, dashStyleFromFile, widthFromFile);
+        }
+
+        public void SetValueOfChar(String _text, String _font, int _size)
+        {
+            text = _text;
+            font = _font;
+            size = _size;
+        }
+
+        public override string WriteData()
+        {
+            // in ra string co dang "4 x y text size height  width color  dashStyle width font"
+            String result = "4 ";
+            result += mostLeft.X.ToString() + " ";
+            result += mostLeft.Y.ToString() + " ";
+            result += text + " ";
+            result += size + " ";
+            result += height.ToString() + " ";
+            result += width.ToString() + " ";
+            result += penAttr.color.ToArgb().ToString() + " " +
+                    penAttr.dashStyle.ToString() + " " +
+                    penAttr.width.ToString() + " ";
+            if (font == "")
+            {
+                font = ".";
+            }
+            result += LengthOfFont(font).ToString() + " ";
+            result += font;
+            return result;
+        }
+    }
+
     public class MyEllipse : MyShape
     {
         private int height;
         private Point mostLeft;
         private int width;
 
-        public MyEllipse(PenAttr _penAttr, Point p_start, Point p_end) :
+        public MyEllipse(PenAttr _penAttr, List<Point> _points) :
             base(_penAttr)
         {
-            mostLeft = new Point(Math.Min(p_start.X, p_end.X), Math.Min(p_start.Y, p_end.Y));
-            width = Math.Abs(p_start.X - p_end.X);
-            height = Math.Abs(p_start.Y - p_end.Y);
-            // mac dinh to mau trang
-            brushAttr = new BrushAttr(Color.White, "SolidBrush");
+            mostLeft = new Point(Math.Min(_points[0].X, _points[1].X),
+                Math.Min(_points[0].Y, _points[1].Y));
+            width = Math.Abs(_points[0].X - _points[1].X);
+            height = Math.Abs(_points[0].Y - _points[1].Y);
         }
 
         public MyEllipse() :
@@ -63,7 +219,11 @@ namespace _1612180_1612677
             mostLeft = new Point(myEllipse.mostLeft.X, myEllipse.mostLeft.Y);
             width = myEllipse.width;
             height = myEllipse.height;
-            brushAttr = new BrushAttr(myEllipse.brushAttr);
+        }
+
+        public static bool isClickedPointsCanDrawShape(List<Point> _points)
+        {
+            return _points.Count == 2;
         }
 
         public override MyShape Clone()
@@ -71,16 +231,36 @@ namespace _1612180_1612677
             return new MyEllipse(this);
         }
 
-        public override void draw(Bitmap _bitmap)
+        public override void draw(Bitmap _bitmap, PictureBox pictureBox)
+        {
+            using (Graphics graphics = Graphics.FromImage(_bitmap))
+            using (Pen pen = new Pen(penAttr.color, penAttr.width))
+            {
+                Rectangle rectangle = new Rectangle(mostLeft, new Size(width, height));
+                pen.DashStyle = penAttr.dashStyle;
+                graphics.DrawEllipse(pen, rectangle);
+                pictureBox.Invalidate();
+            }
+        }
+
+        public override void fill(Bitmap _bitmap, PictureBox pictureBox)
         {
             using (Graphics graphics = Graphics.FromImage(_bitmap))
             {
-                Rectangle rectangle = new Rectangle(mostLeft, new Size(width, height));
-                using (Pen pen = new Pen(penAttr.color, penAttr.width))
+                switch (brushAttr.typeBrush)
                 {
-                    pen.DashStyle = penAttr.dashStyle;
-                    graphics.DrawEllipse(pen, rectangle);
+                    case "SolidBrush":
+                        using (Brush brush = new SolidBrush(brushAttr.color))
+                        {
+                            Rectangle rectangle = new Rectangle(mostLeft, new Size(width, height));
+                            graphics.FillEllipse(brush, rectangle);
+                        }
+                        break;
+
+                    default:
+                        break;
                 }
+                pictureBox.Invalidate();
             }
         }
 
@@ -97,13 +277,20 @@ namespace _1612180_1612677
         public override bool isPointBelongPrecisely(Point p)
         {
             using (GraphicsPath path = new GraphicsPath())
+            using (Pen pen = new Pen(penAttr.color, penAttr.width))
             {
                 path.AddEllipse(new Rectangle(mostLeft, new Size(width, height)));
-                using (Pen pen = new Pen(penAttr.color, penAttr.width))
-                {
-                    pen.DashStyle = penAttr.dashStyle;
-                    return path.IsOutlineVisible(p, pen);
-                }
+                pen.DashStyle = penAttr.dashStyle;
+                return path.IsOutlineVisible(p, pen);
+            }
+        }
+
+        public override bool isPointInsidePrecisly(Point p)
+        {
+            using (GraphicsPath path = new GraphicsPath())
+            {
+                path.AddEllipse(new Rectangle(mostLeft, new Size(width, height)));
+                return path.IsVisible(p);
             }
         }
 
@@ -142,53 +329,12 @@ namespace _1612180_1612677
                 brushAttr.typeBrush.ToString();
             return result;
         }
-
-        public override bool isPointInsidePrecisly(Point p)
-        {
-            using (GraphicsPath path = new GraphicsPath())
-            {
-                path.AddEllipse(new Rectangle(mostLeft, new Size(width, height)));
-                return path.IsVisible(p);
-            }
-        }
-
-        public override bool canFill()
-        {
-            return true;
-        }
-
-        public override void fill(Bitmap _bitmap)
-        {
-            if (brushAttr == null || !canFill())
-                return;
-            switch (brushAttr.typeBrush)
-            {
-                case "SolidBrush":
-                    using (Graphics graphics = Graphics.FromImage(_bitmap))
-                    using (Brush brush = new SolidBrush(brushAttr.color))
-                    {
-                        Rectangle rectangle = new Rectangle(mostLeft, new Size(width, height));
-                        graphics.FillEllipse(brush, rectangle);
-                    }
-                    break;
-
-                default:
-                    break;
-            }
-        }
     }
 
     public class MyLine : MyShape
     {
         private Point p_end;
         private Point p_start;
-
-        public MyLine(PenAttr _penAttr, Point _p_start, Point _p_end) :
-            base(_penAttr)
-        {
-            p_start = new Point(_p_start.X, _p_start.Y);
-            p_end = new Point(_p_end.X, _p_end.Y);
-        }
 
         public MyLine() :
             base()
@@ -204,20 +350,31 @@ namespace _1612180_1612677
             p_end = new Point(myLine.p_end.X, myLine.p_end.Y);
         }
 
+        public MyLine(PenAttr _penAttr, List<Point> _points) :
+            base(_penAttr)
+        {
+            p_start = new Point(_points[0].X, _points[0].Y);
+            p_end = new Point(_points[1].X, _points[1].Y);
+        }
+
+        public static bool isClickedPointsCanDrawShape(List<Point> _points)
+        {
+            return _points.Count == 2;
+        }
+
         public override MyShape Clone()
         {
             return new MyLine(this);
         }
 
-        public override void draw(Bitmap _bitmap)
+        public override void draw(Bitmap _bitmap, PictureBox pictureBox)
         {
             using (Graphics graphics = Graphics.FromImage(_bitmap))
+            using (Pen pen = new Pen(penAttr.color, penAttr.width))
             {
-                using (Pen pen = new Pen(penAttr.color, penAttr.width))
-                {
-                    pen.DashStyle = penAttr.dashStyle;
-                    graphics.DrawLine(pen, p_start, p_end);
-                }
+                pen.DashStyle = penAttr.dashStyle;
+                graphics.DrawLine(pen, p_start, p_end);
+                pictureBox.Invalidate();
             }
         }
 
@@ -233,13 +390,11 @@ namespace _1612180_1612677
         {
             // su dung graphics path
             using (GraphicsPath path = new GraphicsPath())
+            using (Pen pen = new Pen(penAttr.color, penAttr.width))
             {
                 path.AddLine(p_start, p_end);
-                using (Pen pen = new Pen(penAttr.color, penAttr.width))
-                {
-                    pen.DashStyle = penAttr.dashStyle;
-                    return path.IsOutlineVisible(p, pen);
-                }
+                pen.DashStyle = penAttr.dashStyle;
+                return path.IsOutlineVisible(p, pen);
             }
         }
 
@@ -272,21 +427,152 @@ namespace _1612180_1612677
         }
     }
 
+    public class MyPolygon : MyShape
+    {
+        private List<Point> points;
+
+        public MyPolygon(PenAttr _penAttr, List<Point> _points) :
+            base(_penAttr)
+        {
+            points = new List<Point>(_points);
+        }
+
+        public MyPolygon() :
+            base()
+        {
+            points = null;
+        }
+
+        public MyPolygon(MyPolygon myPolygon) :
+            base(myPolygon)
+        {
+            points = new List<Point>(myPolygon.points);
+        }
+
+        public static bool isClickedPointsCanDrawShape(List<Point> _points)
+        {
+            // it nhat 2 diem
+            // da giac hoan thanh khi diem dau va diem cuoi trung nhau
+            return _points.Count >= 2 && isPointEqual(_points[_points.Count - 1], _points[0]);
+        }
+
+        public override MyShape Clone()
+        {
+            return new MyPolygon(this);
+        }
+
+        public override void draw(Bitmap _bitmap, PictureBox pictureBox)
+        {
+            // so diem phai >= 2
+            if (points.Count < 2)
+                return;
+            using (Graphics graphics = Graphics.FromImage(_bitmap))
+            using (Pen pen = new Pen(penAttr.color, penAttr.width))
+            {
+                pen.DashStyle = penAttr.dashStyle;
+                graphics.DrawPolygon(pen, points.ToArray());
+                pictureBox.Invalidate();
+            }
+        }
+
+        public override void drawEdgePoints(Bitmap _bitmap, PictureBox pictureBox)
+        {
+            List<Point> edgePoints = getEdgePoints();
+            using (Graphics graphics = Graphics.FromImage(_bitmap))
+            using (Brush brush_white = new SolidBrush(Color.White))
+            using (Brush brush_red = new SolidBrush(Color.Red))
+            using (Pen pen_black = new Pen(Color.Black, 1))
+            using (Pen pen_red = new Pen(Color.Red, 1))
+            {
+                Point p_mostLeft;
+                Rectangle rectangle;
+                foreach (Point p in edgePoints)
+                {
+                    p_mostLeft = new Point(p.X - 2, p.Y - 2);
+                    rectangle = new Rectangle(p_mostLeft, new Size(4, 4));
+                    graphics.FillRectangle(brush_white, rectangle);
+                    graphics.DrawRectangle(pen_black, rectangle);
+                }
+                // diem dau tien ve mau do
+                p_mostLeft = new Point(edgePoints[0].X - 2, edgePoints[0].Y - 2);
+                rectangle = new Rectangle(p_mostLeft, new Size(4, 4));
+                graphics.FillRectangle(brush_red, rectangle);
+                graphics.DrawRectangle(pen_red, rectangle);
+                pictureBox.Invalidate();
+            }
+        }
+
+        public override void fill(Bitmap _bitmap, PictureBox pictureBox)
+        {
+            if (points.Count < 2)
+                return;
+            using (Graphics graphics = Graphics.FromImage(_bitmap))
+            {
+                switch (brushAttr.typeBrush)
+                {
+                    case "SolidBrush":
+                        using (Brush brush = new SolidBrush(brushAttr.color))
+                        {
+                            graphics.FillPolygon(brush, points.ToArray());
+                        }
+                        break;
+
+                    default:
+                        break;
+                }
+                pictureBox.Invalidate();
+            }
+        }
+
+        public override List<Point> getEdgePoints()
+        {
+            return new List<Point>(points);
+        }
+
+        public override bool isPointBelongPrecisely(Point p)
+        {
+            using (GraphicsPath path = new GraphicsPath())
+            using (Pen pen = new Pen(penAttr.color, penAttr.width))
+            {
+                path.AddPolygon(points.ToArray());
+                pen.DashStyle = penAttr.dashStyle;
+                return path.IsOutlineVisible(p, pen);
+            }
+        }
+
+        public override bool isPointInsidePrecisly(Point p)
+        {
+            using (GraphicsPath path = new GraphicsPath())
+            {
+                path.AddPolygon(points.ToArray());
+                return path.IsVisible(p);
+            }
+        }
+
+        public override void ReadData(string data)
+        {
+        }
+
+        public override string WriteData()
+        {
+            return "";
+        }
+    }
+
     public class MyRectangle : MyShape
     {
         private int height;
         private Point mostLeft;
         private int width;
 
-        public MyRectangle(PenAttr _penAttr, Point p_start, Point p_end) :
+        public MyRectangle(PenAttr _penAttr, List<Point> _points) :
             base(_penAttr)
         {
             // tim diem goc trai
-            mostLeft = new Point(Math.Min(p_start.X, p_end.X), Math.Min(p_start.Y, p_end.Y));
-            width = Math.Abs(p_start.X - p_end.X);
-            height = Math.Abs(p_start.Y - p_end.Y);
-            // mac dinh to mau trang
-            brushAttr = new BrushAttr(Color.White, "SolidBrush");
+            mostLeft = new Point(Math.Min(_points[0].X, _points[1].X),
+                Math.Min(_points[0].Y, _points[1].Y));
+            width = Math.Abs(_points[0].X - _points[1].X);
+            height = Math.Abs(_points[0].Y - _points[1].Y);
         }
 
         public MyRectangle(MyRectangle myRectangle) :
@@ -295,7 +581,6 @@ namespace _1612180_1612677
             mostLeft = new Point(myRectangle.mostLeft.X, myRectangle.mostLeft.Y);
             width = myRectangle.width;
             height = myRectangle.height;
-            brushAttr = new BrushAttr(myRectangle.brushAttr);
         }
 
         public MyRectangle() :
@@ -304,9 +589,9 @@ namespace _1612180_1612677
             mostLeft = Point.Empty;
         }
 
-        public override bool canFill()
+        public static bool isClickedPointsCanDrawShape(List<Point> _points)
         {
-            return true;
+            return _points.Count == 2;
         }
 
         public override MyShape Clone()
@@ -314,37 +599,37 @@ namespace _1612180_1612677
             return new MyRectangle(this);
         }
 
-        public override void draw(Bitmap _bitmap)
+        public override void draw(Bitmap _bitmap, PictureBox pictureBox)
         {
             using (Graphics graphics = Graphics.FromImage(_bitmap))
+            using (Pen pen = new Pen(penAttr.color, penAttr.width))
             {
                 // ve hcn
                 Rectangle rectangle = new Rectangle(mostLeft, new Size(width, height));
-                using (Pen pen = new Pen(penAttr.color, penAttr.width))
-                {
-                    pen.DashStyle = penAttr.dashStyle;
-                    graphics.DrawRectangle(pen, rectangle);
-                }
+                pen.DashStyle = penAttr.dashStyle;
+                graphics.DrawRectangle(pen, rectangle);
+                pictureBox.Invalidate();
             }
         }
 
-        public override void fill(Bitmap _bitmap)
+        public override void fill(Bitmap _bitmap, PictureBox pictureBox)
         {
-            if (brushAttr == null || !canFill())
-                return;
-            switch (brushAttr.typeBrush)
+            using (Graphics graphics = Graphics.FromImage(_bitmap))
             {
-                case "SolidBrush":
-                    using (Graphics graphics = Graphics.FromImage(_bitmap))
-                    using (Brush brush = new SolidBrush(brushAttr.color))
-                    {
-                        Rectangle rectangle = new Rectangle(mostLeft, new Size(width, height));
-                        graphics.FillRectangle(brush, rectangle);
-                    }
-                    break;
+                switch (brushAttr.typeBrush)
+                {
+                    case "SolidBrush":
+                        using (Brush brush = new SolidBrush(brushAttr.color))
+                        {
+                            Rectangle rectangle = new Rectangle(mostLeft, new Size(width, height));
+                            graphics.FillRectangle(brush, rectangle);
+                        }
+                        break;
 
-                default:
-                    break;
+                    default:
+                        break;
+                }
+                pictureBox.Invalidate();
             }
         }
 
@@ -361,13 +646,11 @@ namespace _1612180_1612677
         public override bool isPointBelongPrecisely(Point p)
         {
             using (GraphicsPath path = new GraphicsPath())
+            using (Pen pen = new Pen(penAttr.color, penAttr.width))
             {
                 path.AddRectangle(new Rectangle(mostLeft, new Size(width, height)));
-                using (Pen pen = new Pen(penAttr.color, penAttr.width))
-                {
-                    pen.DashStyle = penAttr.dashStyle;
-                    return path.IsOutlineVisible(p, pen);
-                }
+                pen.DashStyle = penAttr.dashStyle;
+                return path.IsOutlineVisible(p, pen);
             }
         }
 
@@ -418,16 +701,13 @@ namespace _1612180_1612677
 
     public abstract class MyShape
     {
+        private const int RANGE = 10;
+
         public MyShape(PenAttr _penAttr)
         {
             penAttr = new PenAttr(_penAttr);
-            brushAttr = null;
-        }
-
-        public MyShape(PenAttr _penAttr, BrushAttr _brushAttr)
-        {
-            penAttr = new PenAttr(_penAttr);
-            brushAttr = new BrushAttr(_brushAttr);
+            // mac dinh la mau trang
+            brushAttr = new BrushAttr(Color.White, "SolidBrush");
         }
 
         public MyShape()
@@ -445,9 +725,25 @@ namespace _1612180_1612677
         public BrushAttr brushAttr { get; set; }
         public PenAttr penAttr { get; set; }
 
-        // co the to mau duoc
-        public virtual bool canFill()
+        // 2 diem gan nhau la duoc
+        // khong can chinh xac lam
+        public static bool isPointEqual(Point p, Point q)
         {
+            List<Point> ps = new List<Point>();
+            int pointRange = RANGE;
+            for (int i = -pointRange; i <= pointRange; ++i)
+            {
+                for (int j = -pointRange; j <= pointRange; ++j)
+                {
+                    ps.Add(new Point(p.X + i, p.Y + j));
+                }
+            }
+            // chi can 1 diem trung la duoc
+            foreach (Point p_temp in ps)
+            {
+                if (p_temp.Equals(q))
+                    return true;
+            }
             return false;
         }
 
@@ -487,9 +783,9 @@ namespace _1612180_1612677
             return result;
         }
 
-        public abstract void draw(Bitmap _bitmap);
+        public abstract void draw(Bitmap _bitmap, PictureBox pictureBox);
 
-        public void drawEdgePoints(Bitmap _bitmap)
+        public virtual void drawEdgePoints(Bitmap _bitmap, PictureBox pictureBox)
         {
             List<Point> edgePoints = getEdgePoints();
             using (Graphics graphics = Graphics.FromImage(_bitmap))
@@ -503,10 +799,11 @@ namespace _1612180_1612677
                     graphics.FillRectangle(brush, rectangle);
                     graphics.DrawRectangle(pen, rectangle);
                 }
+                pictureBox.Invalidate();
             }
         }
 
-        public void drawInsidePoint(Bitmap _bitmap, Point p)
+        public void drawInsidePoint(Bitmap _bitmap, Point p, PictureBox pictureBox)
         {
             using (Graphics graphics = Graphics.FromImage(_bitmap))
             using (Brush brush = new SolidBrush(Color.White))
@@ -516,11 +813,12 @@ namespace _1612180_1612677
                 Rectangle rectangle = new Rectangle(p_mostLeft, new Size(4, 4));
                 graphics.FillRectangle(brush, rectangle);
                 graphics.DrawRectangle(pen, rectangle);
+                pictureBox.Invalidate();
             }
         }
 
         // to mau
-        public virtual void fill(Bitmap _bitmap)
+        public virtual void fill(Bitmap _bitmap, PictureBox pictureBox)
         {
         }
 
@@ -533,7 +831,7 @@ namespace _1612180_1612677
         {
             List<Point> ps = new List<Point>();
             // lay nhung pixel xung quanh
-            int clickRange = 5;
+            int clickRange = RANGE;
             for (int i = -clickRange; i <= clickRange; ++i)
             {
                 for (int j = -clickRange; j <= clickRange; ++j)
@@ -542,19 +840,19 @@ namespace _1612180_1612677
                 }
             }
 
-            bool flag = false;
             foreach (Point temp_p in ps)
             {
                 // chi can mot diem nam trong la nam trong
-                flag |= isPointBelongPrecisely(temp_p);
+                if (isPointBelongPrecisely(p))
+                    return true;
             }
-
-            return flag;
+            return false;
         }
 
-        // kiem tra chinh xac mot diem
+        // kiem tra chinh xac mot diem nam o canh
         public abstract bool isPointBelongPrecisely(Point p);
 
+        // kiem tra chinh xac mot diem nam be trong
         public virtual bool isPointInsidePrecisly(Point p)
         {
             return false;
@@ -587,77 +885,5 @@ namespace _1612180_1612677
         public Color color { get; set; }
         public DashStyle dashStyle { get; set; }
         public int width { get; set; }
-    }
-
-    public class MyCharater : MyShape
-    {
-        private String text;
-        private Point mostLeft;
-        private String font;
-        private int size;
-
-        public MyCharater() : base()
-        {
-            mostLeft = Point.Empty;
-        }
-
-        public MyCharater(PenAttr _penAttr, String _text, Point p_start, String _font, int _size) :
-            base(_penAttr)
-        {
-            mostLeft = new Point(p_start.X, p_start.Y);
-            text = _text;
-            font = _font;
-            size = _size;
-        }
-
-        public MyCharater(MyCharater myCharactor) :
-            base(myCharactor)
-        {
-            mostLeft = new Point(myCharactor.mostLeft.X, myCharactor.mostLeft.Y);
-            font = myCharactor.font;
-            size = myCharactor.size;
-        }
-
-        public override MyShape Clone()
-        {
-            return new MyCharater(this);
-        }
-
-        public override void draw(Bitmap _bitmap)
-        {
-            using (Graphics graphics = Graphics.FromImage(_bitmap))
-            {
-                // ve charactor
-                using (Pen pen = new Pen(base.penAttr.color, base.penAttr.width))
-                {
-                    pen.DashStyle = base.penAttr.dashStyle;
-                    graphics.DrawString(text, new Font(font, size, FontStyle.Regular), new SolidBrush(Color.Red), mostLeft);
-                }
-            }
-        }
-
-        public override List<Point> getEdgePoints()
-        {
-            List<Point> edgePoints = new List<Point>();
-            edgePoints.Add(new Point(mostLeft.X, mostLeft.Y));
-            edgePoints.Add(new Point(mostLeft.X, mostLeft.Y + size));
-            edgePoints.Add(new Point(mostLeft.X + size, mostLeft.Y));
-            edgePoints.Add(new Point(mostLeft.X + size, mostLeft.Y + size));
-            return edgePoints;
-        }
-
-        public override bool isPointBelongPrecisely(Point p)
-        {
-            return false;
-        }
-
-        public override void ReadData(string data)
-        {
-        }
-
-        public override string WriteData()
-        {
-            return null;
-        }
     }
 }

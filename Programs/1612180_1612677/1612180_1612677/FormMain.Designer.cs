@@ -54,6 +54,9 @@
             this.comboBoxFont = new System.Windows.Forms.ComboBox();
             this.label6 = new System.Windows.Forms.Label();
             this.numericUpDownFontSize = new System.Windows.Forms.NumericUpDown();
+            this.buttonDrawPolygon = new System.Windows.Forms.Button();
+            this.buttonDel = new System.Windows.Forms.Button();
+            this.buttonUnselect = new System.Windows.Forms.Button();
             this.menuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMain)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPenWidth)).BeginInit();
@@ -131,11 +134,10 @@
             this.pictureBoxMain.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pictureBoxMain_MouseClick);
             this.pictureBoxMain.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureBoxMain_MouseDown);
             this.pictureBoxMain.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureBoxMain_MouseMove);
-            this.pictureBoxMain.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pictureBoxMain_MouseUp);
             // 
             // buttonClearAll
             // 
-            this.buttonClearAll.Location = new System.Drawing.Point(182, 36);
+            this.buttonClearAll.Location = new System.Drawing.Point(120, 36);
             this.buttonClearAll.Name = "buttonClearAll";
             this.buttonClearAll.Size = new System.Drawing.Size(75, 23);
             this.buttonClearAll.TabIndex = 4;
@@ -145,7 +147,7 @@
             // 
             // buttonSelect
             // 
-            this.buttonSelect.Location = new System.Drawing.Point(276, 36);
+            this.buttonSelect.Location = new System.Drawing.Point(214, 36);
             this.buttonSelect.Name = "buttonSelect";
             this.buttonSelect.Size = new System.Drawing.Size(75, 23);
             this.buttonSelect.TabIndex = 5;
@@ -165,7 +167,7 @@
             // 
             // buttonShowColor
             // 
-            this.buttonShowColor.Location = new System.Drawing.Point(379, 36);
+            this.buttonShowColor.Location = new System.Drawing.Point(493, 36);
             this.buttonShowColor.Name = "buttonShowColor";
             this.buttonShowColor.Size = new System.Drawing.Size(75, 23);
             this.buttonShowColor.TabIndex = 8;
@@ -197,7 +199,7 @@
             0,
             0,
             0});
-            this.numericUpDownPenWidth.ValueChanged += new System.EventHandler(this.reloadPenWidthDashStyle);
+            this.numericUpDownPenWidth.ValueChanged += new System.EventHandler(this.reloadPenAttr);
             // 
             // comboBoxDashStyle
             // 
@@ -207,7 +209,7 @@
             this.comboBoxDashStyle.Name = "comboBoxDashStyle";
             this.comboBoxDashStyle.Size = new System.Drawing.Size(91, 21);
             this.comboBoxDashStyle.TabIndex = 11;
-            this.comboBoxDashStyle.SelectedIndexChanged += new System.EventHandler(this.reloadPenWidthDashStyle);
+            this.comboBoxDashStyle.SelectedIndexChanged += new System.EventHandler(this.reloadPenAttr);
             // 
             // label2
             // 
@@ -221,7 +223,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(473, 41);
+            this.label3.Location = new System.Drawing.Point(574, 41);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(60, 13);
             this.label3.TabIndex = 15;
@@ -231,7 +233,7 @@
             // 
             this.comboBoxBrushStyle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxBrushStyle.FormattingEnabled = true;
-            this.comboBoxBrushStyle.Location = new System.Drawing.Point(551, 41);
+            this.comboBoxBrushStyle.Location = new System.Drawing.Point(655, 38);
             this.comboBoxBrushStyle.Name = "comboBoxBrushStyle";
             this.comboBoxBrushStyle.Size = new System.Drawing.Size(121, 21);
             this.comboBoxBrushStyle.TabIndex = 16;
@@ -261,6 +263,7 @@
             this.textBoxChar.Name = "textBoxChar";
             this.textBoxChar.Size = new System.Drawing.Size(100, 20);
             this.textBoxChar.TabIndex = 19;
+            this.textBoxChar.TextChanged += new System.EventHandler(this.reloadFontAttr);
             // 
             // label5
             // 
@@ -279,6 +282,7 @@
             this.comboBoxFont.Name = "comboBoxFont";
             this.comboBoxFont.Size = new System.Drawing.Size(121, 21);
             this.comboBoxFont.TabIndex = 21;
+            this.comboBoxFont.SelectedIndexChanged += new System.EventHandler(this.reloadFontAttr);
             // 
             // label6
             // 
@@ -295,12 +299,46 @@
             this.numericUpDownFontSize.Name = "numericUpDownFontSize";
             this.numericUpDownFontSize.Size = new System.Drawing.Size(46, 20);
             this.numericUpDownFontSize.TabIndex = 23;
+            this.numericUpDownFontSize.ValueChanged += new System.EventHandler(this.reloadFontAttr);
+            // 
+            // buttonDrawPolygon
+            // 
+            this.buttonDrawPolygon.Location = new System.Drawing.Point(13, 169);
+            this.buttonDrawPolygon.Name = "buttonDrawPolygon";
+            this.buttonDrawPolygon.Size = new System.Drawing.Size(95, 23);
+            this.buttonDrawPolygon.TabIndex = 24;
+            this.buttonDrawPolygon.Text = "Draw Polygon";
+            this.buttonDrawPolygon.UseVisualStyleBackColor = true;
+            this.buttonDrawPolygon.Click += new System.EventHandler(this.buttonDrawPolygon_Click);
+            // 
+            // buttonDel
+            // 
+            this.buttonDel.Location = new System.Drawing.Point(379, 36);
+            this.buttonDel.Name = "buttonDel";
+            this.buttonDel.Size = new System.Drawing.Size(92, 23);
+            this.buttonDel.TabIndex = 25;
+            this.buttonDel.Text = "Delete Selected";
+            this.buttonDel.UseVisualStyleBackColor = true;
+            this.buttonDel.Click += new System.EventHandler(this.buttonDel_Click);
+            // 
+            // buttonUnselect
+            // 
+            this.buttonUnselect.Location = new System.Drawing.Point(295, 36);
+            this.buttonUnselect.Name = "buttonUnselect";
+            this.buttonUnselect.Size = new System.Drawing.Size(75, 23);
+            this.buttonUnselect.TabIndex = 26;
+            this.buttonUnselect.Text = "Unselect";
+            this.buttonUnselect.UseVisualStyleBackColor = true;
+            this.buttonUnselect.Click += new System.EventHandler(this.buttonUnselect_Click);
             // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(788, 432);
+            this.Controls.Add(this.buttonUnselect);
+            this.Controls.Add(this.buttonDel);
+            this.Controls.Add(this.buttonDrawPolygon);
             this.Controls.Add(this.numericUpDownFontSize);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.comboBoxFont);
@@ -365,6 +403,9 @@
         private System.Windows.Forms.ComboBox comboBoxFont;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.NumericUpDown numericUpDownFontSize;
+        private System.Windows.Forms.Button buttonDrawPolygon;
+        private System.Windows.Forms.Button buttonDel;
+        private System.Windows.Forms.Button buttonUnselect;
     }
 }
 
