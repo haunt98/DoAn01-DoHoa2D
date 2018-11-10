@@ -117,11 +117,14 @@ namespace _1612180_1612677
             width = Int32.Parse(result[4]);
 
             //doc du lieu penAttr tu file
-            Color colorFromFile = ConvertColorFromString(result[5]);
+            Color colorShape = ConvertColorFromString(result[5]);
             DashStyle dashStyleFromFile = ConvertDashStypeFromString(result[6]);
             int widthFromFile = Int32.Parse(result[7]);
+            penAttr = new PenAttr(colorShape, dashStyleFromFile, widthFromFile);
 
-            penAttr = new PenAttr(colorFromFile, dashStyleFromFile, widthFromFile);
+            //doc Brush tu file
+            Color colorFill = ConvertColorFromString(result[8]);
+            brushAttr = new BrushAttr(colorFill, result[9]);
         }
 
         public override string WriteData()
@@ -134,7 +137,9 @@ namespace _1612180_1612677
             result += width.ToString() + " ";
             result += penAttr.color.ToArgb().ToString() + " " +
                 penAttr.dashStyle.ToString() + " " +
-                penAttr.width.ToString();
+                penAttr.width.ToString() + " ";
+            result += brushAttr.color.ToArgb().ToString() + " " +
+                brushAttr.typeBrush.ToString();
             return result;
         }
 
@@ -249,7 +254,6 @@ namespace _1612180_1612677
             Color colorFromFile = ConvertColorFromString(result[5]);
             DashStyle dashStyleFromFile = ConvertDashStypeFromString(result[6]);
             int widthFromFile = Int32.Parse(result[7]);
-
             penAttr = new PenAttr(colorFromFile, dashStyleFromFile, widthFromFile);
         }
 
@@ -384,12 +388,15 @@ namespace _1612180_1612677
             height = Int32.Parse(result[3]);
             width = Int32.Parse(result[4]);
 
-            //doc du lieu penAttr tu file
-            Color colorFromFile = ConvertColorFromString(result[5]);
+            // doc du lieu penAttr tu file
+            Color colorShape = ConvertColorFromString(result[5]);
             DashStyle dashStyleFromFile = ConvertDashStypeFromString(result[6]);
             int widthFromFile = Int32.Parse(result[7]);
+            penAttr = new PenAttr(colorShape, dashStyleFromFile, widthFromFile);
 
-            penAttr = new PenAttr(colorFromFile, dashStyleFromFile, widthFromFile);
+            // doc Brush tu file
+            Color colorFill = ConvertColorFromString(result[8]);
+            brushAttr = new BrushAttr(colorFill, result[9]);
         }
 
         public override string WriteData()
@@ -402,7 +409,9 @@ namespace _1612180_1612677
             result += width.ToString() + " ";
             result += penAttr.color.ToArgb().ToString() + " " +
                 penAttr.dashStyle.ToString() + " " +
-                penAttr.width.ToString();
+                penAttr.width.ToString() + " ";
+            result += brushAttr.color.ToArgb().ToString() + " " +
+                brushAttr.typeBrush.ToString();
             return result;
         }
     }

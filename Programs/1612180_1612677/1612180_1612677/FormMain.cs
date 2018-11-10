@@ -589,7 +589,6 @@ namespace _1612180_1612677
                     fillWrap(myShape, bitmap_temp);
                     drawWrap(myShape, bitmap_temp);
                     myShape.drawEdgePoints(bitmap_temp);
-
                     pictureBoxMain.Invalidate();
                 }
             }
