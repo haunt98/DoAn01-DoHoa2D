@@ -9,69 +9,39 @@ using System.Windows.Forms;
 
 namespace _1612180_1612677
 {
-    public class BrushAttr
-    {
-        public BrushAttr(Color _color, String _typeBrush)
-        {
-            color = _color;
-            typeBrush = _typeBrush;
-        }
-
-        public BrushAttr(BrushAttr brushAttr)
-        {
-            // mac dinh la mau trang
-            if (brushAttr == null)
-            {
-                color = Color.White;
-                typeBrush = "SolidBrush";
-            }
-            else
-            {
-                color = brushAttr.color;
-                typeBrush = brushAttr.typeBrush;
-            }
-        }
-
-        public Color color { get; set; }
-        public String typeBrush { get; set; }
-    }
-
     public class MyCharater : MyShape
     {
-        private String font;
         private int height;
         private Point mostLeft;
-        private int size;
-        private String text;
         private int width;
+        public FontAttr fontAttr { get; set; }
 
         public MyCharater() : base()
         {
             mostLeft = Point.Empty;
         }
 
-        public MyCharater(PenAttr _penAttr, String _text, List<Point> _points, String _font, int _size) :
+        public MyCharater(PenAttr _penAttr, List<Point> _points, FontAttr _fontAttr) :
             base(_penAttr)
         {
             mostLeft = new Point(_points[0].X, _points[0].Y);
-            text = _text;
-            font = _font;
-            size = _size;
+            fontAttr = new FontAttr(_fontAttr);
         }
 
-        public MyCharater(MyCharater myCharactor) :
-            base(myCharactor)
+        public MyCharater(MyCharater myCharacter) :
+            base(myCharacter)
         {
-            mostLeft = new Point(myCharactor.mostLeft.X, myCharactor.mostLeft.Y);
-            font = myCharactor.font;
-            size = myCharactor.size;
+            mostLeft = new Point(myCharacter.mostLeft.X, myCharacter.mostLeft.Y);
+            width = myCharacter.width;
+            height = myCharacter.height;
+            fontAttr = new FontAttr(myCharacter.fontAttr);
         }
 
-        private void getHeightAndWidthOfChar(Graphics graphics, String _text, Font _font)
+        private void getHeightAndWidthOfChar(Graphics graphics, Font font)
         {
             //get height and width of text
-            width = (int)graphics.MeasureString(text, _font).Width;
-            height = (int)graphics.MeasureString(text, _font).Height;
+            width = (int)graphics.MeasureString(fontAttr.text, font).Width;
+            height = (int)graphics.MeasureString(fontAttr.text, font).Height;
         }
 
         private int LengthOfFont(string font)
@@ -97,13 +67,14 @@ namespace _1612180_1612677
         public override void draw(Bitmap _bitmap, PictureBox pictureBox)
         {
             using (Graphics graphics = Graphics.FromImage(_bitmap))
-            using (Pen pen = new Pen(base.penAttr.color, base.penAttr.width))
+            using (Pen pen = new Pen(penAttr.color, penAttr.width))
+            using (Brush brush = new SolidBrush(penAttr.color))
             {
-                pen.DashStyle = base.penAttr.dashStyle;
-                Font f = new Font(font, size, FontStyle.Regular);
-                getHeightAndWidthOfChar(graphics, text, f);
+                pen.DashStyle = penAttr.dashStyle;
+                Font font = new Font(fontAttr.fontFamily, fontAttr.size, FontStyle.Regular);
+                getHeightAndWidthOfChar(graphics, font);
                 //draw
-                graphics.DrawString(text, f, new SolidBrush(base.penAttr.color), mostLeft);
+                graphics.DrawString(fontAttr.text, font, brush, mostLeft);
                 pictureBox.Invalidate();
             }
         }
@@ -115,17 +86,9 @@ namespace _1612180_1612677
             return edgePoints;
         }
 
-        public void getHeightAndWidth(Bitmap bitmap)
-        {
-            Graphics graphics = Graphics.FromImage(bitmap);
-            Font f = new Font(font, size, FontStyle.Regular);
-            width = (int)graphics.MeasureString(text, f).Width;
-            height = (int)graphics.MeasureString(text, f).Height;
-        }
-
         public override bool isPointBelongPrecisely(Point p)
         {
-            // mac dinh cac vien khong thuoc
+            // mac dinh khong chon vien
             return false;
         }
 
@@ -143,8 +106,8 @@ namespace _1612180_1612677
             // in ra string co dang "4 x y text size height  width color dashStyle width font"
             String[] result = data.Split(' ');
             mostLeft = new Point(Int32.Parse(result[1]), Int32.Parse(result[2]));
-            text = result[3];
-            size = Int32.Parse(result[4]);
+            fontAttr.text = result[3];
+            fontAttr.size = Int32.Parse(result[4]);
             height = Int32.Parse(result[5]);
             width = Int32.Parse(result[6]);
 
@@ -153,20 +116,20 @@ namespace _1612180_1612677
             DashStyle dashStyleFromFile = ConvertDashStypeFromString(result[8]);
             int widthFromFile = Int32.Parse(result[9]);
 
-            for (int i = 0; i < Int32.Parse(result[10]); i++)
+            if (Int32.Parse(result[10]) != 0)
             {
-                font += result[11 + i] + " ";
+                for (int i = 0; i < Int32.Parse(result[10]); i++)
+                {
+                    fontAttr.fontFamily += result[11 + i] + " ";
+                }
+                fontAttr.fontFamily = fontAttr.fontFamily.Remove(fontAttr.fontFamily.Length - 1);
+            }
+            else
+            {
+                fontAttr.fontFamily += result[11];
             }
 
-            font = font.Remove(font.Length - 1);
             penAttr = new PenAttr(colorShape, dashStyleFromFile, widthFromFile);
-        }
-
-        public void SetValueOfChar(String _text, String _font, int _size)
-        {
-            text = _text;
-            font = _font;
-            size = _size;
         }
 
         public override string WriteData()
@@ -175,20 +138,20 @@ namespace _1612180_1612677
             String result = "4 ";
             result += mostLeft.X.ToString() + " ";
             result += mostLeft.Y.ToString() + " ";
-            result += text + " ";
-            result += size + " ";
+            result += fontAttr.text + " ";
+            result += fontAttr.size + " ";
             result += height.ToString() + " ";
             result += width.ToString() + " ";
             result += penAttr.color.ToArgb().ToString() + " " +
                     penAttr.dashStyle.ToString() + " " +
                     penAttr.width.ToString() + " ";
-            if (font == "")
-            {
-                font = ".";
-            }
-            result += LengthOfFont(font).ToString() + " ";
-            result += font;
+            result += LengthOfFont(fontAttr.fontFamily).ToString() + " ";
+            result += fontAttr.fontFamily;
             return result;
+        }
+
+        public override void drawInsidePoint(Bitmap _bitmap, Point p, PictureBox pictureBox)
+        {
         }
     }
 
@@ -551,11 +514,48 @@ namespace _1612180_1612677
 
         public override void ReadData(string data)
         {
+            // doc string co dang "5 color dashStype width length x y "
+            String[] result = data.Split(' ');
+
+            Color colorShape = ConvertColorFromString(result[1]);
+            DashStyle dashStyleFromFile = ConvertDashStypeFromString(result[2]);
+            int widthFromFile = Int32.Parse(result[3]);
+            penAttr = new PenAttr(colorShape, dashStyleFromFile, widthFromFile);
+            // doc Brush tu file
+            Color colorFill = ConvertColorFromString(result[4]);
+            brushAttr = new BrushAttr(colorFill, result[5]);
+
+            int length = Int32.Parse(result[6]);
+            points = new List<Point>(length);
+            int i = 0, k = 0;
+            while (i < length) //5
+            {
+                Point temp = new Point(Int32.Parse(result[7 + k]), Int32.Parse(result[8 + k]));
+                points.Add(temp);
+                i = i + 1;
+                k = k + 2;
+            }
+            //doc du lieu penAttr tu file
+
+            // doc Brush tu file
         }
 
         public override string WriteData()
         {
-            return "";
+            // in ra string co dang "5  color dashStype width  typeBrush length xi yi "
+            String result = "5 ";
+            result += penAttr.color.ToArgb().ToString() + " " +
+               penAttr.dashStyle.ToString() + " " +
+               penAttr.width.ToString() + " ";
+            result += brushAttr.color.ToArgb().ToString() + " " +
+                brushAttr.typeBrush.ToString() + " ";
+            result += points.Count + " ";
+            for (int i = 0; i < points.Count; i++)
+            {
+                result += points[i].X.ToString() + " " + points[i].Y.ToString() + " ";
+            }
+
+            return result;
         }
     }
 
@@ -803,7 +803,7 @@ namespace _1612180_1612677
             }
         }
 
-        public void drawInsidePoint(Bitmap _bitmap, Point p, PictureBox pictureBox)
+        public virtual void drawInsidePoint(Bitmap _bitmap, Point p, PictureBox pictureBox)
         {
             using (Graphics graphics = Graphics.FromImage(_bitmap))
             using (Brush brush = new SolidBrush(Color.White))
@@ -863,27 +863,5 @@ namespace _1612180_1612677
 
         // Viet data
         public abstract String WriteData();
-    }
-
-    // Luu nhung thuoc tinh cua class Pen
-    public class PenAttr
-    {
-        public PenAttr(Color _color, DashStyle _dashStyle, int _width)
-        {
-            color = _color;
-            dashStyle = _dashStyle;
-            width = _width;
-        }
-
-        public PenAttr(PenAttr penAttr)
-        {
-            color = penAttr.color;
-            dashStyle = penAttr.dashStyle;
-            width = penAttr.width;
-        }
-
-        public Color color { get; set; }
-        public DashStyle dashStyle { get; set; }
-        public int width { get; set; }
     }
 }
