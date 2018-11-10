@@ -45,7 +45,6 @@
             this.numericUpDownPenWidth = new System.Windows.Forms.NumericUpDown();
             this.comboBoxDashStyle = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.buttonFill = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.comboBoxBrushStyle = new System.Windows.Forms.ComboBox();
             this.buttonDrawChar = new System.Windows.Forms.Button();
@@ -217,16 +216,6 @@
             this.label2.TabIndex = 12;
             this.label2.Text = "Dash Style";
             // 
-            // buttonFill
-            // 
-            this.buttonFill.Location = new System.Drawing.Point(679, 36);
-            this.buttonFill.Name = "buttonFill";
-            this.buttonFill.Size = new System.Drawing.Size(75, 23);
-            this.buttonFill.TabIndex = 14;
-            this.buttonFill.Text = "Fill";
-            this.buttonFill.UseVisualStyleBackColor = true;
-            this.buttonFill.Click += new System.EventHandler(this.buttonFill_Click);
-            // 
             // label3
             // 
             this.label3.AutoSize = true;
@@ -319,7 +308,6 @@
             this.Controls.Add(this.buttonDrawChar);
             this.Controls.Add(this.comboBoxBrushStyle);
             this.Controls.Add(this.label3);
-            this.Controls.Add(this.buttonFill);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.comboBoxDashStyle);
             this.Controls.Add(this.numericUpDownPenWidth);
@@ -366,7 +354,6 @@
         private System.Windows.Forms.NumericUpDown numericUpDownPenWidth;
         private System.Windows.Forms.ComboBox comboBoxDashStyle;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Button buttonFill;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ComboBox comboBoxBrushStyle;
         private System.Windows.Forms.Button buttonDrawChar;

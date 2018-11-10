@@ -121,11 +121,26 @@ namespace _1612180_1612677
             // reload lai mau sac cho vien cua shape
             if (state == SELECT_STATE)
             {
-                if (clickedOutlineShape < 0 || clickedOutlineShape >= myShapes.Count)
+                int clickedShape = clickedInsideShape > clickedOutlineShape
+                    ? clickedInsideShape : clickedOutlineShape;
+
+                if (clickedShape == -1)
                     return;
-                myShapes[clickedOutlineShape].penAttr = getPenAttr();
-                clearAllResetBitmap();
-                DrawAndFillShapes(bitmap);
+
+                // click ben trong, doi mau ben trong
+                if (clickedShape == clickedInsideShape)
+                {
+                    myShapes[clickedInsideShape].brushAttr = getBrushAttr();
+                    clearAllResetBitmap();
+                    DrawAndFillShapes(bitmap);
+                }
+                // click vien, doi mau vien
+                else
+                {
+                    myShapes[clickedOutlineShape].penAttr = getPenAttr();
+                    clearAllResetBitmap();
+                    DrawAndFillShapes(bitmap);
+                }
             }
         }
 
@@ -336,6 +351,11 @@ namespace _1612180_1612677
                         myShape.fill(bitmap_temp);
                         myShape.draw(bitmap_temp);
                         myShape.drawEdgePoints(bitmap_temp);
+                        // neu click vao ben trong, danh dau tai diem click
+                        if (clickedShape == clickedInsideShape)
+                        {
+                            myShape.drawInsidePoint(bitmap_temp, e.Location);
+                        }
                         pictureBoxMain.Invalidate();
                         break;
                 }
@@ -344,7 +364,7 @@ namespace _1612180_1612677
             {
                 p_end = e.Location;
                 MyCharater myCharater = new MyCharater(getPenAttr(), textBoxChar.Text, p_end,
-                    comboBoxFont.SelectedText.ToString(),
+                    comboBoxFont.Text.ToString(),
                     Convert.ToInt32(Math.Round(numericUpDownFontSize.Value, 0)));
                 drawWrap(myCharater, bitmap);
                 myShapes.Add(myCharater);
@@ -523,8 +543,8 @@ namespace _1612180_1612677
                         sWriter.Flush();
                     }
                     fileStream.Close();
+                    isSaveFile = true;
                 }
-                isSaveFile = true;
             }
             else
             {

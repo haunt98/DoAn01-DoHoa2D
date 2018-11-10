@@ -18,8 +18,11 @@ namespace _1612180_1612677
 
         public BrushAttr(BrushAttr brushAttr)
         {
-            color = brushAttr.color;
-            typeBrush = brushAttr.typeBrush;
+            if (brushAttr != null)
+            {
+                color = brushAttr.color;
+                typeBrush = brushAttr.typeBrush;
+            }
         }
 
         public Color color { get; set; }
@@ -124,6 +127,15 @@ namespace _1612180_1612677
                 penAttr.dashStyle.ToString() + " " +
                 penAttr.width.ToString();
             return result;
+        }
+
+        public override bool isPointInsidePrecisly(Point p)
+        {
+            using (GraphicsPath path = new GraphicsPath())
+            {
+                path.AddEllipse(new Rectangle(mostLeft, new Size(width, height)));
+                return path.IsVisible(p);
+            }
         }
     }
 
@@ -450,6 +462,19 @@ namespace _1612180_1612677
             }
         }
 
+        public void drawInsidePoint(Bitmap _bitmap, Point p)
+        {
+            using (Graphics graphics = Graphics.FromImage(_bitmap))
+            using (Brush brush = new SolidBrush(Color.White))
+            using (Pen pen = new Pen(Color.Black, 1))
+            {
+                Point p_mostLeft = new Point(p.X - 2, p.Y - 2);
+                Rectangle rectangle = new Rectangle(p_mostLeft, new Size(4, 4));
+                graphics.FillRectangle(brush, rectangle);
+                graphics.DrawRectangle(pen, rectangle);
+            }
+        }
+
         // to mau
         public virtual void fill(Bitmap _bitmap)
         {
@@ -463,18 +488,31 @@ namespace _1612180_1612677
         public bool isPointBelong(Point p)
         {
             List<Point> ps = new List<Point>();
-            // XXX
-            // XXX
-            // XXX
+            // XXXXX
+            // XXXXX
+            // XXpXX
+            // XXXXX
+            // XXXXX
+            ps.Add(new Point(p.X - 2, p.Y - 2));
+            ps.Add(new Point(p.X - 2, p.Y - 1));
+            ps.Add(new Point(p.X - 2, p.Y));
+            ps.Add(new Point(p.X - 2, p.Y + 1));
+            ps.Add(new Point(p.X - 2, p.Y + 2));
+            ps.Add(new Point(p.X - 1, p.Y - 2));
             ps.Add(new Point(p.X - 1, p.Y - 1));
             ps.Add(new Point(p.X - 1, p.Y));
             ps.Add(new Point(p.X - 1, p.Y + 1));
+            ps.Add(new Point(p.X - 1, p.Y + 2));
+            ps.Add(new Point(p.X, p.Y - 2));
             ps.Add(new Point(p.X, p.Y - 1));
             ps.Add(new Point(p.X, p.Y));
             ps.Add(new Point(p.X, p.Y + 1));
+            ps.Add(new Point(p.X, p.Y + 2));
+            ps.Add(new Point(p.X + 1, p.Y - 2));
             ps.Add(new Point(p.X + 1, p.Y - 1));
             ps.Add(new Point(p.X + 1, p.Y));
             ps.Add(new Point(p.X + 1, p.Y + 1));
+            ps.Add(new Point(p.X + 1, p.Y + 2));
 
             bool flag = false;
             foreach (Point temp_p in ps)
