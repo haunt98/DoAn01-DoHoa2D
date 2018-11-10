@@ -66,26 +66,26 @@ namespace _1612180_1612677
         {
             clearBitmap();
 
-            // reset list and state
+            // reset list
             myShapes.Clear();
             clickedPoints.Clear();
+            selectShape.Clear();
+            // reset state
             state = NO_STATE;
         }
 
         private void buttonDel_Click(object sender, EventArgs e)
         {
-            if (state != SELECT_STATE)
+            if (state != SELECT_STATE || selectShape.Count == 0)
                 return;
 
-            int clickedShape = selectInsideShape > selectOutlineShape
-                ? selectInsideShape : selectOutlineShape;
+            foreach (int select_temp in selectShape)
+            {
+                myShapes.RemoveAt(select_temp);
+            }
 
-            // chua click shape nao ca
-            if (clickedShape == -1)
-                return;
-
-            // xoa shape ra khoi list
-            myShapes.RemoveAt(clickedShape);
+            state = NO_STATE;
+            selectShape.Clear();
             // xoa roi ve lai
             clearBitmap();
             wrapRedrawAllShapes(bitmap_primary);
@@ -93,31 +93,54 @@ namespace _1612180_1612677
 
         private void buttonDrawChar_Click(object sender, EventArgs e)
         {
+            // reset list
+            clickedPoints.Clear();
+            selectShape.Clear();
+            // set state
             state = CHARACTER_STATE;
         }
 
         private void buttonDrawEll_Click(object sender, EventArgs e)
         {
+            // reset list
+            clickedPoints.Clear();
+            selectShape.Clear();
+            // set state
             state = ELLIPSE_STATE;
         }
 
         private void buttonDrawLine_Click(object sender, EventArgs e)
         {
+            // reset list
+            clickedPoints.Clear();
+            selectShape.Clear();
+            // set state
             state = LINE_STATE;
         }
 
         private void buttonDrawPolygon_Click(object sender, EventArgs e)
         {
+            // reset list
+            clickedPoints.Clear();
+            selectShape.Clear();
+            // set state
             state = POLYGON_STATE;
         }
 
         private void buttonDrawRec_Click(object sender, EventArgs e)
         {
+            // reset list
+            clickedPoints.Clear();
+            selectShape.Clear();
+            // set state
             state = RECTANGLE_STATE;
         }
 
         private void buttonSelect_Click(object sender, EventArgs e)
         {
+            // reset list
+            clickedPoints.Clear();
+            // set state
             state = SELECT_STATE;
         }
 
@@ -328,27 +351,40 @@ namespace _1612180_1612677
                     }
 
                     // chon shape nam ngoai cung
-                    int clickedShape = selectOutlineShape > selectInsideShape ?
+                    int select_temp = selectOutlineShape > selectInsideShape ?
                         selectOutlineShape : selectInsideShape;
-                    switch (clickedShape)
+                    switch (select_temp)
                     {
-                        // click khong trung
+                        // select khong trung
                         case -1:
                             pictureBoxMain.Image = bitmap_primary;
                             break;
-                        // click trung
+                        // select trung
                         default:
                             bitmap_temp = (Bitmap)bitmap_primary.Clone();
                             pictureBoxMain.Image = bitmap_temp;
                             // dau tien fill, sau do draw vien, sau do draw edge
-                            MyShape myShape = myShapes[clickedShape].Clone();
+                            MyShape myShape = myShapes[select_temp].Clone();
                             myShape.fill(bitmap_temp, pictureBoxMain);
                             myShape.draw(bitmap_temp, pictureBoxMain);
                             myShape.drawEdgePoints(bitmap_temp, pictureBoxMain);
                             // neu click vao ben trong, danh dau tai diem click
-                            if (clickedShape == selectInsideShape)
+                            if (select_temp == selectInsideShape)
                             {
                                 myShape.drawInsidePoint(bitmap_temp, e.Location, pictureBoxMain);
+                            }
+                            // them select vao list select shape
+
+                            if (selectShape.IndexOf(select_temp) == -1)
+                            {
+                                // khong co thi them vao
+                                selectShape.Add(select_temp);
+                            }
+                            else
+                            {
+                                // xoa roi them lai cho dung thu tu
+                                selectShape.Remove(select_temp);
+                                selectShape.Add(select_temp);
                             }
                             break;
                     }
@@ -453,6 +489,7 @@ namespace _1612180_1612677
             {
                 return;
             }
+
             // them diem hien tai vao click points
             clickedPoints.Add(new Point(e.Location.X, e.Location.Y));
             // ve tren bitmap_temp
@@ -640,6 +677,10 @@ namespace _1612180_1612677
             if (state == SELECT_STATE)
             {
                 state = NO_STATE;
+                selectShape.Clear();
+                // xoa roi ve lai
+                clearBitmap();
+                wrapRedrawAllShapes(bitmap_primary);
             }
         }
     }
