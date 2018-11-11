@@ -9,12 +9,9 @@ namespace _1612180_1612677
     [Serializable]
     public class MyPolygon : MyShape
     {
-        private List<Point> points;
-
         public MyPolygon(PenAttr _penAttr, List<Point> _points) :
-            base(_penAttr)
+            base(_penAttr, _points)
         {
-            points = new List<Point>(_points);
         }
 
         public static bool isClickedPointsCanDrawShape(List<Point> _points)

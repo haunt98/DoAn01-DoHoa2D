@@ -11,15 +11,19 @@ namespace _1612180_1612677
     {
         private const int RANGE = 10;
 
-        public MyShape(PenAttr _penAttr)
+        public MyShape(PenAttr _penAttr, List<Point> _points)
         {
             penAttr = new PenAttr(_penAttr);
+
             // mac dinh la mau trang
             brushAttr = new BrushAttr(Color.White, "SolidBrush");
+
+            points = new List<Point>(_points);
         }
 
         public BrushAttr brushAttr { get; set; }
         public PenAttr penAttr { get; set; }
+        protected List<Point> points;
 
         // 2 diem gan nhau la duoc
         // khong can chinh xac lam
@@ -124,6 +128,10 @@ namespace _1612180_1612677
         // di chuyen points
         public virtual void movePoints(int _moveWidth, int _moveHeight)
         {
+            for (int i = 0; i < points.Count; ++i)
+            {
+                points[i] = new Point(points[i].X + _moveWidth, points[i].Y + _moveHeight);
+            }
         }
     }
 }

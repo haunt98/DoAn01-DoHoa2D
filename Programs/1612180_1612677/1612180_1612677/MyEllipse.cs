@@ -9,17 +9,17 @@ namespace _1612180_1612677
     [Serializable]
     public class MyEllipse : MyShape
     {
-        private int height;
         private Point mostLeft;
         private int width;
+        private int height;
 
         public MyEllipse(PenAttr _penAttr, List<Point> _points) :
-            base(_penAttr)
+            base(_penAttr, _points)
         {
-            mostLeft = new Point(Math.Min(_points[0].X, _points[1].X),
-                Math.Min(_points[0].Y, _points[1].Y));
-            width = Math.Abs(_points[0].X - _points[1].X);
-            height = Math.Abs(_points[0].Y - _points[1].Y);
+            mostLeft = new Point(Math.Min(points[0].X, points[1].X),
+                Math.Min(points[0].Y, points[1].Y));
+            width = Math.Abs(points[0].X - points[1].X);
+            height = Math.Abs(points[0].Y - points[1].Y);
         }
 
         public static bool isClickedPointsCanDrawShape(List<Point> _points)
@@ -88,6 +88,17 @@ namespace _1612180_1612677
                 path.AddEllipse(new Rectangle(mostLeft, new Size(width, height)));
                 return path.IsVisible(p);
             }
+        }
+
+        public override void movePoints(int _moveWidth, int _moveHeight)
+        {
+            base.movePoints(_moveWidth, _moveHeight);
+            // tinh lai
+            mostLeft = new Point(Math.Min(points[0].X, points[1].X),
+                Math.Min(points[0].Y, points[1].Y));
+            width = Math.Abs(points[0].X - points[1].X);
+            height = Math.Abs(points[0].Y - points[1].Y);
+
         }
     }
 }

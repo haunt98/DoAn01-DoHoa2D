@@ -9,12 +9,12 @@ namespace _1612180_1612677
     [Serializable]
     public class MyCharater : MyShape
     {
-        private int height;
         private Point mostLeft;
         private int width;
+        private int height;
 
         public MyCharater(PenAttr _penAttr, List<Point> _points, FontAttr _fontAttr) :
-            base(_penAttr)
+            base(_penAttr, _points)
         {
             mostLeft = new Point(_points[0].X, _points[0].Y);
             fontAttr = new FontAttr(_fontAttr);

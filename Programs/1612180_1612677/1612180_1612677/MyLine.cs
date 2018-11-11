@@ -9,14 +9,9 @@ namespace _1612180_1612677
     [Serializable]
     public class MyLine : MyShape
     {
-        private Point p_end;
-        private Point p_start;
-
         public MyLine(PenAttr _penAttr, List<Point> _points) :
-            base(_penAttr)
+            base(_penAttr, _points)
         {
-            p_start = new Point(_points[0].X, _points[0].Y);
-            p_end = new Point(_points[1].X, _points[1].Y);
         }
 
         public static bool isClickedPointsCanDrawShape(List<Point> _points)
@@ -30,7 +25,7 @@ namespace _1612180_1612677
             using (Pen pen = new Pen(penAttr.color, penAttr.width))
             {
                 pen.DashStyle = penAttr.dashStyle;
-                graphics.DrawLine(pen, p_start, p_end);
+                graphics.DrawLine(pen, points[0], points[1]);
                 pictureBox.Invalidate();
             }
         }
@@ -38,8 +33,8 @@ namespace _1612180_1612677
         public override List<Point> getEdgePoints()
         {
             List<Point> edgePoints = new List<Point>();
-            edgePoints.Add(new Point(p_start.X, p_start.Y));
-            edgePoints.Add(new Point(p_end.X, p_end.Y));
+            edgePoints.Add(new Point(points[0].X, points[0].Y));
+            edgePoints.Add(new Point(points[1].X, points[1].Y));
             return edgePoints;
         }
 
@@ -49,18 +44,10 @@ namespace _1612180_1612677
             using (GraphicsPath path = new GraphicsPath())
             using (Pen pen = new Pen(penAttr.color, penAttr.width))
             {
-                path.AddLine(p_start, p_end);
+                path.AddLine(points[0], points[1]);
                 pen.DashStyle = penAttr.dashStyle;
                 return path.IsOutlineVisible(p, pen);
             }
-        }
-
-        public override void movePoints(int _moveWidth, int _moveHeight)
-        {
-            p_start.X += _moveWidth;
-            p_start.Y += _moveHeight;
-            p_end.X += _moveWidth;
-            p_end.Y += _moveHeight;
         }
     }
 }

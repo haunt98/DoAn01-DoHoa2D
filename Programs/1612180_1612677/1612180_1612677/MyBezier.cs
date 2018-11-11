@@ -9,12 +9,9 @@ namespace _1612180_1612677
     [Serializable]
     internal class MyBezier : MyShape
     {
-        private List<Point> points;
-
         public MyBezier(PenAttr _penAttr, List<Point> _points) :
-            base(_penAttr)
+            base(_penAttr, _points)
         {
-            points = new List<Point>(_points);
         }
 
         public static bool isClickedPointsCanDrawShape(List<Point> _points)
@@ -24,8 +21,7 @@ namespace _1612180_1612677
 
         public override void draw(Bitmap _bitmap, PictureBox pictureBox)
         {
-            // so diem phai >= 2
-            if (points.Count < 2)
+            if (points.Count != 4)
                 return;
             using (Graphics graphics = Graphics.FromImage(_bitmap))
             using (Pen pen = new Pen(penAttr.color, penAttr.width))

@@ -9,18 +9,19 @@ namespace _1612180_1612677
     [Serializable]
     public class MyRectangle : MyShape
     {
-        private int height;
         private Point mostLeft;
         private int width;
+        private int height;
 
         public MyRectangle(PenAttr _penAttr, List<Point> _points) :
-            base(_penAttr)
+            base(_penAttr, _points)
         {
-            // tim diem goc trai
-            mostLeft = new Point(Math.Min(_points[0].X, _points[1].X),
-                Math.Min(_points[0].Y, _points[1].Y));
-            width = Math.Abs(_points[0].X - _points[1].X);
-            height = Math.Abs(_points[0].Y - _points[1].Y);
+            // diem trai nhat
+            mostLeft = new Point(Math.Min(points[0].X, points[1].X),
+                Math.Min(points[0].Y, points[1].Y));
+            width = Math.Abs(points[0].X - points[1].X);
+            height = Math.Abs(points[0].Y - points[1].Y);
+
         }
 
         public static bool isClickedPointsCanDrawShape(List<Point> _points)
@@ -33,7 +34,6 @@ namespace _1612180_1612677
             using (Graphics graphics = Graphics.FromImage(_bitmap))
             using (Pen pen = new Pen(penAttr.color, penAttr.width))
             {
-                // ve hcn
                 Rectangle rectangle = new Rectangle(mostLeft, new Size(width, height));
                 pen.DashStyle = penAttr.dashStyle;
                 graphics.DrawRectangle(pen, rectangle);
@@ -94,8 +94,13 @@ namespace _1612180_1612677
 
         public override void movePoints(int _moveWidth, int _moveHeight)
         {
-            mostLeft.X += _moveWidth;
-            mostLeft.Y += _moveHeight;
+            base.movePoints(_moveWidth, _moveHeight);
+            // tinh lai
+            mostLeft = new Point(Math.Min(points[0].X, points[1].X),
+                Math.Min(points[0].Y, points[1].Y));
+            width = Math.Abs(points[0].X - points[1].X);
+            height = Math.Abs(points[0].Y - points[1].Y);
+
         }
     }
 }

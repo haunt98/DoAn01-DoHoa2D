@@ -9,12 +9,9 @@ namespace _1612180_1612677
     [Serializable]
     public class MyHinhBinhHanh : MyShape
     {
-        private List<Point> points;
-
         public MyHinhBinhHanh(PenAttr _penAttr, List<Point> _points) :
-            base(_penAttr)
+            base(_penAttr, _points)
         {
-            points = new List<Point>(_points);
         }
 
         private static Point findFinalPointOfParallel(List<Point> _points)
@@ -30,15 +27,16 @@ namespace _1612180_1612677
 
         public static bool isClickedPointsCanDrawShape(List<Point> _points)
         {
-            // hinh binh hanh ve bang 3 diem
+            // hinh binh hanh can 3 diem
             if (_points.Count == 3)
             {
+                // them 1 diem con lai
                 Point final = findFinalPointOfParallel(_points);
                 if (final != Point.Empty)
                 {
                     _points.Add(final);
+                    return true;
                 }
-                return true;
             }
             return false;
         }
@@ -86,7 +84,8 @@ namespace _1612180_1612677
 
         public override void fill(Bitmap _bitmap, PictureBox pictureBox)
         {
-            if (points.Count != 4)
+            // so diem phai >= 2
+            if (points.Count <= 2)
                 return;
             using (Graphics graphics = Graphics.FromImage(_bitmap))
             {
