@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace _1612180_1612677
 {
     // luu nhung thuoc tinh cua brush
+    [Serializable]
     public class BrushAttr
     {
         public BrushAttr(Color _color, String _typeBrush)
@@ -37,6 +34,7 @@ namespace _1612180_1612677
     }
 
     // luu nhung thuoc tinh cua font
+    [Serializable]
     public class FontAttr
     {
         public FontAttr(String _text, string _fontFamily, int _size)
@@ -59,6 +57,7 @@ namespace _1612180_1612677
     }
 
     // luu nhung thuoc tinh cua pen
+    [Serializable]
     public class PenAttr
     {
         public PenAttr(Color _color, DashStyle _dashStyle, int _width)

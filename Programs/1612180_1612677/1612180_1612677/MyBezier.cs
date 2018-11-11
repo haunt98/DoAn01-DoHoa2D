@@ -10,57 +10,37 @@ using System.Windows.Forms;
 namespace _1612180_1612677
 {
     [Serializable]
-    public class MyHinhBinhHanh : MyShape
+
+    class MyBezier : MyShape
     {
         private List<Point> points;
 
-        public MyHinhBinhHanh(PenAttr _penAttr, List<Point> _points) :
+        public MyBezier(PenAttr _penAttr, List<Point> _points) :
             base(_penAttr)
         {
             points = new List<Point>(_points);
         }
 
-        public MyHinhBinhHanh() :
+        public MyBezier() :
             base()
         {
             points = new List<Point>();
         }
 
-        public MyHinhBinhHanh(MyHinhBinhHanh myHinhBinhHanh) :
-            base(myHinhBinhHanh)
+        public MyBezier(MyBezier myBezier) :
+            base(myBezier)
         {
-            points = new List<Point>(myHinhBinhHanh.points);
-        }
-
-        private static Point findFinalPointOfParallel(List<Point> _points)
-        {
-            if (_points.Count == 3)
-            {
-                int x = _points[0].X + _points[2].X;
-                int y = _points[0].Y + _points[2].Y;
-                return new Point(x - _points[1].X, y - _points[1].Y);
-            }
-            return Point.Empty;
+            points = new List<Point>(myBezier.points);
         }
 
         public static bool isClickedPointsCanDrawShape(List<Point> _points)
-        {
-            // hinh binh hanh ve bang 3 diem
-            if (_points.Count == 3)
-            {
-                Point final = findFinalPointOfParallel(_points);
-                if (final != Point.Empty)
-                {
-                    _points.Add(final);
-                }
-                return true;
-            }
-            return false;
+        { 
+            return _points.Count == 4;
         }
 
         public override MyShape Clone()
         {
-            return new MyHinhBinhHanh(this);
+            return new MyBezier(this);
         }
 
         public override void draw(Bitmap _bitmap, PictureBox pictureBox)
@@ -72,7 +52,7 @@ namespace _1612180_1612677
             using (Pen pen = new Pen(penAttr.color, penAttr.width))
             {
                 pen.DashStyle = penAttr.dashStyle;
-                graphics.DrawPolygon(pen, points.ToArray());
+                graphics.DrawBeziers(pen, points.ToArray());
                 pictureBox.Invalidate();
             }
         }
@@ -106,24 +86,7 @@ namespace _1612180_1612677
 
         public override void fill(Bitmap _bitmap, PictureBox pictureBox)
         {
-            if (points.Count != 4)
-                return;
-            using (Graphics graphics = Graphics.FromImage(_bitmap))
-            {
-                switch (brushAttr.typeBrush)
-                {
-                    case "SolidBrush":
-                        using (Brush brush = new SolidBrush(brushAttr.color))
-                        {
-                            graphics.FillPolygon(brush, points.ToArray());
-                        }
-                        break;
-
-                    default:
-                        break;
-                }
-                pictureBox.Invalidate();
-            }
+            return;
         }
 
         public override List<Point> getEdgePoints()
@@ -136,7 +99,7 @@ namespace _1612180_1612677
             using (GraphicsPath path = new GraphicsPath())
             using (Pen pen = new Pen(penAttr.color, penAttr.width))
             {
-                path.AddPolygon(points.ToArray());
+                path.AddBeziers(points.ToArray());
                 pen.DashStyle = penAttr.dashStyle;
                 return path.IsOutlineVisible(p, pen);
             }
@@ -144,11 +107,8 @@ namespace _1612180_1612677
 
         public override bool isPointInsidePrecisly(Point p)
         {
-            using (GraphicsPath path = new GraphicsPath())
-            {
-                path.AddPolygon(points.ToArray());
-                return path.IsVisible(p);
-            }
+            return false;
         }
+
     }
 }

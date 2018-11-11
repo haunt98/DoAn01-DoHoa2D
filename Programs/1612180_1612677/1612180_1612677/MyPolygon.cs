@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace _1612180_1612677
 {
+    [Serializable]
     public class MyPolygon : MyShape
     {
         private List<Point> points;
@@ -129,52 +127,6 @@ namespace _1612180_1612677
                 path.AddPolygon(points.ToArray());
                 return path.IsVisible(p);
             }
-        }
-
-        public override void ReadData(string data)
-        {
-            // doc string co dang "5 color dashStype width length x y "
-            String[] result = data.Split(' ');
-
-            Color colorShape = ConvertColorFromString(result[1]);
-            DashStyle dashStyleFromFile = ConvertDashStypeFromString(result[2]);
-            int widthFromFile = Int32.Parse(result[3]);
-            penAttr = new PenAttr(colorShape, dashStyleFromFile, widthFromFile);
-            // doc Brush tu file
-            Color colorFill = ConvertColorFromString(result[4]);
-            brushAttr = new BrushAttr(colorFill, result[5]);
-
-            int length = Int32.Parse(result[6]);
-            points = new List<Point>(length);
-            int i = 0, k = 0;
-            while (i < length) //5
-            {
-                Point temp = new Point(Int32.Parse(result[7 + k]), Int32.Parse(result[8 + k]));
-                points.Add(temp);
-                i = i + 1;
-                k = k + 2;
-            }
-            //doc du lieu penAttr tu file
-
-            // doc Brush tu file
-        }
-
-        public override string WriteData()
-        {
-            // in ra string co dang "5  color dashStype width  typeBrush length xi yi "
-            String result = "5 ";
-            result += penAttr.color.ToArgb().ToString() + " " +
-               penAttr.dashStyle.ToString() + " " +
-               penAttr.width.ToString() + " ";
-            result += brushAttr.color.ToArgb().ToString() + " " +
-                brushAttr.typeBrush.ToString() + " ";
-            result += points.Count + " ";
-            for (int i = 0; i < points.Count; i++)
-            {
-                result += points[i].X.ToString() + " " + points[i].Y.ToString() + " ";
-            }
-
-            return result;
         }
     }
 }

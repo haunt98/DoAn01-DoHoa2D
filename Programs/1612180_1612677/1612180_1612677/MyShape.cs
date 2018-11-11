@@ -9,6 +9,7 @@ using System.Windows.Forms;
 
 namespace _1612180_1612677
 {
+    [Serializable]
     public abstract class MyShape
     {
         private const int RANGE = 10;
@@ -168,10 +169,8 @@ namespace _1612180_1612677
             return false;
         }
 
-        // Doc data
-        public abstract void ReadData(String data);
-
-        // Viet data
-        public abstract String WriteData();
+        public virtual void movePoints(int _moveWidth, int _moveHeight)
+        {
+        }
     }
 }

@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace _1612180_1612677
 {
+    [Serializable]
     public class MyLine : MyShape
     {
         private Point p_end;
@@ -76,32 +74,12 @@ namespace _1612180_1612677
             }
         }
 
-        public override void ReadData(string data)
+        public override void movePoints(int _moveWidth, int _moveHeight)
         {
-            //doc string co dang "1 xstart ystart xend yend color dashStype width"
-            String[] result = data.Split(' ');
-            p_start = new Point(Int32.Parse(result[1]), Int32.Parse(result[2]));
-            p_end = new Point(Int32.Parse(result[3]), Int32.Parse(result[4]));
-
-            //doc du lieu penAtt tu file
-            Color colorFromFile = ConvertColorFromString(result[5]);
-            DashStyle dashStyleFromFile = ConvertDashStypeFromString(result[6]);
-            int widthFromFile = Int32.Parse(result[7]);
-            penAttr = new PenAttr(colorFromFile, dashStyleFromFile, widthFromFile);
-        }
-
-        public override string WriteData()
-        {
-            //in ra string co dang 1 xstart ystart xend yend
-            String result = "1 ";
-            result += p_start.X.ToString() + " ";
-            result += p_start.Y.ToString() + " ";
-            result += p_end.X.ToString() + " ";
-            result += p_end.Y.ToString() + " ";
-            result += penAttr.color.ToArgb().ToString() + " " +
-                penAttr.dashStyle.ToString() + " " +
-                penAttr.width.ToString();
-            return result;
+            p_start.X += _moveWidth;
+            p_start.Y += _moveHeight;
+            p_end.X += _moveWidth;
+            p_end.Y += _moveHeight;
         }
     }
 }

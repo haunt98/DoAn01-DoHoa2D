@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace _1612180_1612677
 {
+    [Serializable]
     public class MyEllipse : MyShape
     {
         private int height;
@@ -109,42 +107,6 @@ namespace _1612180_1612677
                 path.AddEllipse(new Rectangle(mostLeft, new Size(width, height)));
                 return path.IsVisible(p);
             }
-        }
-
-        public override void ReadData(string data)
-        {
-            // doc string co dang "3 x y  height  width color dashStype width"
-
-            String[] result = data.Split(' ');
-            mostLeft = new Point(Int32.Parse(result[1]), Int32.Parse(result[2]));
-            height = Int32.Parse(result[3]);
-            width = Int32.Parse(result[4]);
-
-            //doc du lieu penAttr tu file
-            Color colorShape = ConvertColorFromString(result[5]);
-            DashStyle dashStyleFromFile = ConvertDashStypeFromString(result[6]);
-            int widthFromFile = Int32.Parse(result[7]);
-            penAttr = new PenAttr(colorShape, dashStyleFromFile, widthFromFile);
-
-            //doc Brush tu file
-            Color colorFill = ConvertColorFromString(result[8]);
-            brushAttr = new BrushAttr(colorFill, result[9]);
-        }
-
-        public override string WriteData()
-        {
-            // in ra string co dang "3 x y  height  width color dashStype width"
-            String result = "3 ";
-            result += mostLeft.X.ToString() + " ";
-            result += mostLeft.Y.ToString() + " ";
-            result += height.ToString() + " ";
-            result += width.ToString() + " ";
-            result += penAttr.color.ToArgb().ToString() + " " +
-                penAttr.dashStyle.ToString() + " " +
-                penAttr.width.ToString() + " ";
-            result += brushAttr.color.ToArgb().ToString() + " " +
-                brushAttr.typeBrush.ToString();
-            return result;
         }
     }
 }
