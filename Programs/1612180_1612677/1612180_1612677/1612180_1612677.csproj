@@ -54,9 +54,15 @@
     <Compile Include="FormMain.Designer.cs">
       <DependentUpon>FormMain.cs</DependentUpon>
     </Compile>
+    <Compile Include="MyCharacter.cs" />
+    <Compile Include="MyEllipse.cs" />
+    <Compile Include="MyHinhBinhHanh.cs" />
+    <Compile Include="MyLine.cs" />
+    <Compile Include="MyPolygon.cs" />
+    <Compile Include="MyRectangle.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Shape.cs" />
+    <Compile Include="MyShape.cs" />
     <EmbeddedResource Include="FormMain.resx">
       <DependentUpon>FormMain.cs</DependentUpon>
     </EmbeddedResource>

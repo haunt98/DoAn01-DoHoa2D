@@ -566,12 +566,6 @@ namespace _1612180_1612677
                 // khong co thi them vao
                 selectShape.Add(select_temp);
             }
-            else
-            {
-                // xoa roi them lai cho dung thu tu
-                selectShape.Remove(select_temp);
-                selectShape.Add(select_temp);
-            }
         }
 
         private void reloadFontAttr(object sender, EventArgs e)
