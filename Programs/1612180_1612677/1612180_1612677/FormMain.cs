@@ -341,7 +341,7 @@ namespace _1612180_1612677
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "Text files (*.txt)|*.txt";
+            ofd.Filter = "Binary files (*.bin)|*.bin";
             if (ofd.ShowDialog() == DialogResult.OK)
             {
                 myShapes.Clear();
@@ -774,9 +774,9 @@ namespace _1612180_1612677
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.InitialDirectory = @"C:\";
             sfd.RestoreDirectory = true;
-            sfd.FileName = filePath;
-            sfd.DefaultExt = "txt";
-            sfd.Filter = "Text files (*.txt)|*.txt";
+            sfd.FileName = "Untitled";
+            sfd.DefaultExt = "bin";
+            sfd.Filter = "Binary files (*.bin)|*.bin";
 
             if (sfd.ShowDialog() == DialogResult.OK)
             {
