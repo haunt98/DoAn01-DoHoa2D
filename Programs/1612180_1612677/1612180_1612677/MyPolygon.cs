@@ -16,9 +16,18 @@ namespace _1612180_1612677
 
         public static bool isClickedPointsCanDrawShape(List<Point> _points)
         {
-            // it nhat 2 diem
-            // da giac hoan thanh khi diem dau va diem cuoi trung nhau
-            return _points.Count >= 2 && isPointEqual(_points[_points.Count - 1], _points[0]);
+            // da giac can it nhat 2 diem
+            if (_points.Count >= 2)
+            {
+                // da giac hoan thanh khi diem dau va diem cuoi trung nhau
+                if (isPointEqual(_points[_points.Count - 1], _points[0]))
+                {
+                    // delete diem trung
+                    _points.RemoveAt(_points.Count - 1);
+                    return true;
+                }
+            }
+            return false;
         }
 
         public override void draw(Bitmap _bitmap, PictureBox pictureBox)

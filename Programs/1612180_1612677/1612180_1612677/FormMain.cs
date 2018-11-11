@@ -440,8 +440,6 @@ namespace _1612180_1612677
                         break;
 
                     case POLYGON_STATE:
-                        // vi diem dau diem cuoi da giac trung nhau
-                        clickedPoints.RemoveAt(clickedPoints.Count - 1);
                         myShape = new MyPolygon(getPenAttr(), clickedPoints);
                         break;
 
