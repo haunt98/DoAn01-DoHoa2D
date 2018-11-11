@@ -23,28 +23,9 @@ namespace _1612180_1612677
             height = Math.Abs(_points[0].Y - _points[1].Y);
         }
 
-        public MyRectangle(MyRectangle myRectangle) :
-            base(myRectangle)
-        {
-            mostLeft = new Point(myRectangle.mostLeft.X, myRectangle.mostLeft.Y);
-            width = myRectangle.width;
-            height = myRectangle.height;
-        }
-
-        public MyRectangle() :
-            base()
-        {
-            mostLeft = Point.Empty;
-        }
-
         public static bool isClickedPointsCanDrawShape(List<Point> _points)
         {
             return _points.Count == 2;
-        }
-
-        public override MyShape Clone()
-        {
-            return new MyRectangle(this);
         }
 
         public override void draw(Bitmap _bitmap, PictureBox pictureBox)

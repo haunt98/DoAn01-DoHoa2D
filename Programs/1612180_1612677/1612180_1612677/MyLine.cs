@@ -12,20 +12,6 @@ namespace _1612180_1612677
         private Point p_end;
         private Point p_start;
 
-        public MyLine() :
-            base()
-        {
-            p_start = Point.Empty;
-            p_end = Point.Empty;
-        }
-
-        public MyLine(MyLine myLine) :
-            base(myLine)
-        {
-            p_start = new Point(myLine.p_start.X, myLine.p_start.Y);
-            p_end = new Point(myLine.p_end.X, myLine.p_end.Y);
-        }
-
         public MyLine(PenAttr _penAttr, List<Point> _points) :
             base(_penAttr)
         {
@@ -36,11 +22,6 @@ namespace _1612180_1612677
         public static bool isClickedPointsCanDrawShape(List<Point> _points)
         {
             return _points.Count == 2;
-        }
-
-        public override MyShape Clone()
-        {
-            return new MyLine(this);
         }
 
         public override void draw(Bitmap _bitmap, PictureBox pictureBox)

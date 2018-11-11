@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -8,8 +7,6 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace _1612180_1612677
@@ -82,8 +79,15 @@ namespace _1612180_1612677
             myShapes.Clear();
             clickedPoints.Clear();
             selectShape.Clear();
+            posMovingShape.Clear();
+
             // reset state
             state = NO_STATE;
+            isMouseDown = false;
+            isMovingShape = false;
+            selectedShape = -1;
+            selectInsideShape = -1;
+            selectOutlineShape = -1;
         }
 
         private void buttonDel_Click(object sender, EventArgs e)
@@ -106,6 +110,10 @@ namespace _1612180_1612677
 
         private void buttonDrawBezier_Click(object sender, EventArgs e)
         {
+            // reset list
+            clickedPoints.Clear();
+            selectShape.Clear();
+            // set state
             state = BEZIER_STATE;
         }
 
@@ -129,6 +137,10 @@ namespace _1612180_1612677
 
         private void buttonDrawHBH_Click(object sender, EventArgs e)
         {
+            // reset list
+            clickedPoints.Clear();
+            selectShape.Clear();
+            // set state
             state = HINHBINHHANH_STATE;
         }
 
@@ -175,35 +187,36 @@ namespace _1612180_1612677
             // reload lai mau sac cho vien cua shape
             if (state == SELECT_STATE)
             {
-                int clickedShape = selectInsideShape > selectOutlineShape
-                    ? selectInsideShape : selectOutlineShape;
-
-                if (clickedShape == -1)
+                if (selectedShape == -1)
                     return;
 
                 // click ben trong, doi mau ben trong
-                if (clickedShape == selectInsideShape)
+                if (selectedShape != selectOutlineShape)
                 {
-                    if (myShapes[selectInsideShape] is MyCharater)
+                    if (myShapes[selectedShape] is MyCharater)
                     {
-                        myShapes[selectInsideShape].penAttr = getPenAttr();
-                        clearBitmap();
-                        wrapRedrawAllShapes(bitmap_primary);
+                        myShapes[selectedShape].penAttr = getPenAttr();
                     }
                     else
                     {
-                        myShapes[selectInsideShape].brushAttr = getBrushAttr();
-                        clearBitmap();
-                        wrapRedrawAllShapes(bitmap_primary);
+                        myShapes[selectedShape].brushAttr = getBrushAttr();
                     }
                 }
                 // click vien, doi mau vien
                 else
                 {
                     myShapes[selectOutlineShape].penAttr = getPenAttr();
-                    clearBitmap();
-                    wrapRedrawAllShapes(bitmap_primary);
                 }
+
+                // xoa roi ve lai trong bitmap_primary
+                clearBitmap();
+                wrapRedrawAllShapes(bitmap_primary);
+
+                // highlight trong bitmap_temp
+                bitmap_temp = (Bitmap)bitmap_primary.Clone();
+                pictureBoxMain.Image = bitmap_temp;
+                wrapRedrawAllShapes(bitmap_temp);
+                wrapHightLightShape(selectedShape, bitmap_temp);
             }
         }
 
@@ -352,7 +365,10 @@ namespace _1612180_1612677
                 // khong nhan su kien mouse down
                 // khi khong xay ra dieu gi ca
                 isMouseDown = false;
+                // khong moving gi ca
                 isMovingShape = false;
+                // set bitmap_primary
+                pictureBoxMain.Image = bitmap_primary;
                 return;
             }
             // xu ly truong hop select
@@ -575,7 +591,7 @@ namespace _1612180_1612677
                 // di chuyen shape theo mouse move
                 myShapes[selectedShape].movePoints(moveWidth, moveHeight);
 
-                // xoa roi ve lai
+                // xoa roi ve lai trong bitmap_primary
                 clearBitmap();
                 wrapRedrawAllShapes(bitmap_primary);
 
@@ -583,7 +599,11 @@ namespace _1612180_1612677
                 // lam noi bat len tren bitmap_temp
                 bitmap_temp = (Bitmap)bitmap_primary.Clone();
                 pictureBoxMain.Image = bitmap_temp;
-                wrapHightLightShape(selectedShape, bitmap_temp, e);
+                wrapHightLightShape(selectedShape, bitmap_temp);
+                if (selectedShape != selectOutlineShape)
+                {
+                    myShapes[selectedShape].drawInsidePoint(bitmap_temp, e.Location, pictureBoxMain);
+                }
 
                 // reset lai list moving shape
                 posMovingShape.Clear();
@@ -611,11 +631,16 @@ namespace _1612180_1612677
             // di chuyen shape theo mouse move
             myShapes[selectedShape].movePoints(moveWidth, moveHeight);
 
-            // xoa roi ve lai
+            // xoa roi ve lai trong bitmap_primary
             clearBitmap();
             wrapRedrawAllShapes(bitmap_primary);
+
             // highlight select shape trong khi di chuyen
-            wrapHightLightShape(selectedShape, bitmap_primary, e);
+            wrapHightLightShape(selectedShape, bitmap_primary);
+            if (selectedShape != selectOutlineShape)
+            {
+                myShapes[selectedShape].drawInsidePoint(bitmap_primary, e.Location, pictureBoxMain);
+            }
 
             // xoa diem hien ra khoi list vi tri cua shape moving
             // vi chi la ve tam
@@ -651,7 +676,7 @@ namespace _1612180_1612677
             }
 
             // chon shape nam ngoai cung
-            selectedShape = selectOutlineShape > selectInsideShape ?
+            selectedShape = selectOutlineShape >= selectInsideShape ?
                 selectOutlineShape : selectInsideShape;
 
             // select khong trung
@@ -674,7 +699,11 @@ namespace _1612180_1612677
             // hightlight shape dang select
             bitmap_temp = (Bitmap)bitmap_primary.Clone();
             pictureBoxMain.Image = bitmap_temp;
-            wrapHightLightShape(selectedShape, bitmap_temp, e);
+            wrapHightLightShape(selectedShape, bitmap_temp);
+            if (selectedShape != selectOutlineShape)
+            {
+                myShapes[selectedShape].drawInsidePoint(bitmap_temp, e.Location, pictureBoxMain);
+            }
 
             // them select vao list select shape
             if (selectShape.IndexOf(selectedShape) == -1)
@@ -692,30 +721,25 @@ namespace _1612180_1612677
             if (state != SELECT_STATE)
                 return;
 
-            int clickedShape = selectInsideShape > selectOutlineShape
-                ? selectInsideShape : selectOutlineShape;
-
             // chua click shape nao ca
-            if (clickedShape == -1)
+            if (selectedShape == -1)
                 return;
-            else
+
+            // kiem tra character
+            if (myShapes[selectedShape] is MyCharater)
             {
+                myShapes[selectedShape].penAttr = getPenAttr();
+                MyCharater myCharacter = myShapes[selectedShape] as MyCharater;
+                myCharacter.fontAttr = getFontAttr();
+
+                // xoa roi ve lai trong bitmap_primary
                 clearBitmap();
+                wrapRedrawAllShapes(bitmap_primary);
+
+                // highlight trong bitmap_temp
+                bitmap_temp = (Bitmap)bitmap_primary.Clone();
                 pictureBoxMain.Image = bitmap_temp;
-
-                // ve trong bitmap temp
-
-                // dau tien fill, sau do draw vien, sau do draw edge
-                if (myShapes[clickedShape] is MyCharater)
-                {
-                    MyShape myShape = myShapes[clickedShape];
-                    myShape.penAttr = getPenAttr();
-                    MyCharater myCharacter = myShape as MyCharater;
-                    myCharacter.fontAttr = getFontAttr();
-                    pictureBoxMain.Invalidate();
-                }
-                // ve trong bitmap real
-                wrapRedrawAllShapes(bitmap_temp);
+                wrapHightLightShape(selectedShape, bitmap_temp);
             }
         }
 
@@ -724,26 +748,24 @@ namespace _1612180_1612677
             if (state != SELECT_STATE)
                 return;
 
-            int clickedShape = selectInsideShape > selectOutlineShape
-                ? selectInsideShape : selectOutlineShape;
-
             // chua click shape nao ca
-            if (clickedShape == -1)
+            if (selectedShape == -1)
                 return;
 
             // click vien cua shape
-            if (clickedShape == selectOutlineShape)
+            if (selectedShape == selectOutlineShape)
             {
-                myShapes[clickedShape].penAttr = getPenAttr();
+                // thay doi vien
+                myShapes[selectedShape].penAttr = getPenAttr();
 
-                // tao bitmap temp va reset bitmap
-                Bitmap btemp = (Bitmap)bitmap_primary.Clone();
+                // xo roi ve lai trong bitmap_primary
                 clearBitmap();
-                bitmap_temp = (Bitmap)btemp.Clone();
-                pictureBoxMain.Image = bitmap_temp;
-
-                // ve trong bitmap real
                 wrapRedrawAllShapes(bitmap_primary);
+
+                // hightlight trong bitmap_temp
+                bitmap_temp = (Bitmap)bitmap_primary.Clone();
+                pictureBoxMain.Image = bitmap_temp;
+                wrapHightLightShape(selectedShape, bitmap_temp);
             }
         }
 
@@ -791,17 +813,12 @@ namespace _1612180_1612677
             }
         }
 
-        private void wrapHightLightShape(int _hlShape, Bitmap _bitmap, MouseEventArgs e)
+        private void wrapHightLightShape(int _hlShape, Bitmap _bitmap)
         {
             // dau tien fill, sau do draw vien, sau do draw edge
             myShapes[_hlShape].fill(_bitmap, pictureBoxMain);
             myShapes[_hlShape].draw(_bitmap, pictureBoxMain);
             myShapes[_hlShape].drawEdgePoints(_bitmap, pictureBoxMain);
-            // neu click vao ben trong, danh dau tai diem click
-            if (_hlShape == selectInsideShape)
-            {
-                myShapes[_hlShape].drawInsidePoint(_bitmap, e.Location, pictureBoxMain);
-            }
         }
 
         private void wrapRedrawAllShapes(Bitmap _bitmap)

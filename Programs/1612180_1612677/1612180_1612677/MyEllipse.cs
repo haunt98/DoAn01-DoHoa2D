@@ -22,28 +22,9 @@ namespace _1612180_1612677
             height = Math.Abs(_points[0].Y - _points[1].Y);
         }
 
-        public MyEllipse() :
-            base()
-        {
-            mostLeft = Point.Empty;
-        }
-
-        public MyEllipse(MyEllipse myEllipse) :
-            base(myEllipse)
-        {
-            mostLeft = new Point(myEllipse.mostLeft.X, myEllipse.mostLeft.Y);
-            width = myEllipse.width;
-            height = myEllipse.height;
-        }
-
         public static bool isClickedPointsCanDrawShape(List<Point> _points)
         {
             return _points.Count == 2;
-        }
-
-        public override MyShape Clone()
-        {
-            return new MyEllipse(this);
         }
 
         public override void draw(Bitmap _bitmap, PictureBox pictureBox)

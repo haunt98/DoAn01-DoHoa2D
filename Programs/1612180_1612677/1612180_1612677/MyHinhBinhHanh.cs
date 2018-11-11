@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace _1612180_1612677
@@ -18,18 +15,6 @@ namespace _1612180_1612677
             base(_penAttr)
         {
             points = new List<Point>(_points);
-        }
-
-        public MyHinhBinhHanh() :
-            base()
-        {
-            points = new List<Point>();
-        }
-
-        public MyHinhBinhHanh(MyHinhBinhHanh myHinhBinhHanh) :
-            base(myHinhBinhHanh)
-        {
-            points = new List<Point>(myHinhBinhHanh.points);
         }
 
         private static Point findFinalPointOfParallel(List<Point> _points)
@@ -56,11 +41,6 @@ namespace _1612180_1612677
                 return true;
             }
             return false;
-        }
-
-        public override MyShape Clone()
-        {
-            return new MyHinhBinhHanh(this);
         }
 
         public override void draw(Bitmap _bitmap, PictureBox pictureBox)

@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
@@ -19,18 +16,6 @@ namespace _1612180_1612677
             penAttr = new PenAttr(_penAttr);
             // mac dinh la mau trang
             brushAttr = new BrushAttr(Color.White, "SolidBrush");
-        }
-
-        public MyShape()
-        {
-            penAttr = null;
-            brushAttr = null;
-        }
-
-        public MyShape(MyShape myShape)
-        {
-            penAttr = new PenAttr(myShape.penAttr);
-            brushAttr = new BrushAttr(myShape.brushAttr);
         }
 
         public BrushAttr brushAttr { get; set; }
@@ -56,42 +41,6 @@ namespace _1612180_1612677
                     return true;
             }
             return false;
-        }
-
-        public abstract MyShape Clone();
-
-        public Color ConvertColorFromString(String data)
-        {
-            Color result = Color.FromArgb(Int32.Parse(data));
-            return result;
-        }
-
-        public DashStyle ConvertDashStypeFromString(String dashStyle)
-        {
-            DashStyle result = DashStyle.Solid;
-            switch (dashStyle)
-            {
-                case "Dash":
-                    result = DashStyle.Dash;
-                    break;
-
-                case "DashDot":
-                    result = DashStyle.DashDot;
-                    break;
-
-                case "DashDotDot":
-                    result = DashStyle.DashDotDot;
-                    break;
-
-                case "Dot":
-                    result = DashStyle.Dot;
-                    break;
-
-                case "Solid":
-                    result = DashStyle.Solid;
-                    break;
-            }
-            return result;
         }
 
         public abstract void draw(Bitmap _bitmap, PictureBox pictureBox);
@@ -161,7 +110,10 @@ namespace _1612180_1612677
         }
 
         // kiem tra chinh xac mot diem nam o canh
-        public abstract bool isPointBelongPrecisely(Point p);
+        public virtual bool isPointBelongPrecisely(Point p)
+        {
+            return false;
+        }
 
         // kiem tra chinh xac mot diem nam be trong
         public virtual bool isPointInsidePrecisly(Point p)
@@ -169,6 +121,7 @@ namespace _1612180_1612677
             return false;
         }
 
+        // di chuyen points
         public virtual void movePoints(int _moveWidth, int _moveHeight)
         {
         }

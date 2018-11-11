@@ -57,6 +57,8 @@
             this.buttonDrawPolygon = new System.Windows.Forms.Button();
             this.buttonDel = new System.Windows.Forms.Button();
             this.buttonUnselect = new System.Windows.Forms.Button();
+            this.buttonDrawHbh = new System.Windows.Forms.Button();
+            this.buttonDrawBezier = new System.Windows.Forms.Button();
             this.menuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMain)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPenWidth)).BeginInit();
@@ -126,9 +128,9 @@
             // 
             // pictureBoxMain
             // 
-            this.pictureBoxMain.Location = new System.Drawing.Point(120, 129);
+            this.pictureBoxMain.Location = new System.Drawing.Point(136, 129);
             this.pictureBoxMain.Name = "pictureBoxMain";
-            this.pictureBoxMain.Size = new System.Drawing.Size(656, 282);
+            this.pictureBoxMain.Size = new System.Drawing.Size(640, 282);
             this.pictureBoxMain.TabIndex = 3;
             this.pictureBoxMain.TabStop = false;
             this.pictureBoxMain.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureBoxMain_MouseDown);
@@ -331,11 +333,33 @@
             this.buttonUnselect.UseVisualStyleBackColor = true;
             this.buttonUnselect.Click += new System.EventHandler(this.buttonUnselect_Click);
             // 
+            // buttonDrawHbh
+            // 
+            this.buttonDrawHbh.Location = new System.Drawing.Point(13, 214);
+            this.buttonDrawHbh.Name = "buttonDrawHbh";
+            this.buttonDrawHbh.Size = new System.Drawing.Size(117, 23);
+            this.buttonDrawHbh.TabIndex = 27;
+            this.buttonDrawHbh.Text = "Draw Hinh binh hanh";
+            this.buttonDrawHbh.UseVisualStyleBackColor = true;
+            this.buttonDrawHbh.Click += new System.EventHandler(this.buttonDrawHBH_Click);
+            // 
+            // buttonDrawBezier
+            // 
+            this.buttonDrawBezier.Location = new System.Drawing.Point(13, 261);
+            this.buttonDrawBezier.Name = "buttonDrawBezier";
+            this.buttonDrawBezier.Size = new System.Drawing.Size(75, 23);
+            this.buttonDrawBezier.TabIndex = 28;
+            this.buttonDrawBezier.Text = "Draw Bezier";
+            this.buttonDrawBezier.UseVisualStyleBackColor = true;
+            this.buttonDrawBezier.Click += new System.EventHandler(this.buttonDrawBezier_Click);
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(788, 432);
+            this.Controls.Add(this.buttonDrawBezier);
+            this.Controls.Add(this.buttonDrawHbh);
             this.Controls.Add(this.buttonUnselect);
             this.Controls.Add(this.buttonDel);
             this.Controls.Add(this.buttonDrawPolygon);
@@ -406,6 +430,8 @@
         private System.Windows.Forms.Button buttonDrawPolygon;
         private System.Windows.Forms.Button buttonDel;
         private System.Windows.Forms.Button buttonUnselect;
+        private System.Windows.Forms.Button buttonDrawHbh;
+        private System.Windows.Forms.Button buttonDrawBezier;
     }
 }
 

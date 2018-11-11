@@ -17,28 +17,11 @@ namespace _1612180_1612677
             points = new List<Point>(_points);
         }
 
-        public MyPolygon() :
-            base()
-        {
-            points = new List<Point>();
-        }
-
-        public MyPolygon(MyPolygon myPolygon) :
-            base(myPolygon)
-        {
-            points = new List<Point>(myPolygon.points);
-        }
-
         public static bool isClickedPointsCanDrawShape(List<Point> _points)
         {
             // it nhat 2 diem
             // da giac hoan thanh khi diem dau va diem cuoi trung nhau
             return _points.Count >= 2 && isPointEqual(_points[_points.Count - 1], _points[0]);
-        }
-
-        public override MyShape Clone()
-        {
-            return new MyPolygon(this);
         }
 
         public override void draw(Bitmap _bitmap, PictureBox pictureBox)

@@ -2,16 +2,12 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace _1612180_1612677
 {
     [Serializable]
-
-    class MyBezier : MyShape
+    internal class MyBezier : MyShape
     {
         private List<Point> points;
 
@@ -21,26 +17,9 @@ namespace _1612180_1612677
             points = new List<Point>(_points);
         }
 
-        public MyBezier() :
-            base()
-        {
-            points = new List<Point>();
-        }
-
-        public MyBezier(MyBezier myBezier) :
-            base(myBezier)
-        {
-            points = new List<Point>(myBezier.points);
-        }
-
         public static bool isClickedPointsCanDrawShape(List<Point> _points)
-        { 
-            return _points.Count == 4;
-        }
-
-        public override MyShape Clone()
         {
-            return new MyBezier(this);
+            return _points.Count == 4;
         }
 
         public override void draw(Bitmap _bitmap, PictureBox pictureBox)
@@ -84,11 +63,6 @@ namespace _1612180_1612677
             }
         }
 
-        public override void fill(Bitmap _bitmap, PictureBox pictureBox)
-        {
-            return;
-        }
-
         public override List<Point> getEdgePoints()
         {
             return new List<Point>(points);
@@ -104,11 +78,5 @@ namespace _1612180_1612677
                 return path.IsOutlineVisible(p, pen);
             }
         }
-
-        public override bool isPointInsidePrecisly(Point p)
-        {
-            return false;
-        }
-
     }
 }
