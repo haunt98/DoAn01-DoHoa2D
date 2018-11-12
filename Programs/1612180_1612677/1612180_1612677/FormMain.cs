@@ -23,6 +23,7 @@ namespace _1612180_1612677
         private const int POLYGON_STATE = 5;
         private const int HINHBINHHANH_STATE = 6;
         private const int BEZIER_STATE = 7;
+        private const int PARABOL_STATE = 8;
 
         // state luu trang thai hien tai
         private int state = NO_STATE;
@@ -151,6 +152,15 @@ namespace _1612180_1612677
             selectShapes.Clear();
             // set state
             state = LINE_STATE;
+        }
+
+        private void buttonDrawPara_Click(object sender, EventArgs e)
+        {
+            // reset list
+            clickedPoints.Clear();
+            selectShapes.Clear();
+            // set state
+            state = PARABOL_STATE;
         }
 
         private void buttonDrawPolygon_Click(object sender, EventArgs e)
@@ -287,79 +297,6 @@ namespace _1612180_1612677
             buttonShowColor.BackColor = colorDialog.Color;
         }
 
-        private BrushAttr getBrushAttr()
-        {
-            BrushAttr brushAttr = new BrushAttr(colorDialog.Color,
-                comboBoxBrushStyle.SelectedItem.ToString());
-            return brushAttr;
-        }
-
-        private FontAttr getFontAttr()
-        {
-            FontAttr fontAttr = new FontAttr(textBoxChar.Text,
-                comboBoxFont.SelectedItem.ToString(),
-                Convert.ToInt32(Math.Round(numericUpDownFontSize.Value, 0)));
-            return fontAttr;
-        }
-
-        private PenAttr getPenAttr()
-        {
-            PenAttr penAttr = null;
-            switch (comboBoxDashStyle.SelectedItem.ToString())
-            {
-                case "Dash":
-                    penAttr = new PenAttr(colorDialog.Color, DashStyle.Dash,
-                        Convert.ToInt32(Math.Round(numericUpDownPenWidth.Value, 0)));
-                    break;
-
-                case "DashDot":
-                    penAttr = new PenAttr(colorDialog.Color, DashStyle.DashDot,
-                        Convert.ToInt32(Math.Round(numericUpDownPenWidth.Value, 0)));
-                    break;
-
-                case "DashDotDot":
-                    penAttr = new PenAttr(colorDialog.Color, DashStyle.DashDotDot,
-                        Convert.ToInt32(Math.Round(numericUpDownPenWidth.Value, 0)));
-                    break;
-
-                case "Dot":
-                    penAttr = new PenAttr(colorDialog.Color, DashStyle.Dot,
-                        Convert.ToInt32(Math.Round(numericUpDownPenWidth.Value, 0)));
-                    break;
-
-                case "Solid":
-                    penAttr = new PenAttr(colorDialog.Color, DashStyle.Solid,
-                        Convert.ToInt32(Math.Round(numericUpDownPenWidth.Value, 0)));
-                    break;
-
-                default:
-                    break;
-            }
-            return penAttr;
-        }
-
-        private void openToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "Binary files (*.bin)|*.bin";
-            if (ofd.ShowDialog() == DialogResult.OK)
-            {
-                myShapes.Clear();
-                FileStream fs = new FileStream(ofd.FileName, FileMode.Open);
-                BinaryFormatter bf = new BinaryFormatter();
-                int length = (int)bf.Deserialize(fs);
-                myShapes = new List<MyShape>(length);
-                for (int i = 0; i < length; i++)
-                {
-                    myShapes.Add((MyShape)bf.Deserialize(fs));
-                }
-                fs.Close();
-
-                clearBitmap();
-                wrapRedrawAllShapes(bitmap_primary);
-            }
-        }
-
         private void pictureBoxMain_MouseDown(object sender, MouseEventArgs e)
         {
             if (state == NO_STATE)
@@ -418,6 +355,10 @@ namespace _1612180_1612677
                     flag = MyBezier.isClickedPointsCanDrawShape(clickedPoints);
                     break;
 
+                case PARABOL_STATE:
+                    flag = MyParabol.isClickedPointsCanDrawShape(clickedPoints);
+                    break;
+
                 default:
                     break;
             }
@@ -453,6 +394,10 @@ namespace _1612180_1612677
 
                     case BEZIER_STATE:
                         myShape = new MyBezier(getPenAttr(), clickedPoints);
+                        break;
+
+                    case PARABOL_STATE:
+                        myShape = new MyParabol(getPenAttr(), clickedPoints);
                         break;
 
                     default:
@@ -552,13 +497,20 @@ namespace _1612180_1612677
                     myShape = new MyBezier(getPenAttr(), clickedPoints);
                     break;
 
+                case PARABOL_STATE:
+                    myShape = new MyParabol(getPenAttr(), clickedPoints);
+                    break;
+
                 default:
                     break;
             }
 
             // ve shape
-            myShape.draw(bitmap_temp, pictureBoxMain);
-            myShape.drawEdgePoints(bitmap_temp, pictureBoxMain);
+            if (myShape != null)
+            {
+                myShape.draw(bitmap_temp, pictureBoxMain);
+                myShape.drawEdgePoints(bitmap_temp, pictureBoxMain);
+            }
 
             // remove vi tri vua ve
             // vi day chi la mouse move tam thoi
@@ -743,6 +695,57 @@ namespace _1612180_1612677
             }
         }
 
+        private BrushAttr getBrushAttr()
+        {
+            BrushAttr brushAttr = new BrushAttr(colorDialog.Color,
+                comboBoxBrushStyle.SelectedItem.ToString());
+            return brushAttr;
+        }
+
+        private FontAttr getFontAttr()
+        {
+            FontAttr fontAttr = new FontAttr(textBoxChar.Text,
+                comboBoxFont.SelectedItem.ToString(),
+                Convert.ToInt32(Math.Round(numericUpDownFontSize.Value, 0)));
+            return fontAttr;
+        }
+
+        private PenAttr getPenAttr()
+        {
+            PenAttr penAttr = null;
+            switch (comboBoxDashStyle.SelectedItem.ToString())
+            {
+                case "Dash":
+                    penAttr = new PenAttr(colorDialog.Color, DashStyle.Dash,
+                        Convert.ToInt32(Math.Round(numericUpDownPenWidth.Value, 0)));
+                    break;
+
+                case "DashDot":
+                    penAttr = new PenAttr(colorDialog.Color, DashStyle.DashDot,
+                        Convert.ToInt32(Math.Round(numericUpDownPenWidth.Value, 0)));
+                    break;
+
+                case "DashDotDot":
+                    penAttr = new PenAttr(colorDialog.Color, DashStyle.DashDotDot,
+                        Convert.ToInt32(Math.Round(numericUpDownPenWidth.Value, 0)));
+                    break;
+
+                case "Dot":
+                    penAttr = new PenAttr(colorDialog.Color, DashStyle.Dot,
+                        Convert.ToInt32(Math.Round(numericUpDownPenWidth.Value, 0)));
+                    break;
+
+                case "Solid":
+                    penAttr = new PenAttr(colorDialog.Color, DashStyle.Solid,
+                        Convert.ToInt32(Math.Round(numericUpDownPenWidth.Value, 0)));
+                    break;
+
+                default:
+                    break;
+            }
+            return penAttr;
+        }
+
         private void reloadPenAttr(object sender, EventArgs e)
         {
             if (state != SELECT_STATE)
@@ -766,6 +769,28 @@ namespace _1612180_1612677
                 bitmap_temp = (Bitmap)bitmap_primary.Clone();
                 pictureBoxMain.Image = bitmap_temp;
                 wrapHightLightShape(selectShape, bitmap_temp);
+            }
+        }
+
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "Binary files (*.bin)|*.bin";
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                myShapes.Clear();
+                FileStream fs = new FileStream(ofd.FileName, FileMode.Open);
+                BinaryFormatter bf = new BinaryFormatter();
+                int length = (int)bf.Deserialize(fs);
+                myShapes = new List<MyShape>(length);
+                for (int i = 0; i < length; i++)
+                {
+                    myShapes.Add((MyShape)bf.Deserialize(fs));
+                }
+                fs.Close();
+
+                clearBitmap();
+                wrapRedrawAllShapes(bitmap_primary);
             }
         }
 

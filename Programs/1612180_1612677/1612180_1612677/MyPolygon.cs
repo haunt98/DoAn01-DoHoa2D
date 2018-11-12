@@ -93,11 +93,6 @@ namespace _1612180_1612677
             }
         }
 
-        public override List<Point> getEdgePoints()
-        {
-            return new List<Point>(points);
-        }
-
         public override bool isPointBelongPrecisely(Point p)
         {
             using (GraphicsPath path = new GraphicsPath())

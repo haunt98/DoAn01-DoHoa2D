@@ -87,7 +87,10 @@ namespace _1612180_1612677
         }
 
         // edge vi du nhu 4 dinh hcn, diem dau va diem cuoi cua doan thang
-        public abstract List<Point> getEdgePoints();
+        public virtual List<Point> getEdgePoints()
+        {
+            return new List<Point>(points);
+        }
 
         // vi khi click tung pixel rat kho
         // nen xet them nhung diem lan can

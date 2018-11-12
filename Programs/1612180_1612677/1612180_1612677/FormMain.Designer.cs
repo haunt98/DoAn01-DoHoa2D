@@ -59,6 +59,7 @@
             this.buttonUnselect = new System.Windows.Forms.Button();
             this.buttonDrawHbh = new System.Windows.Forms.Button();
             this.buttonDrawBezier = new System.Windows.Forms.Button();
+            this.buttonDrawPara = new System.Windows.Forms.Button();
             this.menuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMain)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPenWidth)).BeginInit();
@@ -345,7 +346,7 @@
             // 
             // buttonDrawBezier
             // 
-            this.buttonDrawBezier.Location = new System.Drawing.Point(13, 261);
+            this.buttonDrawBezier.Location = new System.Drawing.Point(13, 257);
             this.buttonDrawBezier.Name = "buttonDrawBezier";
             this.buttonDrawBezier.Size = new System.Drawing.Size(75, 23);
             this.buttonDrawBezier.TabIndex = 28;
@@ -353,11 +354,22 @@
             this.buttonDrawBezier.UseVisualStyleBackColor = true;
             this.buttonDrawBezier.Click += new System.EventHandler(this.buttonDrawBezier_Click);
             // 
+            // buttonDrawPara
+            // 
+            this.buttonDrawPara.Location = new System.Drawing.Point(13, 311);
+            this.buttonDrawPara.Name = "buttonDrawPara";
+            this.buttonDrawPara.Size = new System.Drawing.Size(75, 23);
+            this.buttonDrawPara.TabIndex = 29;
+            this.buttonDrawPara.Text = "Parabol";
+            this.buttonDrawPara.UseVisualStyleBackColor = true;
+            this.buttonDrawPara.Click += new System.EventHandler(this.buttonDrawPara_Click);
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(788, 432);
+            this.Controls.Add(this.buttonDrawPara);
             this.Controls.Add(this.buttonDrawBezier);
             this.Controls.Add(this.buttonDrawHbh);
             this.Controls.Add(this.buttonUnselect);
@@ -432,6 +444,7 @@
         private System.Windows.Forms.Button buttonUnselect;
         private System.Windows.Forms.Button buttonDrawHbh;
         private System.Windows.Forms.Button buttonDrawBezier;
+        private System.Windows.Forms.Button buttonDrawPara;
     }
 }
 

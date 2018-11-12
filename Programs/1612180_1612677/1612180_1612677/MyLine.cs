@@ -30,14 +30,6 @@ namespace _1612180_1612677
             }
         }
 
-        public override List<Point> getEdgePoints()
-        {
-            List<Point> edgePoints = new List<Point>();
-            edgePoints.Add(new Point(points[0].X, points[0].Y));
-            edgePoints.Add(new Point(points[1].X, points[1].Y));
-            return edgePoints;
-        }
-
         public override bool isPointBelongPrecisely(Point p)
         {
             // su dung graphics path

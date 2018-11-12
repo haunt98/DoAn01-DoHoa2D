@@ -49,13 +49,6 @@ namespace _1612180_1612677
             }
         }
 
-        public override List<Point> getEdgePoints()
-        {
-            List<Point> edgePoints = new List<Point>();
-            edgePoints.Add(new Point(mostLeft.X, mostLeft.Y));
-            return edgePoints;
-        }
-
         public override bool isPointInsidePrecisly(Point p)
         {
             using (GraphicsPath path = new GraphicsPath())

@@ -2,35 +2,59 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace _1612180_1612677
 {
-    [Serializable]
-    public class MyHinhBinhHanh : MyShape
+    class MyParabol : MyShape
     {
-        public MyHinhBinhHanh(PenAttr _penAttr, List<Point> _points) :
+        public MyParabol(PenAttr _penAttr, List<Point> _points) :
             base(_penAttr, _points)
         {
         }
 
         private static Point findFinalPointOfParallel(List<Point> _points)
         {
-            if (_points.Count == 3)
+            if (_points.Count == 2)
             {
-                int x = _points[0].X + _points[2].X;
-                int y = _points[0].Y + _points[2].Y;
-                return new Point(x - _points[1].X, y - _points[1].Y);
+                int dx = Math.Abs(_points[0].X - _points[1].X);
+                int dy = Math.Abs(_points[0].Y - _points[1].Y);
+                Point final;
+                // doi xung qua X, X giu nguyen
+                if (dx > dy)
+                {
+                    if (_points[0].Y > _points[1].Y)
+                    {
+                        final = new Point(_points[0].X, _points[0].Y - 2 * dy);
+                    }
+                    else
+                    {
+                        final = new Point(_points[0].X, _points[0].Y + 2 * dy);
+                    }
+                }
+                // doi xung qua Y
+                else
+                {
+                    if (_points[0].X > _points[1].X)
+                    {
+                        final = new Point(_points[0].X - 2 * dx, _points[0].Y);
+                    }
+                    else
+                    {
+                        final = new Point(_points[0].X + 2 * dx, _points[0].Y);
+                    }
+                }
+                return final;
             }
             return Point.Empty;
         }
-
         public static bool isClickedPointsCanDrawShape(List<Point> _points)
         {
-            // hinh binh hanh can 3 diem
-            if (_points.Count == 3)
+            if (_points.Count == 2)
             {
-                // them 1 diem con lai
                 Point final = findFinalPointOfParallel(_points);
                 if (final != Point.Empty)
                 {
@@ -50,7 +74,7 @@ namespace _1612180_1612677
             using (Pen pen = new Pen(penAttr.color, penAttr.width))
             {
                 pen.DashStyle = penAttr.dashStyle;
-                graphics.DrawPolygon(pen, points.ToArray());
+                graphics.DrawCurve(pen, points.ToArray());
                 pictureBox.Invalidate();
             }
         }
@@ -82,46 +106,14 @@ namespace _1612180_1612677
             }
         }
 
-        public override void fill(Bitmap _bitmap, PictureBox pictureBox)
-        {
-            // so diem phai >= 2
-            if (points.Count <= 2)
-                return;
-            using (Graphics graphics = Graphics.FromImage(_bitmap))
-            {
-                switch (brushAttr.typeBrush)
-                {
-                    case "SolidBrush":
-                        using (Brush brush = new SolidBrush(brushAttr.color))
-                        {
-                            graphics.FillPolygon(brush, points.ToArray());
-                        }
-                        break;
-
-                    default:
-                        break;
-                }
-                pictureBox.Invalidate();
-            }
-        }
-
         public override bool isPointBelongPrecisely(Point p)
         {
             using (GraphicsPath path = new GraphicsPath())
             using (Pen pen = new Pen(penAttr.color, penAttr.width))
             {
-                path.AddPolygon(points.ToArray());
+                path.AddCurve(points.ToArray());
                 pen.DashStyle = penAttr.dashStyle;
                 return path.IsOutlineVisible(p, pen);
-            }
-        }
-
-        public override bool isPointInsidePrecisly(Point p)
-        {
-            using (GraphicsPath path = new GraphicsPath())
-            {
-                path.AddPolygon(points.ToArray());
-                return path.IsVisible(p);
             }
         }
     }

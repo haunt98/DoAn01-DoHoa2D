@@ -59,6 +59,7 @@
     <Compile Include="MyEllipse.cs" />
     <Compile Include="MyHinhBinhHanh.cs" />
     <Compile Include="MyLine.cs" />
+    <Compile Include="MyParabol.cs" />
     <Compile Include="MyPolygon.cs" />
     <Compile Include="MyRectangle.cs" />
     <Compile Include="Program.cs" />
