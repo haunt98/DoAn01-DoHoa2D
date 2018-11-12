@@ -46,29 +46,8 @@ namespace _1612180_1612677
 
         public override void drawEdgePoints(Bitmap _bitmap, PictureBox pictureBox)
         {
-            List<Point> edgePoints = getEdgePoints();
-            using (Graphics graphics = Graphics.FromImage(_bitmap))
-            using (Brush brush_white = new SolidBrush(Color.White))
-            using (Brush brush_red = new SolidBrush(Color.Red))
-            using (Pen pen_black = new Pen(Color.Black, 1))
-            using (Pen pen_red = new Pen(Color.Red, 1))
-            {
-                Point p_mostLeft;
-                Rectangle rectangle;
-                foreach (Point p in edgePoints)
-                {
-                    p_mostLeft = new Point(p.X - 2, p.Y - 2);
-                    rectangle = new Rectangle(p_mostLeft, new Size(4, 4));
-                    graphics.FillRectangle(brush_white, rectangle);
-                    graphics.DrawRectangle(pen_black, rectangle);
-                }
-                // diem dau tien ve mau do
-                p_mostLeft = new Point(edgePoints[0].X - 2, edgePoints[0].Y - 2);
-                rectangle = new Rectangle(p_mostLeft, new Size(4, 4));
-                graphics.FillRectangle(brush_red, rectangle);
-                graphics.DrawRectangle(pen_red, rectangle);
-                pictureBox.Invalidate();
-            }
+            base.drawEdgePoints(_bitmap, pictureBox);
+            base.drawFirstPoint(_bitmap, pictureBox);
         }
 
         public override void fill(Bitmap _bitmap, PictureBox pictureBox)

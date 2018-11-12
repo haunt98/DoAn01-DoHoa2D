@@ -9,7 +9,10 @@ namespace _1612180_1612677
     [Serializable]
     public abstract class MyShape
     {
-        private const int RANGE = 10;
+        private const int RANGE = 20;
+        private Color COLOR_EDGE_POINTS = Color.White;
+        private Color COLOR_FIRST_POINT = Color.Red;
+        private Color COLOR_INSIDE_POINT = Color.Blue;
 
         public MyShape(PenAttr _penAttr, List<Point> _points)
         {
@@ -49,11 +52,12 @@ namespace _1612180_1612677
 
         public abstract void draw(Bitmap _bitmap, PictureBox pictureBox);
 
+        // ve cac diem the hien khung cua shape
         public virtual void drawEdgePoints(Bitmap _bitmap, PictureBox pictureBox)
         {
             List<Point> edgePoints = getEdgePoints();
             using (Graphics graphics = Graphics.FromImage(_bitmap))
-            using (Brush brush = new SolidBrush(Color.White))
+            using (Brush brush = new SolidBrush(COLOR_EDGE_POINTS))
             using (Pen pen = new Pen(Color.Black, 1))
             {
                 foreach (Point p in edgePoints)
@@ -67,10 +71,27 @@ namespace _1612180_1612677
             }
         }
 
+        // diem dau tien cua shape
+        public virtual void drawFirstPoint(Bitmap _bitmap, PictureBox pictureBox)
+        {
+            List<Point> edgePoints = getEdgePoints();
+            using (Graphics graphics = Graphics.FromImage(_bitmap))
+            using (Brush brush = new SolidBrush(COLOR_FIRST_POINT))
+            using (Pen pen = new Pen(Color.Black, 1))
+            {
+                Point p_mostLeft = new Point(edgePoints[0].X - 2, edgePoints[0].Y - 2);
+                Rectangle rectangle = new Rectangle(p_mostLeft, new Size(4, 4));
+                graphics.FillRectangle(brush, rectangle);
+                graphics.DrawRectangle(pen, rectangle);
+                pictureBox.Invalidate();
+            }
+        }
+
+        // diem khi select ben trong shape
         public virtual void drawInsidePoint(Bitmap _bitmap, Point p, PictureBox pictureBox)
         {
             using (Graphics graphics = Graphics.FromImage(_bitmap))
-            using (Brush brush = new SolidBrush(Color.White))
+            using (Brush brush = new SolidBrush(COLOR_INSIDE_POINT))
             using (Pen pen = new Pen(Color.Black, 1))
             {
                 Point p_mostLeft = new Point(p.X - 2, p.Y - 2);
@@ -81,7 +102,7 @@ namespace _1612180_1612677
             }
         }
 
-        // to mau
+        // to mau, cai dat cu the class con
         public virtual void fill(Bitmap _bitmap, PictureBox pictureBox)
         {
         }
@@ -92,8 +113,7 @@ namespace _1612180_1612677
             return new List<Point>(points);
         }
 
-        // vi khi click tung pixel rat kho
-        // nen xet them nhung diem lan can
+        // 2 Point gan nhau coi nhu trung nhau
         public bool isPointBelong(Point p)
         {
             List<Point> ps = new List<Point>();
