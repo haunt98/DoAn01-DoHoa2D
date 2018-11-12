@@ -72,13 +72,24 @@ namespace _1612180_1612677
 
         public override bool isPointBelongPrecisely(Point p)
         {
+            bool flag = false;
+            // hinh elip
             using (GraphicsPath path = new GraphicsPath())
             using (Pen pen = new Pen(penAttr.color, penAttr.width))
             {
                 path.AddEllipse(new Rectangle(mostLeft, new Size(width, height)));
                 pen.DashStyle = penAttr.dashStyle;
-                return path.IsOutlineVisible(p, pen);
+                flag |= path.IsOutlineVisible(p, pen);
             }
+            // hcn vien
+            using (GraphicsPath path = new GraphicsPath())
+            using (Pen pen = new Pen(penAttr.color, penAttr.width))
+            {
+                path.AddRectangle(new Rectangle(mostLeft, new Size(width, height)));
+                pen.DashStyle = penAttr.dashStyle;
+                flag |= path.IsOutlineVisible(p, pen);
+            }
+            return flag;
         }
 
         public override bool isPointInsidePrecisly(Point p)
@@ -99,6 +110,16 @@ namespace _1612180_1612677
             width = Math.Abs(points[0].X - points[1].X);
             height = Math.Abs(points[0].Y - points[1].Y);
 
+        }
+
+        public override void scalePoints(Point p_before, Point p_after)
+        {
+            base.scalePoints(p_before, p_after);
+            // tinh lai
+            mostLeft = new Point(Math.Min(points[0].X, points[1].X),
+                Math.Min(points[0].Y, points[1].Y));
+            width = Math.Abs(points[0].X - points[1].X);
+            height = Math.Abs(points[0].Y - points[1].Y);
         }
     }
 }

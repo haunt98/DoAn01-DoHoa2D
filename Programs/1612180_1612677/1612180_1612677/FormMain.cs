@@ -43,8 +43,11 @@ namespace _1612180_1612677
         // trai qua su kien MouseDown chua
         private bool isMouseDown = false;
 
-        // co dang moving shape hay khon
+        // co dang moving shape hay khong
         private bool isMovingShape = false;
+
+        // co dang scaling shape hay khong
+        bool isScalingShape = false;
 
         // trai qua su kien saveFile hay chua
         private bool isSaveFile = false;
@@ -72,6 +75,42 @@ namespace _1612180_1612677
             InitializeComponent();
         }
 
+        private void FormMain_Load(object sender, EventArgs e)
+        {
+            // tao bien bitmap gan cho pictureBox
+            bitmap_primary = new Bitmap(pictureBoxMain.Width,
+                pictureBoxMain.Height,
+                PixelFormat.Format24bppRgb);
+            pictureBoxMain.Image = bitmap_primary;
+            clearBitmap();
+
+            // Dash Style combo box
+            comboBoxDashStyle.Items.Add("Dash");
+            comboBoxDashStyle.Items.Add("DashDot");
+            comboBoxDashStyle.Items.Add("DashDotDot");
+            comboBoxDashStyle.Items.Add("Dot");
+            comboBoxDashStyle.Items.Add("Solid");
+            comboBoxDashStyle.SelectedIndex = comboBoxDashStyle.Items.IndexOf("Solid");
+
+            // Brush Style combo box
+            comboBoxBrushStyle.Items.Add("SolidBrush");
+            comboBoxBrushStyle.SelectedIndex = comboBoxBrushStyle.Items.IndexOf("SolidBrush");
+
+            // Font Style combo box
+            foreach (FontFamily font in FontFamily.Families)
+            {
+                comboBoxFont.Items.Add(font.Name.ToString());
+            }
+            comboBoxFont.SelectedItem = FontFamily.Families[1].Name.ToString();
+
+            //set value of font size
+            numericUpDownFontSize.Value = 12;
+
+            // default color dialog
+            colorDialog.Color = Color.Black;
+            buttonShowColor.BackColor = colorDialog.Color;
+        }
+
         private void buttonClearAll_Click(object sender, EventArgs e)
         {
             clearBitmap();
@@ -86,6 +125,7 @@ namespace _1612180_1612677
             state = NO_STATE;
             isMouseDown = false;
             isMovingShape = false;
+            isScalingShape = false;
             selectShape = -1;
             selectInsideShape = -1;
             selectOutlineShape = -1;
@@ -261,42 +301,6 @@ namespace _1612180_1612677
             }
         }
 
-        private void FormMain_Load(object sender, EventArgs e)
-        {
-            // tao bien bitmap gan cho pictureBox
-            bitmap_primary = new Bitmap(pictureBoxMain.Width,
-                pictureBoxMain.Height,
-                PixelFormat.Format24bppRgb);
-            pictureBoxMain.Image = bitmap_primary;
-            clearBitmap();
-
-            // Dash Style combo box
-            comboBoxDashStyle.Items.Add("Dash");
-            comboBoxDashStyle.Items.Add("DashDot");
-            comboBoxDashStyle.Items.Add("DashDotDot");
-            comboBoxDashStyle.Items.Add("Dot");
-            comboBoxDashStyle.Items.Add("Solid");
-            comboBoxDashStyle.SelectedIndex = comboBoxDashStyle.Items.IndexOf("Solid");
-
-            // Brush Style combo box
-            comboBoxBrushStyle.Items.Add("SolidBrush");
-            comboBoxBrushStyle.SelectedIndex = comboBoxBrushStyle.Items.IndexOf("SolidBrush");
-
-            // Font Style combo box
-            foreach (FontFamily font in FontFamily.Families)
-            {
-                comboBoxFont.Items.Add(font.Name.ToString());
-            }
-            comboBoxFont.SelectedItem = FontFamily.Families[1].Name.ToString();
-
-            //set value of font size
-            numericUpDownFontSize.Value = 12;
-
-            // default color dialog
-            colorDialog.Color = Color.Black;
-            buttonShowColor.BackColor = colorDialog.Color;
-        }
-
         private void pictureBoxMain_MouseDown(object sender, MouseEventArgs e)
         {
             if (state == NO_STATE)
@@ -452,9 +456,12 @@ namespace _1612180_1612677
 
         private void pictureBoxMain_MouseMove(object sender, MouseEventArgs e)
         {
-            if (state == SELECT_STATE && isMovingShape)
+            if (state == SELECT_STATE)
             {
-                processMoving(e);
+                if (isMovingShape)
+                {
+                    processMoving(e);
+                }
                 return;
             }
             // neu khong con mouse down thi khong ve nua
@@ -528,14 +535,102 @@ namespace _1612180_1612677
                     // reset list point vi tri cua shape truoc va sau
                     posMovingShape.Clear();
 
-                    // khong cho phep moving khi tha ra
+                    // khong cho phep moving khi khong click trung
                     isMovingShape = false;
+
+                    // khong cho phep scaling khi khong click trung
+                    isScalingShape = false;
                     return;
                 }
 
                 // them diem hien tai khi mouse up
                 posMovingShape.Add(new Point(e.Location.X, e.Location.Y));
 
+                if (isScalingShape)
+                {
+                    // di chuyen shape theo mouse move
+                    myShapes[selectShape].scalePoints(posMovingShape[0], posMovingShape[1]);
+
+                    // xoa roi ve lai trong bitmap_primary
+                    clearBitmap();
+                    wrapRedrawAllShapes(bitmap_primary);
+
+                    // shape dang duoc click
+                    // lam noi bat len tren bitmap_temp
+                    bitmap_temp = (Bitmap)bitmap_primary.Clone();
+                    pictureBoxMain.Image = bitmap_temp;
+                    wrapHightLightShape(selectShape, bitmap_temp);
+                }
+                else
+                {
+                    // vector di chuyen
+                    int moveWidth = posMovingShape[1].X - posMovingShape[0].X;
+                    int moveHeight = posMovingShape[1].Y - posMovingShape[0].Y;
+
+                    // di chuyen shape theo mouse move
+                    myShapes[selectShape].movePoints(moveWidth, moveHeight);
+
+                    // xoa roi ve lai trong bitmap_primary
+                    clearBitmap();
+                    wrapRedrawAllShapes(bitmap_primary);
+
+                    // shape dang duoc click
+                    // lam noi bat len tren bitmap_temp
+                    bitmap_temp = (Bitmap)bitmap_primary.Clone();
+                    pictureBoxMain.Image = bitmap_temp;
+                    wrapHightLightShape(selectShape, bitmap_temp);
+                    myShapes[selectShape].drawInsidePoint(bitmap_temp, e.Location, pictureBoxMain);
+                }
+
+
+                // reset lai list moving shape
+                posMovingShape.Clear();
+
+                // khong cho phep moving khi tha ra
+                isMovingShape = false;
+
+                // khong cho phep scaling khi tha ra
+                isScalingShape = false;
+            }
+        }
+
+        private void processMoving(MouseEventArgs e)
+        {
+            // khong click vao shape nao
+            if (selectShape == -1)
+            {
+                posMovingShape.Clear();
+
+                // khong cho phep moving khi khong click trung
+                isMovingShape = false;
+
+                // khong cho phep scaling khi khong click trung
+                isScalingShape = false;
+                return;
+            }
+
+            // them diem hien tai vao list vi tri cua shape moving
+            posMovingShape.Add(new Point(e.Location.X, e.Location.Y));
+
+            // scale time :)
+            if (isScalingShape)
+            {
+                // scale shape theo mouse move
+                myShapes[selectShape].scalePoints(posMovingShape[0], posMovingShape[1]);
+
+                // xoa roi ve lai trong bitmap_primary
+                clearBitmap();
+                wrapRedrawAllShapes(bitmap_primary);
+
+                // highlight select shape trong khi di chuyen
+                wrapHightLightShape(selectShape, bitmap_primary);
+
+                // reset lai points cua shape vi chi la ve tam
+                myShapes[selectShape].scalePoints(posMovingShape[1], posMovingShape[0]);
+            }
+            // move time :)
+            else
+            {
                 // vector di chuyen
                 int moveWidth = posMovingShape[1].X - posMovingShape[0].X;
                 int moveHeight = posMovingShape[1].Y - posMovingShape[0].Y;
@@ -547,69 +642,26 @@ namespace _1612180_1612677
                 clearBitmap();
                 wrapRedrawAllShapes(bitmap_primary);
 
-                // shape dang duoc click
-                // lam noi bat len tren bitmap_temp
-                bitmap_temp = (Bitmap)bitmap_primary.Clone();
-                pictureBoxMain.Image = bitmap_temp;
-                wrapHightLightShape(selectShape, bitmap_temp);
-                if (selectShape != selectOutlineShape)
-                {
-                    myShapes[selectShape].drawInsidePoint(bitmap_temp, e.Location, pictureBoxMain);
-                }
-
-                // reset lai list moving shape
-                posMovingShape.Clear();
-
-                // khong cho phep moving khi tha ra
-                isMovingShape = false;
-            }
-        }
-
-        private void processMoving(MouseEventArgs e)
-        {
-            // khong click vao shape nao
-            if (selectShape == -1)
-            {
-                posMovingShape.Clear();
-                return;
-            }
-            // them diem hien tai vao list vi tri cua shape moving
-            posMovingShape.Add(new Point(e.Location.X, e.Location.Y));
-
-            // vector di chuyen
-            int moveWidth = posMovingShape[1].X - posMovingShape[0].X;
-            int moveHeight = posMovingShape[1].Y - posMovingShape[0].Y;
-
-            // di chuyen shape theo mouse move
-            myShapes[selectShape].movePoints(moveWidth, moveHeight);
-
-            // xoa roi ve lai trong bitmap_primary
-            clearBitmap();
-            wrapRedrawAllShapes(bitmap_primary);
-
-            // highlight select shape trong khi di chuyen
-            wrapHightLightShape(selectShape, bitmap_primary);
-            if (selectShape != selectOutlineShape)
-            {
+                // highlight select shape trong khi di chuyen
+                wrapHightLightShape(selectShape, bitmap_primary);
                 myShapes[selectShape].drawInsidePoint(bitmap_primary, e.Location, pictureBoxMain);
+
+                // reset lai points cua shape vi chi la ve tam
+                myShapes[selectShape].movePoints(-moveWidth, -moveHeight);
             }
 
             // xoa diem hien ra khoi list vi tri cua shape moving
             // vi chi la ve tam
             posMovingShape.RemoveAt(posMovingShape.Count - 1);
-            // reset lai points cua shape vi chi la ve tam
-            myShapes[selectShape].movePoints(-moveWidth, -moveHeight);
         }
 
         private void processSelect(MouseEventArgs e)
         {
-            Point p = new Point(e.Location.X, e.Location.Y);
-
             // tim shape co diem nam tren
             selectOutlineShape = -1;
             for (int i = myShapes.Count - 1; i >= 0; --i)
             {
-                if (myShapes[i].isPointBelong(p))
+                if (myShapes[i].isPointBelong(new Point(e.Location.X, e.Location.Y)))
                 {
                     selectOutlineShape = i;
                     break;
@@ -620,7 +672,7 @@ namespace _1612180_1612677
             selectInsideShape = -1;
             for (int i = myShapes.Count - 1; i >= 0; --i)
             {
-                if (myShapes[i].isPointInsidePrecisly(p))
+                if (myShapes[i].isPointInsidePrecisly(new Point(e.Location.X, e.Location.Y)))
                 {
                     selectInsideShape = i;
                     break;
@@ -642,29 +694,55 @@ namespace _1612180_1612677
 
                 // select khong trung thi khong cho moving
                 isMovingShape = false;
+
+                // select khong trung thi khong cho scale
+                isScalingShape = false;
                 return;
             }
             // select trung thi them dia diem shape hien tai
             posMovingShape.Add(new Point(e.Location.X, e.Location.Y));
 
-            // select trung thi ve tren bitmap_temp
-            // hightlight shape dang select
-            bitmap_temp = (Bitmap)bitmap_primary.Clone();
-            pictureBoxMain.Image = bitmap_temp;
-            wrapHightLightShape(selectShape, bitmap_temp);
-            if (selectShape != selectOutlineShape)
+            // click vao outline
+            if (selectShape == selectOutlineShape)
             {
-                myShapes[selectShape].drawInsidePoint(bitmap_temp, e.Location, pictureBoxMain);
+                isScalingShape = false;
+
+                List<Point> edgePoints = myShapes[selectShape].getEdgePoints();
+                foreach (Point p in edgePoints)
+                {
+                    // phai click trung edge Point => cho phep move va scale
+                    // 20 la so pixel de cho click de trung
+                    if (MyShape.isPointEqual(new Point(e.Location.X, e.Location.Y), p, 20))
+                    {
+                        isScalingShape = true;
+                        break;
+                    }
+                }
+            }
+            // click vao inside
+            else
+            {
+                // ve tren bitmap_temp
+                // hightlight shape dang select
+                bitmap_temp = (Bitmap)bitmap_primary.Clone();
+                pictureBoxMain.Image = bitmap_temp;
+                wrapHightLightShape(selectShape, bitmap_temp);
+                if (selectShape != selectOutlineShape)
+                {
+                    myShapes[selectShape].drawInsidePoint(bitmap_temp, e.Location, pictureBoxMain);
+                }
+
+                // them select vao list select shape
+                if (selectShapes.IndexOf(selectShape) == -1)
+                {
+                    // khong co thi them vao
+                    selectShapes.Add(selectShape);
+                }
+                // khong phai scale
+                isScalingShape = false;
             }
 
-            // them select vao list select shape
-            if (selectShapes.IndexOf(selectShape) == -1)
-            {
-                // khong co thi them vao
-                selectShapes.Add(selectShape);
-            }
-
-            // select trung thi cho phep moving
+            // cho phep di chuyen
             isMovingShape = true;
         }
 

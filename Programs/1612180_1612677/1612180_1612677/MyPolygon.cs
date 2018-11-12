@@ -20,7 +20,7 @@ namespace _1612180_1612677
             if (_points.Count >= 2)
             {
                 // da giac hoan thanh khi diem dau va diem cuoi trung nhau
-                if (isPointEqual(_points[_points.Count - 1], _points[0]))
+                if (isPointEqual(_points[_points.Count - 1], _points[0], RANGE))
                 {
                     // delete diem trung
                     _points.RemoveAt(_points.Count - 1);

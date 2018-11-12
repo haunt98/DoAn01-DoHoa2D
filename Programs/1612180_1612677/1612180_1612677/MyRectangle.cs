@@ -21,7 +21,6 @@ namespace _1612180_1612677
                 Math.Min(points[0].Y, points[1].Y));
             width = Math.Abs(points[0].X - points[1].X);
             height = Math.Abs(points[0].Y - points[1].Y);
-
         }
 
         public static bool isClickedPointsCanDrawShape(List<Point> _points)
@@ -101,6 +100,16 @@ namespace _1612180_1612677
             width = Math.Abs(points[0].X - points[1].X);
             height = Math.Abs(points[0].Y - points[1].Y);
 
+        }
+
+        public override void scalePoints(Point p_before, Point p_after)
+        {
+            base.scalePoints(p_before, p_after);
+            // tinh lai
+            mostLeft = new Point(Math.Min(points[0].X, points[1].X),
+                Math.Min(points[0].Y, points[1].Y));
+            width = Math.Abs(points[0].X - points[1].X);
+            height = Math.Abs(points[0].Y - points[1].Y);
         }
     }
 }

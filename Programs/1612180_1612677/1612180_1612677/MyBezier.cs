@@ -42,5 +42,10 @@ namespace _1612180_1612677
                 return path.IsOutlineVisible(p, pen);
             }
         }
+
+        // khong co diem ben trong
+        public override void drawInsidePoint(Bitmap _bitmap, Point p, PictureBox pictureBox)
+        {
+        }
     }
 }
