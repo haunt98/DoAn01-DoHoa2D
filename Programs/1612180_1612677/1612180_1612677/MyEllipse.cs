@@ -12,6 +12,7 @@ namespace _1612180_1612677
         private Point mostLeft;
         private int width;
         private int height;
+        public BrushAttr brushAttr { get; set; }
 
         public MyEllipse(PenAttr _penAttr, List<Point> _points) :
             base(_penAttr, _points)
@@ -20,6 +21,8 @@ namespace _1612180_1612677
                 Math.Min(points[0].Y, points[1].Y));
             width = Math.Abs(points[0].X - points[1].X);
             height = Math.Abs(points[0].Y - points[1].Y);
+            // mac dinh la mau trang
+            brushAttr = new BrushAttr(Color.White, "SolidBrush");
         }
 
         public static bool isClickedPointsCanDrawShape(List<Point> _points)

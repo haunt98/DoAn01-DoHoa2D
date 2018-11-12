@@ -12,6 +12,7 @@ namespace _1612180_1612677
         private Point mostLeft;
         private int width;
         private int height;
+        public BrushAttr brushAttr { get; set; }
 
         public MyRectangle(PenAttr _penAttr, List<Point> _points) :
             base(_penAttr, _points)
@@ -21,6 +22,8 @@ namespace _1612180_1612677
                 Math.Min(points[0].Y, points[1].Y));
             width = Math.Abs(points[0].X - points[1].X);
             height = Math.Abs(points[0].Y - points[1].Y);
+            // mac dinh la mau trang
+            brushAttr = new BrushAttr(Color.White, "SolidBrush");
         }
 
         public static bool isClickedPointsCanDrawShape(List<Point> _points)
@@ -44,19 +47,38 @@ namespace _1612180_1612677
         {
             using (Graphics graphics = Graphics.FromImage(_bitmap))
             {
+                Rectangle rectangle = new Rectangle(mostLeft, new Size(width, height));
+
                 switch (brushAttr.typeBrush)
                 {
                     case "SolidBrush":
                         using (Brush brush = new SolidBrush(brushAttr.color))
                         {
-                            Rectangle rectangle = new Rectangle(mostLeft, new Size(width, height));
                             graphics.FillRectangle(brush, rectangle);
                         }
                         break;
-
+                    case "HatchBrushVertical":
+                        using (HatchBrush brush = new HatchBrush(HatchStyle.Vertical, brushAttr.color, Color.Blue))
+                        {
+                            graphics.FillRectangle(brush, rectangle);
+                        }
+                        break;
+                    case "HatchBrushHorizontal":
+                        using (HatchBrush brush = new HatchBrush(HatchStyle.Horizontal, brushAttr.color, Color.Blue))
+                        {
+                            graphics.FillRectangle(brush, rectangle);
+                        }
+                        break;
+                    case "HatchBrushCross":
+                        using (HatchBrush brush = new HatchBrush(HatchStyle.Cross, brushAttr.color, Color.Blue))
+                        {
+                            graphics.FillRectangle(brush, rectangle);
+                        }
+                        break;
                     default:
                         break;
                 }
+
                 pictureBox.Invalidate();
             }
         }

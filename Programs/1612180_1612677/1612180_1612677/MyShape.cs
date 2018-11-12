@@ -17,14 +17,9 @@ namespace _1612180_1612677
         public MyShape(PenAttr _penAttr, List<Point> _points)
         {
             penAttr = new PenAttr(_penAttr);
-
-            // mac dinh la mau trang
-            brushAttr = new BrushAttr(Color.White, "SolidBrush");
-
             points = new List<Point>(_points);
         }
 
-        public BrushAttr brushAttr { get; set; }
         public PenAttr penAttr { get; set; }
         public List<Point> points { get; set; }
 

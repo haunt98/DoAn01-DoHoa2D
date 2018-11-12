@@ -94,6 +94,10 @@ namespace _1612180_1612677
 
             // Brush Style combo box
             comboBoxBrushStyle.Items.Add("SolidBrush");
+            comboBoxBrushStyle.Items.Add("HatchBrushVertical");
+            comboBoxBrushStyle.Items.Add("HatchBrushHorizontal");
+            comboBoxBrushStyle.Items.Add("HatchBrushForwardDiagonal");
+            comboBoxBrushStyle.Items.Add("HatchBrushCross");
             comboBoxBrushStyle.SelectedIndex = comboBoxBrushStyle.Items.IndexOf("SolidBrush");
 
             // Font Style combo box
@@ -233,41 +237,8 @@ namespace _1612180_1612677
         {
             colorDialog.ShowDialog();
             buttonShowColor.BackColor = colorDialog.Color;
-
-            // reload lai mau sac cho vien cua shape
-            if (state == SELECT_STATE)
-            {
-                if (selectShape == -1)
-                    return;
-
-                // click ben trong, doi mau ben trong
-                if (selectShape != selectOutlineShape)
-                {
-                    if (myShapes[selectShape] is MyCharater)
-                    {
-                        myShapes[selectShape].penAttr = getPenAttr();
-                    }
-                    else
-                    {
-                        myShapes[selectShape].brushAttr = getBrushAttr();
-                    }
-                }
-                // click vien, doi mau vien
-                else
-                {
-                    myShapes[selectOutlineShape].penAttr = getPenAttr();
-                }
-
-                // xoa roi ve lai trong bitmap_primary
-                clearBitmap();
-                wrapRedrawAllShapes(bitmap_primary);
-
-                // highlight trong bitmap_temp
-                bitmap_temp = (Bitmap)bitmap_primary.Clone();
-                pictureBoxMain.Image = bitmap_temp;
-                wrapRedrawAllShapes(bitmap_temp);
-                wrapHightLightShape(selectShape, bitmap_temp);
-            }
+            // load lai mau vien
+            reloadColorOutline(sender, e);
         }
 
         private void buttonUnselect_Click(object sender, EventArgs e)
@@ -280,6 +251,12 @@ namespace _1612180_1612677
                 clearBitmap();
                 wrapRedrawAllShapes(bitmap_primary);
             }
+        }
+
+        private void buttonFill_Click(object sender, EventArgs e)
+        {
+            // load lai mau ben trong
+            reloadColorInside(sender, e);
         }
 
         // xoa het anh trong pictureBox
@@ -848,6 +825,66 @@ namespace _1612180_1612677
                 pictureBoxMain.Image = bitmap_temp;
                 wrapHightLightShape(selectShape, bitmap_temp);
             }
+        }
+
+        private void reloadColorOutline(object sender, EventArgs e)
+        {
+            if (state != SELECT_STATE || selectShape == -1)
+            {
+                return;
+            }
+
+            // click outline, doi mau vien
+            if (selectShape == selectOutlineShape)
+            {
+                myShapes[selectShape].penAttr = getPenAttr();
+            }
+            clearBitmap();
+            wrapRedrawAllShapes(bitmap_primary);
+        }
+
+        private void reloadColorInside(object sender, EventArgs e)
+        {
+            if (state != SELECT_STATE || selectShape == -1)
+            {
+                return;
+            }
+
+            // click ben trong, doi mau ben trong
+            if (selectShape != selectOutlineShape)
+            {
+                if (myShapes[selectShape] is MyEllipse)
+                {
+                    MyEllipse myEllise = myShapes[selectShape] as MyEllipse;
+                    myEllise.brushAttr = getBrushAttr();
+                    myShapes[selectInsideShape] = (MyShape)myEllise;
+                }
+                else if (myShapes[selectShape] is MyHinhBinhHanh)
+                {
+                    MyHinhBinhHanh myHbh = myShapes[selectShape] as MyHinhBinhHanh;
+                    myHbh.brushAttr = getBrushAttr();
+                    myShapes[selectShape] = (MyShape)myHbh;
+                }
+                else if (myShapes[selectShape] is MyPolygon)
+                {
+                    MyPolygon myPolygon = myShapes[selectShape] as MyPolygon;
+                    myPolygon.brushAttr = getBrushAttr();
+                    myShapes[selectShape] = (MyShape)myPolygon;
+                }
+                else if (myShapes[selectShape] is MyRectangle)
+                {
+                    MyRectangle myRectangle = myShapes[selectShape] as MyRectangle;
+                    myRectangle.brushAttr = getBrushAttr();
+                    myShapes[selectShape] = (MyShape)myRectangle;
+                }
+                else if (myShapes[selectShape] is MyCharater)
+                {
+                    myShapes[selectShape].penAttr = getPenAttr();
+                }
+            }
+
+            clearBitmap();
+            wrapRedrawAllShapes(bitmap_primary);
         }
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)

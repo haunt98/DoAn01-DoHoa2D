@@ -9,9 +9,13 @@ namespace _1612180_1612677
     [Serializable]
     public class MyPolygon : MyShape
     {
+        public BrushAttr brushAttr { get; set; }
+
         public MyPolygon(PenAttr _penAttr, List<Point> _points) :
             base(_penAttr, _points)
         {
+            // mac dinh la mau trang
+            brushAttr = new BrushAttr(Color.White, "SolidBrush");
         }
 
         public static bool isClickedPointsCanDrawShape(List<Point> _points)
@@ -64,7 +68,24 @@ namespace _1612180_1612677
                             graphics.FillPolygon(brush, points.ToArray());
                         }
                         break;
-
+                    case "HatchBrushVertical":
+                        using (HatchBrush brush = new HatchBrush(HatchStyle.Vertical, brushAttr.color, Color.Blue))
+                        {
+                            graphics.FillPolygon(brush, points.ToArray());
+                        }
+                        break;
+                    case "HatchBrushHorizontal":
+                        using (HatchBrush brush = new HatchBrush(HatchStyle.Horizontal, brushAttr.color, Color.Blue))
+                        {
+                            graphics.FillPolygon(brush, points.ToArray());
+                        }
+                        break;
+                    case "HatchBrushCross":
+                        using (HatchBrush brush = new HatchBrush(HatchStyle.Cross, brushAttr.color, Color.Blue))
+                        {
+                            graphics.FillPolygon(brush, points.ToArray());
+                        }
+                        break;
                     default:
                         break;
                 }

@@ -60,6 +60,7 @@
             this.buttonDrawHbh = new System.Windows.Forms.Button();
             this.buttonDrawBezier = new System.Windows.Forms.Button();
             this.buttonDrawPara = new System.Windows.Forms.Button();
+            this.buttonFill = new System.Windows.Forms.Button();
             this.menuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMain)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPenWidth)).BeginInit();
@@ -364,11 +365,22 @@
             this.buttonDrawPara.UseVisualStyleBackColor = true;
             this.buttonDrawPara.Click += new System.EventHandler(this.buttonDrawPara_Click);
             // 
+            // buttonFill
+            // 
+            this.buttonFill.Location = new System.Drawing.Point(493, 68);
+            this.buttonFill.Name = "buttonFill";
+            this.buttonFill.Size = new System.Drawing.Size(75, 23);
+            this.buttonFill.TabIndex = 30;
+            this.buttonFill.Text = "Fill";
+            this.buttonFill.UseVisualStyleBackColor = true;
+            this.buttonFill.Click += new System.EventHandler(this.buttonFill_Click);
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(788, 432);
+            this.Controls.Add(this.buttonFill);
             this.Controls.Add(this.buttonDrawPara);
             this.Controls.Add(this.buttonDrawBezier);
             this.Controls.Add(this.buttonDrawHbh);
@@ -445,6 +457,7 @@
         private System.Windows.Forms.Button buttonDrawHbh;
         private System.Windows.Forms.Button buttonDrawBezier;
         private System.Windows.Forms.Button buttonDrawPara;
+        private System.Windows.Forms.Button buttonFill;
     }
 }
 
