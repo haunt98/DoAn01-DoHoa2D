@@ -237,9 +237,9 @@
             // 
             this.comboBoxBrushStyle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxBrushStyle.FormattingEnabled = true;
-            this.comboBoxBrushStyle.Location = new System.Drawing.Point(655, 38);
+            this.comboBoxBrushStyle.Location = new System.Drawing.Point(640, 38);
             this.comboBoxBrushStyle.Name = "comboBoxBrushStyle";
-            this.comboBoxBrushStyle.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxBrushStyle.Size = new System.Drawing.Size(136, 21);
             this.comboBoxBrushStyle.TabIndex = 16;
             // 
             // buttonDrawChar

@@ -68,24 +68,35 @@ namespace _1612180_1612677
                             graphics.FillPolygon(brush, points.ToArray());
                         }
                         break;
+
                     case "HatchBrushVertical":
                         using (HatchBrush brush = new HatchBrush(HatchStyle.Vertical, brushAttr.color, Color.Blue))
                         {
                             graphics.FillPolygon(brush, points.ToArray());
                         }
                         break;
+
                     case "HatchBrushHorizontal":
                         using (HatchBrush brush = new HatchBrush(HatchStyle.Horizontal, brushAttr.color, Color.Blue))
                         {
                             graphics.FillPolygon(brush, points.ToArray());
                         }
                         break;
+
                     case "HatchBrushCross":
                         using (HatchBrush brush = new HatchBrush(HatchStyle.Cross, brushAttr.color, Color.Blue))
                         {
                             graphics.FillPolygon(brush, points.ToArray());
                         }
                         break;
+
+                    case "HatchBrushForwardDiagonal":
+                        using (HatchBrush brush = new HatchBrush(HatchStyle.ForwardDiagonal, brushAttr.color, Color.Blue))
+                        {
+                            graphics.FillPolygon(brush, points.ToArray());
+                        }
+                        break;
+
                     default:
                         break;
                 }

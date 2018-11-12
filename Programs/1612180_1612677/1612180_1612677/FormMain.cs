@@ -723,32 +723,6 @@ namespace _1612180_1612677
             isMovingShape = true;
         }
 
-        private void reloadFontAttr(object sender, EventArgs e)
-        {
-            if (state != SELECT_STATE)
-                return;
-
-            // chua click shape nao ca
-            if (selectShape == -1)
-                return;
-
-            // kiem tra character
-            if (myShapes[selectShape] is MyCharater)
-            {
-                myShapes[selectShape].penAttr = getPenAttr();
-                MyCharater myCharacter = myShapes[selectShape] as MyCharater;
-                myCharacter.fontAttr = getFontAttr();
-
-                // xoa roi ve lai trong bitmap_primary
-                clearBitmap();
-                wrapRedrawAllShapes(bitmap_primary);
-
-                // highlight trong bitmap_temp
-                bitmap_temp = (Bitmap)bitmap_primary.Clone();
-                pictureBoxMain.Image = bitmap_temp;
-                wrapHightLightShape(selectShape, bitmap_temp);
-            }
-        }
 
         private BrushAttr getBrushAttr()
         {
@@ -799,6 +773,33 @@ namespace _1612180_1612677
                     break;
             }
             return penAttr;
+        }
+
+        private void reloadFontAttr(object sender, EventArgs e)
+        {
+            if (state != SELECT_STATE)
+                return;
+
+            // chua click shape nao ca
+            if (selectShape == -1)
+                return;
+
+            // kiem tra character
+            if (myShapes[selectShape] is MyCharater)
+            {
+                myShapes[selectShape].penAttr = getPenAttr();
+                MyCharater myCharacter = myShapes[selectShape] as MyCharater;
+                myCharacter.fontAttr = getFontAttr();
+
+                // xoa roi ve lai trong bitmap_primary
+                clearBitmap();
+                wrapRedrawAllShapes(bitmap_primary);
+
+                // highlight trong bitmap_temp
+                bitmap_temp = (Bitmap)bitmap_primary.Clone();
+                pictureBoxMain.Image = bitmap_temp;
+                wrapHightLightShape(selectShape, bitmap_temp);
+            }
         }
 
         private void reloadPenAttr(object sender, EventArgs e)

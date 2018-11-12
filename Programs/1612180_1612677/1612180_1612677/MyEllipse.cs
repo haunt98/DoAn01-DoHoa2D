@@ -46,12 +46,41 @@ namespace _1612180_1612677
         {
             using (Graphics graphics = Graphics.FromImage(_bitmap))
             {
+                Rectangle rectangle = new Rectangle(mostLeft, new Size(width, height));
+
                 switch (brushAttr.typeBrush)
                 {
                     case "SolidBrush":
                         using (Brush brush = new SolidBrush(brushAttr.color))
                         {
-                            Rectangle rectangle = new Rectangle(mostLeft, new Size(width, height));
+                            graphics.FillEllipse(brush, rectangle);
+                        }
+                        break;
+
+                    case "HatchBrushVertical":
+                        using (HatchBrush brush = new HatchBrush(HatchStyle.Vertical, brushAttr.color, Color.Blue))
+                        {
+                            graphics.FillEllipse(brush, rectangle);
+                        }
+                        break;
+
+                    case "HatchBrushHorizontal":
+                        using (HatchBrush brush = new HatchBrush(HatchStyle.Horizontal, brushAttr.color, Color.Blue))
+                        {
+                            graphics.FillEllipse(brush, rectangle);
+                        }
+                        break;
+
+                    case "HatchBrushCross":
+                        using (HatchBrush brush = new HatchBrush(HatchStyle.Cross, brushAttr.color, Color.Blue))
+                        {
+                            graphics.FillEllipse(brush, rectangle);
+                        }
+                        break;
+
+                    case "HatchBrushForwardDiagonal":
+                        using (HatchBrush brush = new HatchBrush(HatchStyle.ForwardDiagonal, brushAttr.color, Color.Blue))
+                        {
                             graphics.FillEllipse(brush, rectangle);
                         }
                         break;
