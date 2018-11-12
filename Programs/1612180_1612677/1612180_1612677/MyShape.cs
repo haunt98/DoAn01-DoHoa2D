@@ -26,7 +26,7 @@ namespace _1612180_1612677
 
         public BrushAttr brushAttr { get; set; }
         public PenAttr penAttr { get; set; }
-        protected List<Point> points;
+        public List<Point> points { get; set; }
 
         // 2 diem gan nhau la duoc
         // khong can chinh xac lam

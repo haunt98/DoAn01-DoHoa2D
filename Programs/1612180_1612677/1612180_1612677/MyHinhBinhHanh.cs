@@ -55,12 +55,6 @@ namespace _1612180_1612677
             }
         }
 
-        public override void drawEdgePoints(Bitmap _bitmap, PictureBox pictureBox)
-        {
-            base.drawEdgePoints(_bitmap, pictureBox);
-            base.drawFirstPoint(_bitmap, pictureBox);
-        }
-
         public override void fill(Bitmap _bitmap, PictureBox pictureBox)
         {
             // so diem phai >= 2

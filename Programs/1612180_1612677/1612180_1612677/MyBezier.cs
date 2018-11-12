@@ -32,12 +32,6 @@ namespace _1612180_1612677
             }
         }
 
-        public override void drawEdgePoints(Bitmap _bitmap, PictureBox pictureBox)
-        {
-            base.drawEdgePoints(_bitmap, pictureBox);
-            base.drawFirstPoint(_bitmap, pictureBox);
-        }
-
         public override bool isPointBelongPrecisely(Point p)
         {
             using (GraphicsPath path = new GraphicsPath())
