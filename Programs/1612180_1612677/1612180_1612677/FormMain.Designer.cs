@@ -67,6 +67,8 @@
             this.buttonDrawPara = new System.Windows.Forms.Button();
             this.buttonFill = new System.Windows.Forms.Button();
             this.comboBoxSelectType = new System.Windows.Forms.ComboBox();
+            this.buttonUndo = new System.Windows.Forms.Button();
+            this.buttonRedo = new System.Windows.Forms.Button();
             this.menuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMain)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPenWidth)).BeginInit();
@@ -80,7 +82,7 @@
             this.editToolStripMenuItem});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
-            this.menuStrip.Size = new System.Drawing.Size(788, 24);
+            this.menuStrip.Size = new System.Drawing.Size(810, 24);
             this.menuStrip.TabIndex = 0;
             this.menuStrip.Text = "menuStrip1";
             // 
@@ -337,7 +339,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(533, 103);
+            this.label6.Location = new System.Drawing.Point(521, 103);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(51, 13);
             this.label6.TabIndex = 22;
@@ -345,7 +347,7 @@
             // 
             // numericUpDownFontSize
             // 
-            this.numericUpDownFontSize.Location = new System.Drawing.Point(602, 103);
+            this.numericUpDownFontSize.Location = new System.Drawing.Point(588, 99);
             this.numericUpDownFontSize.Name = "numericUpDownFontSize";
             this.numericUpDownFontSize.Size = new System.Drawing.Size(46, 20);
             this.numericUpDownFontSize.TabIndex = 23;
@@ -431,11 +433,33 @@
             this.comboBoxSelectType.TabIndex = 31;
             this.comboBoxSelectType.SelectedIndexChanged += new System.EventHandler(this.comboBoxSelectType_SelectedIndexChanged);
             // 
+            // buttonUndo
+            // 
+            this.buttonUndo.Location = new System.Drawing.Point(640, 96);
+            this.buttonUndo.Name = "buttonUndo";
+            this.buttonUndo.Size = new System.Drawing.Size(75, 23);
+            this.buttonUndo.TabIndex = 32;
+            this.buttonUndo.Text = "Undo";
+            this.buttonUndo.UseVisualStyleBackColor = true;
+            this.buttonUndo.Click += new System.EventHandler(this.buttonUndo_Click);
+            // 
+            // buttonRedo
+            // 
+            this.buttonRedo.Location = new System.Drawing.Point(723, 96);
+            this.buttonRedo.Name = "buttonRedo";
+            this.buttonRedo.Size = new System.Drawing.Size(75, 23);
+            this.buttonRedo.TabIndex = 33;
+            this.buttonRedo.Text = "Redo";
+            this.buttonRedo.UseVisualStyleBackColor = true;
+            this.buttonRedo.Click += new System.EventHandler(this.buttonRedo_Click);
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(788, 432);
+            this.ClientSize = new System.Drawing.Size(810, 432);
+            this.Controls.Add(this.buttonRedo);
+            this.Controls.Add(this.buttonUndo);
             this.Controls.Add(this.comboBoxSelectType);
             this.Controls.Add(this.buttonFill);
             this.Controls.Add(this.buttonDrawPara);
@@ -521,6 +545,8 @@
         private System.Windows.Forms.ToolStripMenuItem sendBackwardToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem bringForwardToolStripMenuItem;
         private System.Windows.Forms.ComboBox comboBoxSelectType;
+        private System.Windows.Forms.Button buttonUndo;
+        private System.Windows.Forms.Button buttonRedo;
     }
 }
 

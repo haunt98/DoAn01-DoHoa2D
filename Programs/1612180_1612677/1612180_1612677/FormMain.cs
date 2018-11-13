@@ -67,6 +67,15 @@ namespace _1612180_1612677
         // luu cac hinh duoc select
         private List<int> selectShapes = new List<int>();
 
+        // so lan toi da undo, redo
+        private const int MAX_LIST_UNDO_REDO = 5;
+
+        private bool isUndo = false;
+
+        private int indexOfMyShapes = -1;
+
+        private List<List<MyShape>> listMyShapes = new List<List<MyShape>>();
+
         public FormMain()
         {
             InitializeComponent();
@@ -401,7 +410,7 @@ namespace _1612180_1612677
                     myShape.draw(bitmap_primary, pictureBoxMain);
 
                     // them vao list shape
-                    myShapes.Add(myShape);
+                    AddObjectToMyShape(myShape);
                 }
 
                 // reset list click point
@@ -926,7 +935,8 @@ namespace _1612180_1612677
                 myShapes = new List<MyShape>(length);
                 for (int i = 0; i < length; i++)
                 {
-                    myShapes.Add((MyShape)bf.Deserialize(fs));
+                    MyShape myShape = (MyShape)bf.Deserialize(fs);
+                    AddObjectToMyShape(myShape);
                 }
                 fs.Close();
 
@@ -1064,6 +1074,53 @@ namespace _1612180_1612677
         private void comboBoxSelectType_SelectedIndexChanged(object sender, EventArgs e)
         {
             resetSelect();
+        }
+
+        private void buttonUndo_Click(object sender, EventArgs e)
+        {
+            if (indexOfMyShapes == -1)
+                return;
+            else
+            {
+                if (indexOfMyShapes > 0)
+                    indexOfMyShapes = indexOfMyShapes - 1;
+                myShapes = new List<MyShape>(listMyShapes[indexOfMyShapes]);
+            }
+            clearBitmap();
+            wrapDrawAllShapes(bitmap_primary);
+            isUndo = true;
+        }
+
+        private void buttonRedo_Click(object sender, EventArgs e)
+        {
+            if ((indexOfMyShapes == MAX_LIST_UNDO_REDO) || indexOfMyShapes == -1 || indexOfMyShapes == listMyShapes.Count - 1)
+                return;
+            else
+            {
+                indexOfMyShapes = indexOfMyShapes + 1;
+                myShapes = new List<MyShape>(listMyShapes[indexOfMyShapes]);
+            }
+            clearBitmap();
+            wrapDrawAllShapes(bitmap_primary);
+        }
+
+        // them shape vao myShapes
+        // them myShapes vao list myShapes
+        public void AddObjectToMyShape(MyShape myshape)
+        {
+            if (!isUndo)
+                indexOfMyShapes++;
+            else
+            {
+                for (int i = listMyShapes.Count - 1; i >= indexOfMyShapes + 1; i--)
+                {
+                    listMyShapes.RemoveAt(i);
+                }
+                indexOfMyShapes++;
+            }
+
+            myShapes.Add(myshape);
+            listMyShapes.Add(new List<MyShape>(myShapes));
         }
     }
 }

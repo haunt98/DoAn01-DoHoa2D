@@ -171,6 +171,19 @@ namespace _1612180_1612677
             return center;
         }
 
+        // di chuyen points
+        public virtual void movePoints(Point p_before, Point p_after)
+        {
+            // tinh khoang cach di chuyen
+            int moveWidth = p_after.X - p_before.X;
+            int moveHeight = p_after.Y - p_before.Y;
+
+            for (int i = 0; i < points.Count; ++i)
+            {
+                points[i] = new Point(points[i].X + moveWidth, points[i].Y + moveHeight);
+            }
+        }
+
         // scale shape, giu nguyen center
         public virtual void scalePoints(Point p_before, Point p_after)
         {
@@ -180,7 +193,7 @@ namespace _1612180_1612677
                 return;
             }
 
-            // khoang cach diem truoc va sau khi di chuyen den diem trung tam
+            // vector truoc va sau khi di chuyen den diem trung tam
             Point d_after = p_after - (Size)getCenterPoint();
             Point d_before = p_before - (Size)getCenterPoint();
 
@@ -208,28 +221,42 @@ namespace _1612180_1612677
             matrix.Translate(-getCenterPoint().X, -getCenterPoint().Y);
 
             // tinh scale points
-            Point[] scalePoints = points.ToArray();
-            matrix.TransformPoints(scalePoints);
-            points = new List<Point>(scalePoints);
+            Point[] sp = points.ToArray();
+            matrix.TransformPoints(sp);
+            points = new List<Point>(sp);
         }
 
         // rotate shape, giu nguyen center
         public virtual void rotatePoints(Point p_before, Point p_after)
         {
-
-        }
-
-        // di chuyen points
-        public virtual void movePoints(Point p_before, Point p_after)
-        {
-            // tinh khoang cach di chuyen
-            int moveWidth = p_after.X - p_before.X;
-            int moveHeight = p_after.Y - p_before.Y;
-
-            for (int i = 0; i < points.Count; ++i)
+            // khong thay doi gi ca
+            if (p_before.Equals(p_after))
             {
-                points[i] = new Point(points[i].X + moveWidth, points[i].Y + moveHeight);
+                return;
             }
+
+            // vector truoc va sau khi di chuyen den diem trung tam
+            Point d_after = p_after - (Size)getCenterPoint();
+            Point d_before = p_before - (Size)getCenterPoint();
+
+            // tinh goc quay
+            int tich_after_before = d_after.X * d_before.X + d_after.Y * d_before.Y;
+            float value_after = (float)Math.Sqrt(d_after.X * d_after.X + d_after.Y * d_after.Y);
+            float value_before = (float)Math.Sqrt(d_before.X * d_before.X + d_before.Y * d_before.Y);
+
+            float acos = (float)tich_after_before / (value_after * value_before);
+            float angle_pi = (float)Math.Acos(acos);
+            float angle_180 = angle_pi / (float)Math.PI * 180;
+
+            // su dung matrix de rotate
+            Matrix matrix = new Matrix();
+            // goc quay va goc toa do
+            matrix.RotateAt(angle_180, getCenterPoint());
+
+            // tinh rotate points
+            Point[] rp = points.ToArray();
+            matrix.TransformPoints(rp);
+            points = new List<Point>(rp);
         }
 
         public virtual void updatePenAttr(PenAttr _penAttr)
