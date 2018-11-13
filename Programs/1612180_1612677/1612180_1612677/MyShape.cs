@@ -31,6 +31,8 @@ namespace _1612180_1612677
         public static bool isPointEqual(Point p, Point q)
         {
             List<Point> ps = new List<Point>();
+
+            // pixel xung quanh p
             for (int i = -RANGE / 2; i <= RANGE / 2; ++i)
             {
                 for (int j = -RANGE / 2; j <= RANGE / 2; ++j)
@@ -38,6 +40,7 @@ namespace _1612180_1612677
                     ps.Add(new Point(p.X + i, p.Y + j));
                 }
             }
+
             // chi can 1 diem trung la duoc
             foreach (Point p_temp in ps)
             {
@@ -117,19 +120,19 @@ namespace _1612180_1612677
         public bool isPointBelong(Point p)
         {
             List<Point> ps = new List<Point>();
-            // lay nhung pixel xung quanh
-            int clickRange = RANGE;
-            for (int i = -clickRange; i <= clickRange; ++i)
+
+            // pixel xung quanh p
+            for (int i = -RANGE / 2; i <= RANGE / 2; ++i)
             {
-                for (int j = -clickRange; j <= clickRange; ++j)
+                for (int j = -RANGE / 2; j <= RANGE / 2; ++j)
                 {
                     ps.Add(new Point(p.X + i, p.Y + j));
                 }
             }
 
+            // chi can mot diem nam trung
             foreach (Point temp_p in ps)
             {
-                // chi can mot diem nam trong la nam trong
                 if (isPointBelongPrecisely(p))
                     return true;
             }
@@ -142,32 +145,10 @@ namespace _1612180_1612677
             return false;
         }
 
-        public virtual void updatePenAttr(PenAttr _penAttr)
-        {
-            return;
-        }
-        public virtual void updateBrushAttr(BrushAttr _brushAttr)
-        {
-            return;
-        }
-
         // kiem tra chinh xac mot diem nam be trong
         public virtual bool isPointInsidePrecisly(Point p)
         {
             return false;
-        }
-
-        // di chuyen points
-        public virtual void movePoints(Point p_before, Point p_after)
-        {
-            // tinh khoang cach di chuyen
-            int moveWidth = p_after.X - p_before.X;
-            int moveHeight = p_after.Y - p_before.Y;
-
-            for (int i = 0; i < points.Count; ++i)
-            {
-                points[i] = new Point(points[i].X + moveWidth, points[i].Y + moveHeight);
-            }
         }
 
         // lay diem trong tam, la diem giu nguyen khi scale
@@ -232,6 +213,31 @@ namespace _1612180_1612677
         public virtual void rotatePoints(Point p_before, Point p_after)
         {
 
+        }
+
+        // di chuyen points
+        public virtual void movePoints(Point p_before, Point p_after)
+        {
+            // tinh khoang cach di chuyen
+            int moveWidth = p_after.X - p_before.X;
+            int moveHeight = p_after.Y - p_before.Y;
+
+            for (int i = 0; i < points.Count; ++i)
+            {
+                points[i] = new Point(points[i].X + moveWidth, points[i].Y + moveHeight);
+            }
+        }
+
+        public virtual void updatePenAttr(PenAttr _penAttr)
+        {
+        }
+
+        public virtual void updateBrushAttr(BrushAttr _brushAttr)
+        {
+        }
+
+        public virtual void updateFontAttr(FontAttr _fontAttr)
+        {
         }
     }
 }
