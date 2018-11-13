@@ -154,8 +154,8 @@ namespace _1612180_1612677
         // scale shape => phong to, thu nho
         public virtual void scalePoints(Point p_before, Point p_after)
         {
-            float Sx = (float)p_after.X / p_before.X;
-            float Sy = (float)p_after.Y / p_before.Y;
+            float Sx = p_before.X == 0 ? 1 : (float)p_after.X / p_before.X;
+            float Sy = p_before.Y == 0 ? 1 : (float)p_after.Y / p_before.Y;
             for (int i = 0; i < points.Count; ++i)
             {
                 points[i] = new Point((int)Math.Round(points[i].X * Sx),
