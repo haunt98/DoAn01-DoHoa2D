@@ -102,10 +102,18 @@ namespace _1612180_1612677
             {
                 comboBoxFont.Items.Add(font.Name.ToString());
             }
-            comboBoxFont.SelectedItem = FontFamily.Families[1].Name.ToString();
+            // default font is Arial, otherwise fontback first font
+            if (comboBoxFont.Items.IndexOf("Arial") != -1)
+            {
+                comboBoxFont.SelectedIndex = comboBoxFont.Items.IndexOf("Arial");
+            }
+            else
+            {
+                comboBoxFont.SelectedIndex = 0;
+            }
 
-            //set value of font size
-            numericUpDownFontSize.Value = 12;
+            // default value of font size
+            numericUpDownFontSize.Value = 16;
 
             // select style combo box
             comboBoxSelectType.Items.Add("Move");
@@ -304,8 +312,6 @@ namespace _1612180_1612677
 
             // them diem hien tai vao click points
             clickedPoints.Add(e.Location);
-            // ve tren bitmap primary
-            pictureBoxMain.Image = bitmap_primary;
 
             // click point du dieu kien moi ve
             bool flag = false;
@@ -369,7 +375,7 @@ namespace _1612180_1612677
                         break;
 
                     case CHARACTER_STATE:
-                        myShape = new MyCharater(getPenAttr(), clickedPoints, getFontAttr());
+                        myShape = new MyCharater(clickedPoints, getFontAttr());
                         break;
 
                     case HINHBINHHANH_STATE:
@@ -387,10 +393,17 @@ namespace _1612180_1612677
                     default:
                         break;
                 }
-                // ve shape
-                myShape.draw(bitmap_primary, pictureBoxMain);
-                // them vao list shape
-                myShapes.Add(myShape);
+                if (myShape != null)
+                {
+                    // ve tren bitmap primary
+                    pictureBoxMain.Image = bitmap_primary;
+
+                    myShape.draw(bitmap_primary, pictureBoxMain);
+
+                    // them vao list shape
+                    myShapes.Add(myShape);
+                }
+
                 // reset list click point
                 clickedPoints.Clear();
                 // khong bat su kien mouse down nua vi ve xong
@@ -399,13 +412,6 @@ namespace _1612180_1612677
             // van con mouse down
             else
             {
-                // nhung hinh ve nhieu diem
-                // nhu da giac, hinh binh hanh
-                // can ve them luc mouse down nhung chua hoan thanh da giac
-                // ve tren bitmap_temp
-                bitmap_temp = (Bitmap)bitmap_primary.Clone();
-                pictureBoxMain.Image = bitmap_temp;
-
                 // tao shape
                 MyShape myShape = null;
                 switch (state)
@@ -427,9 +433,15 @@ namespace _1612180_1612677
                 }
                 if (myShape != null)
                 {
-                    myShape.drawTemporaryChange(bitmap_temp, pictureBoxMain);
+                    // ve tren bitmap_temp
+                    bitmap_temp = (Bitmap)bitmap_primary.Clone();
+                    pictureBoxMain.Image = bitmap_temp;
+
+                    myShape.draw(bitmap_temp, pictureBoxMain);
                     myShape.drawEdgePoints(bitmap_temp, pictureBoxMain);
                 }
+
+                // ve chua xong nen tiep tuc bat su kien mouse down
                 isMouseDown = true;
             }
         }
@@ -452,9 +464,6 @@ namespace _1612180_1612677
 
             // them diem hien tai vao click points
             clickedPoints.Add(e.Location);
-            // ve tren bitmap_temp
-            bitmap_temp = (Bitmap)bitmap_primary.Clone();
-            pictureBoxMain.Image = bitmap_temp;
 
             // tao shape
             MyShape myShape = null;
@@ -492,10 +501,13 @@ namespace _1612180_1612677
                     break;
             }
 
-            // ve shape
             if (myShape != null)
             {
-                myShape.drawTemporaryChange(bitmap_temp, pictureBoxMain);
+                // ve tren bitmap_temp
+                bitmap_temp = (Bitmap)bitmap_primary.Clone();
+                pictureBoxMain.Image = bitmap_temp;
+
+                myShape.draw(bitmap_temp, pictureBoxMain);
                 myShape.drawEdgePoints(bitmap_temp, pictureBoxMain);
             }
 
@@ -601,7 +613,7 @@ namespace _1612180_1612677
                 wrapDrawAllShapes(bitmap_primary);
 
                 // highlight select shape trong khi di chuyen
-                wrapTemporaryShape(bitmap_primary, selectShape);
+                wrapHighlightShape(bitmap_primary, selectShape);
                 myShapes[selectShape].drawInsidePoint(bitmap_primary, e.Location, pictureBoxMain);
 
                 // reset lai points cua shape vi chi la ve tam
@@ -620,7 +632,7 @@ namespace _1612180_1612677
                 wrapDrawAllShapes(bitmap_primary);
 
                 // highlight select shape trong khi di chuyen
-                wrapTemporaryShape(bitmap_primary, selectShape);
+                wrapHighlightShape(bitmap_primary, selectShape);
                 myShapes[selectShape].drawInsidePoint(bitmap_primary, e.Location, pictureBoxMain);
 
                 // reset lai points cua shape vi chi la ve tam
@@ -639,7 +651,7 @@ namespace _1612180_1612677
                 wrapDrawAllShapes(bitmap_primary);
 
                 // highlight select shape trong khi di chuyen
-                wrapTemporaryShape(bitmap_primary, selectShape);
+                wrapHighlightShape(bitmap_primary, selectShape);
                 myShapes[selectShape].drawInsidePoint(bitmap_primary, e.Location, pictureBoxMain);
 
                 // reset lai points cua shape vi chi la ve tam
@@ -768,7 +780,8 @@ namespace _1612180_1612677
         {
             FontAttr fontAttr = new FontAttr(textBoxChar.Text,
                 comboBoxFont.SelectedItem.ToString(),
-                Convert.ToInt32(Math.Round(numericUpDownFontSize.Value, 0)));
+                Convert.ToInt32(Math.Round(numericUpDownFontSize.Value, 0)),
+                FontStyle.Regular);
             return fontAttr;
         }
 
@@ -817,18 +830,15 @@ namespace _1612180_1612677
             if (selectShape == -1)
                 return;
 
-            // kiem tra character
-            if (myShapes[selectShape] is MyCharater)
+            if (selectShape != selectOutlineShape)
             {
-                myShapes[selectShape].updatePenAttr(getPenAttr());
-                MyCharater myCharacter = myShapes[selectShape] as MyCharater;
-                myCharacter.fontAttr = getFontAttr();
+                myShapes[selectShape].updateFontAttr(getFontAttr());
 
                 // xoa roi ve lai trong bitmap_primary
                 clearBitmap();
                 wrapDrawAllShapes(bitmap_primary);
 
-                // highlight trong bitmap_temp
+                // hightlight trong bitmap_temp
                 bitmap_temp = (Bitmap)bitmap_primary.Clone();
                 pictureBoxMain.Image = bitmap_temp;
                 wrapHighlightShape(bitmap_temp, selectShape);
@@ -985,14 +995,6 @@ namespace _1612180_1612677
                 return;
             myShapes[_index].fill(_bitmap, pictureBoxMain);
             myShapes[_index].draw(_bitmap, pictureBoxMain);
-            myShapes[_index].drawEdgePoints(_bitmap, pictureBoxMain);
-        }
-
-        private void wrapTemporaryShape(Bitmap _bitmap, int _index)
-        {
-            if (_index < 0 || _index >= myShapes.Count)
-                return;
-            myShapes[_index].drawTemporaryChange(_bitmap, pictureBoxMain);
             myShapes[_index].drawEdgePoints(_bitmap, pictureBoxMain);
         }
 

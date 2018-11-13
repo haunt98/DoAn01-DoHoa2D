@@ -32,22 +32,9 @@ namespace _1612180_1612677
             }
         }
 
-		public override void updatePenAttr(PenAttr _penAttr)
+        public override void updatePenAttr(PenAttr _penAttr)
         {
             penAttr = _penAttr;
-        }
-
-        public override void drawTemporaryChange(Bitmap _bitmap, PictureBox pictureBox)
-        {
-            if (points.Count != 4)
-                return;
-            using (Graphics graphics = Graphics.FromImage(_bitmap))
-            using (Pen pen = new Pen(Color.Black))
-            {
-                pen.DashStyle = penAttr.dashStyle;
-                graphics.DrawBeziers(pen, points.ToArray());
-                pictureBox.Invalidate();
-            }
         }
 
         public override bool isPointBelongPrecisely(Point p)

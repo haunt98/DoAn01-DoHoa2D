@@ -15,11 +15,18 @@ namespace _1612180_1612677
         protected Color COLOR_INSIDE_POINT = Color.White;
         protected Color COLOR_PEN_DEFAULT = Color.Black;
         protected Color COLOR_BRUSH_DEFAULT = Color.White;
+        protected Color COLOR_BRUSH_ALTERNATIVE = Color.Blue;
+        protected Color COLOR_BRUSH_DARK = Color.Black;
         protected DashStyle DASH_STYLE_TEMP = DashStyle.Dot;
 
         public MyShape(PenAttr _penAttr, List<Point> _points)
         {
-            penAttr = new PenAttr(_penAttr);
+            penAttr = _penAttr;
+            points = new List<Point>(_points);
+        }
+
+        public MyShape(List<Point> _points)
+        {
             points = new List<Point>(_points);
         }
 
@@ -51,9 +58,6 @@ namespace _1612180_1612677
         }
 
         public abstract void draw(Bitmap _bitmap, PictureBox pictureBox);
-
-        // ve net dut khi thay doi shape
-        public abstract void drawTemporaryChange(Bitmap _bitmap, PictureBox pictureBox);
 
         // ve cac diem the hien khung cua shape
         public virtual void drawEdgePoints(Bitmap _bitmap, PictureBox pictureBox)

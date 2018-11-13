@@ -57,22 +57,6 @@ namespace _1612180_1612677
             }
         }
 
-        public override void drawTemporaryChange(Bitmap _bitmap, PictureBox pictureBox)
-        {
-            // so diem phai >= 2
-            if (points.Count < 2)
-                return;
-            using (Graphics graphics = Graphics.FromImage(_bitmap))
-            using (Pen pen = new Pen(COLOR_PEN_DEFAULT))
-            using (Brush brush = new SolidBrush(COLOR_BRUSH_DEFAULT))
-            {
-                graphics.FillPolygon(brush, points.ToArray());
-                pen.DashStyle = DASH_STYLE_TEMP;
-                graphics.DrawPolygon(pen, points.ToArray());
-                pictureBox.Invalidate();
-            }
-        }
-
         public override void drawEdgePoints(Bitmap _bitmap, PictureBox pictureBox)
         {
             base.drawEdgePoints(_bitmap, pictureBox);
@@ -95,28 +79,28 @@ namespace _1612180_1612677
                         break;
 
                     case "HatchBrushVertical":
-                        using (HatchBrush brush = new HatchBrush(HatchStyle.Vertical, brushAttr.color, Color.Blue))
+                        using (HatchBrush brush = new HatchBrush(HatchStyle.Vertical, brushAttr.color, COLOR_BRUSH_ALTERNATIVE))
                         {
                             graphics.FillPolygon(brush, points.ToArray());
                         }
                         break;
 
                     case "HatchBrushHorizontal":
-                        using (HatchBrush brush = new HatchBrush(HatchStyle.Horizontal, brushAttr.color, Color.Blue))
+                        using (HatchBrush brush = new HatchBrush(HatchStyle.Horizontal, brushAttr.color, COLOR_BRUSH_ALTERNATIVE))
                         {
                             graphics.FillPolygon(brush, points.ToArray());
                         }
                         break;
 
                     case "HatchBrushCross":
-                        using (HatchBrush brush = new HatchBrush(HatchStyle.Cross, brushAttr.color, Color.Blue))
+                        using (HatchBrush brush = new HatchBrush(HatchStyle.Cross, brushAttr.color, COLOR_BRUSH_ALTERNATIVE))
                         {
                             graphics.FillPolygon(brush, points.ToArray());
                         }
                         break;
 
                     case "HatchBrushForwardDiagonal":
-                        using (HatchBrush brush = new HatchBrush(HatchStyle.ForwardDiagonal, brushAttr.color, Color.Blue))
+                        using (HatchBrush brush = new HatchBrush(HatchStyle.ForwardDiagonal, brushAttr.color, COLOR_BRUSH_ALTERNATIVE))
                         {
                             graphics.FillPolygon(brush, points.ToArray());
                         }

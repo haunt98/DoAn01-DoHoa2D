@@ -52,7 +52,7 @@ namespace _1612180_1612677
             return Point.Empty;
         }
 
-		public override void updatePenAttr(PenAttr _penAttr)
+        public override void updatePenAttr(PenAttr _penAttr)
         {
             penAttr = _penAttr;
         }
@@ -80,20 +80,6 @@ namespace _1612180_1612677
             using (Pen pen = new Pen(penAttr.color, penAttr.width))
             {
                 pen.DashStyle = penAttr.dashStyle;
-                graphics.DrawCurve(pen, points.ToArray());
-                pictureBox.Invalidate();
-            }
-        }
-
-        public override void drawTemporaryChange(Bitmap _bitmap, PictureBox pictureBox)
-        {
-            // so diem phai >= 2
-            if (points.Count < 2)
-                return;
-            using (Graphics graphics = Graphics.FromImage(_bitmap))
-            using (Pen pen = new Pen(COLOR_PEN_DEFAULT))
-            {
-                pen.DashStyle = DASH_STYLE_TEMP;
                 graphics.DrawCurve(pen, points.ToArray());
                 pictureBox.Invalidate();
             }

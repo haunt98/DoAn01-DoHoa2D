@@ -37,11 +37,12 @@ namespace _1612180_1612677
     [Serializable]
     public class FontAttr
     {
-        public FontAttr(String _text, string _fontFamily, int _size)
+        public FontAttr(String _text, string _fontFamily, int _size, FontStyle _fontStyle)
         {
             text = _text;
             fontFamily = _fontFamily;
             size = _size;
+            fontStyle = _fontStyle;
         }
 
         public FontAttr(FontAttr fontAttr)
@@ -51,9 +52,14 @@ namespace _1612180_1612677
             size = fontAttr.size;
         }
 
-        public string fontFamily { get; set; }
-        public int size { get; set; }
         public String text { get; set; }
+
+        public string fontFamily { get; set; }
+
+        public int size { get; set; }
+
+        public FontStyle fontStyle { get; set; }
+
     }
 
     // luu nhung thuoc tinh cua pen

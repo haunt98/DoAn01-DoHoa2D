@@ -35,17 +35,6 @@ namespace _1612180_1612677
             }
         }
 
-        public override void drawTemporaryChange(Bitmap _bitmap, PictureBox pictureBox)
-        {
-            using (Graphics graphics = Graphics.FromImage(_bitmap))
-            using (Pen pen = new Pen(COLOR_PEN_DEFAULT))
-            {
-                pen.DashStyle = DASH_STYLE_TEMP;
-                graphics.DrawLine(pen, points[0], points[1]);
-                pictureBox.Invalidate();
-            }
-        }
-
         public override bool isPointBelongPrecisely(Point p)
         {
             // su dung graphics path
