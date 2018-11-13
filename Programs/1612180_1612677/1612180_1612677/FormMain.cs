@@ -1031,16 +1031,13 @@ namespace _1612180_1612677
         // lui lai 1 vi tri
         private void sendBackwardToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (state != SELECT_STATE || selectShape == -1)
+            // vi tri 0 khong the lui
+            if (state != SELECT_STATE || selectShape == -1 || selectShape == 0)
                 return;
 
-            // vi tri 0 khong the lui
-            if (selectShape > 0)
-            {
-                MyShape myShape = myShapes[selectShape];
-                myShapes.RemoveAt(selectShape);
-                myShapes.Insert(selectShape - 1, myShape);
-            }
+            MyShape myShape = myShapes[selectShape];
+            myShapes.RemoveAt(selectShape);
+            myShapes.Insert(selectShape - 1, myShape);
 
             // reset lai picturebox
             clearBitmap();
@@ -1050,16 +1047,13 @@ namespace _1612180_1612677
         // tien toi mot vi tri
         private void bringForwardToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (state != SELECT_STATE || selectShape == -1)
+            // vi tri count - 1 khong the tien
+            if (state != SELECT_STATE || selectShape == -1 || selectShape == myShapes.Count - 1)
                 return;
 
-            // vi tri count - 1 khong the tien
-            if (selectShape < myShapes.Count - 1)
-            {
-                MyShape myShape = myShapes[selectShape];
-                myShapes.RemoveAt(selectShape);
-                myShapes.Insert(selectShape + 1, myShape);
-            }
+            MyShape myShape = myShapes[selectShape];
+            myShapes.RemoveAt(selectShape);
+            myShapes.Insert(selectShape + 1, myShape);
 
             // reset lai picturebox
             clearBitmap();
