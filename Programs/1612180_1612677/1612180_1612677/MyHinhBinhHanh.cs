@@ -28,6 +28,16 @@ namespace _1612180_1612677
             return Point.Empty;
         }
 
+        public override void updatePenAttr(PenAttr _penAttr)
+        {
+            penAttr = _penAttr;
+        }
+
+        public override void updateBrushAttr(BrushAttr _brushAttr)
+        {
+            brushAttr = _brushAttr;
+        }
+
         public static bool isClickedPointsCanDrawShape(List<Point> _points)
         {
             // hinh binh hanh can 3 diem

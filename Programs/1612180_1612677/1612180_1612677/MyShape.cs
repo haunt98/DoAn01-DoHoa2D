@@ -12,10 +12,10 @@ namespace _1612180_1612677
         protected const int RANGE = 10;
         protected Color COLOR_EDGE_POINTS = Color.White;
         protected Color COLOR_FIRST_POINT = Color.Red;
-        protected Color COLOR_INSIDE_POINT = Color.Blue;
+        protected Color COLOR_INSIDE_POINT = Color.White;
         protected Color COLOR_PEN_DEFAULT = Color.Black;
         protected Color COLOR_BRUSH_DEFAULT = Color.White;
-        protected DashStyle DASH_STYLE_TEMP = DashStyle.Dash;
+        protected DashStyle DASH_STYLE_TEMP = DashStyle.Dot;
 
         public MyShape(PenAttr _penAttr, List<Point> _points)
         {
@@ -140,6 +140,15 @@ namespace _1612180_1612677
         public virtual bool isPointBelongPrecisely(Point p)
         {
             return false;
+        }
+
+        public virtual void updatePenAttr(PenAttr _penAttr)
+        {
+            return;
+        }
+        public virtual void updateBrushAttr(BrushAttr _brushAttr)
+        {
+            return;
         }
 
         // kiem tra chinh xac mot diem nam be trong

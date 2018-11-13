@@ -33,6 +33,16 @@ namespace _1612180_1612677
             return false;
         }
 
+        public override void updatePenAttr(PenAttr _penAttr)
+        {
+            penAttr = _penAttr;
+        }
+
+        public override void updateBrushAttr(BrushAttr _brushAttr)
+        {
+            brushAttr = _brushAttr;
+        }
+
         public override void draw(Bitmap _bitmap, PictureBox pictureBox)
         {
             // so diem phai >= 2

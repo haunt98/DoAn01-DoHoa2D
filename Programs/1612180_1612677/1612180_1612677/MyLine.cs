@@ -14,6 +14,11 @@ namespace _1612180_1612677
         {
         }
 
+        public override void updatePenAttr(PenAttr _penAttr)
+        {
+            penAttr = _penAttr;
+        }
+
         public static bool isClickedPointsCanDrawShape(List<Point> _points)
         {
             return _points.Count == 2;

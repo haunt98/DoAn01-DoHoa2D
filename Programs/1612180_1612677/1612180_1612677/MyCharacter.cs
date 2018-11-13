@@ -34,6 +34,11 @@ namespace _1612180_1612677
             return _points.Count == 1;
         }
 
+		public override void updatePenAttr(PenAttr _penAttr)
+        {
+            penAttr = _penAttr;
+        }
+
         public override void draw(Bitmap _bitmap, PictureBox pictureBox)
         {
             using (Graphics graphics = Graphics.FromImage(_bitmap))

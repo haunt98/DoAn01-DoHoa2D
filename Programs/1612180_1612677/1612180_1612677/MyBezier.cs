@@ -32,6 +32,11 @@ namespace _1612180_1612677
             }
         }
 
+		public override void updatePenAttr(PenAttr _penAttr)
+        {
+            penAttr = _penAttr;
+        }
+
         public override void drawTemporaryChange(Bitmap _bitmap, PictureBox pictureBox)
         {
             if (points.Count != 4)

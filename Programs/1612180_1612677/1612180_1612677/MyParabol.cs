@@ -51,6 +51,12 @@ namespace _1612180_1612677
             }
             return Point.Empty;
         }
+
+		public override void updatePenAttr(PenAttr _penAttr)
+        {
+            penAttr = _penAttr;
+        }
+
         public static bool isClickedPointsCanDrawShape(List<Point> _points)
         {
             if (_points.Count == 2)

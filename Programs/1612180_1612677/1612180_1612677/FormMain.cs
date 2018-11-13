@@ -784,7 +784,7 @@ namespace _1612180_1612677
             // kiem tra character
             if (myShapes[selectShape] is MyCharater)
             {
-                myShapes[selectShape].penAttr = getPenAttr();
+                myShapes[selectShape].updatePenAttr(getPenAttr());
                 MyCharater myCharacter = myShapes[selectShape] as MyCharater;
                 myCharacter.fontAttr = getFontAttr();
 
@@ -812,7 +812,7 @@ namespace _1612180_1612677
             if (selectShape == selectOutlineShape)
             {
                 // thay doi vien
-                myShapes[selectShape].penAttr = getPenAttr();
+                myShapes[selectShape].updatePenAttr(getPenAttr());
 
                 // xo roi ve lai trong bitmap_primary
                 clearBitmap();
@@ -835,7 +835,7 @@ namespace _1612180_1612677
             // click outline, doi mau vien
             if (selectShape == selectOutlineShape)
             {
-                myShapes[selectShape].penAttr = getPenAttr();
+                myShapes[selectShape].updatePenAttr(getPenAttr());
             }
             clearBitmap();
             wrapDrawAllShapes(bitmap_primary);
@@ -851,34 +851,7 @@ namespace _1612180_1612677
             // click ben trong, doi mau ben trong
             if (selectShape != selectOutlineShape)
             {
-                if (myShapes[selectShape] is MyEllipse)
-                {
-                    MyEllipse myEllise = myShapes[selectShape] as MyEllipse;
-                    myEllise.brushAttr = getBrushAttr();
-                    myShapes[selectInsideShape] = (MyShape)myEllise;
-                }
-                else if (myShapes[selectShape] is MyHinhBinhHanh)
-                {
-                    MyHinhBinhHanh myHbh = myShapes[selectShape] as MyHinhBinhHanh;
-                    myHbh.brushAttr = getBrushAttr();
-                    myShapes[selectShape] = (MyShape)myHbh;
-                }
-                else if (myShapes[selectShape] is MyPolygon)
-                {
-                    MyPolygon myPolygon = myShapes[selectShape] as MyPolygon;
-                    myPolygon.brushAttr = getBrushAttr();
-                    myShapes[selectShape] = (MyShape)myPolygon;
-                }
-                else if (myShapes[selectShape] is MyRectangle)
-                {
-                    MyRectangle myRectangle = myShapes[selectShape] as MyRectangle;
-                    myRectangle.brushAttr = getBrushAttr();
-                    myShapes[selectShape] = (MyShape)myRectangle;
-                }
-                else if (myShapes[selectShape] is MyCharater)
-                {
-                    myShapes[selectShape].penAttr = getPenAttr();
-                }
+                myShapes[selectShape].updateBrushAttr(getBrushAttr());
             }
 
             clearBitmap();
