@@ -65,7 +65,7 @@ namespace _1612180_1612677
             }
         }
 
-        // diem dau tien cua shape
+        // ve diem dau tien cua shape
         public virtual void drawFirstPoint(Bitmap _bitmap, PictureBox pictureBox)
         {
             List<Point> edgePoints = getEdgePoints();
@@ -81,7 +81,7 @@ namespace _1612180_1612677
             }
         }
 
-        // diem khi select ben trong shape
+        // ve diem khi select ben trong shape
         public virtual void drawInsidePoint(Bitmap _bitmap, Point p, PictureBox pictureBox)
         {
             using (Graphics graphics = Graphics.FromImage(_bitmap))
@@ -208,5 +208,9 @@ namespace _1612180_1612677
             matrix.TransformPoints(scalePoints);
             points = new List<Point>(scalePoints);
         }
+
+        // rotate time :) rotate shape i mean :)
+        // guide by huan guru
+
     }
 }

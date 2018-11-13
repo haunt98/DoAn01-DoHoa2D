@@ -66,6 +66,7 @@
             this.bringToFrontToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sendBackwardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.bringForwardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.comboBoxSelectType = new System.Windows.Forms.ComboBox();
             this.menuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMain)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPenWidth)).BeginInit();
@@ -177,7 +178,7 @@
             // 
             // buttonShowColor
             // 
-            this.buttonShowColor.Location = new System.Drawing.Point(493, 36);
+            this.buttonShowColor.Location = new System.Drawing.Point(640, 36);
             this.buttonShowColor.Name = "buttonShowColor";
             this.buttonShowColor.Size = new System.Drawing.Size(75, 23);
             this.buttonShowColor.TabIndex = 8;
@@ -233,7 +234,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(574, 41);
+            this.label3.Location = new System.Drawing.Point(574, 68);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(60, 13);
             this.label3.TabIndex = 15;
@@ -243,7 +244,7 @@
             // 
             this.comboBoxBrushStyle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxBrushStyle.FormattingEnabled = true;
-            this.comboBoxBrushStyle.Location = new System.Drawing.Point(640, 38);
+            this.comboBoxBrushStyle.Location = new System.Drawing.Point(640, 65);
             this.comboBoxBrushStyle.Name = "comboBoxBrushStyle";
             this.comboBoxBrushStyle.Size = new System.Drawing.Size(136, 21);
             this.comboBoxBrushStyle.TabIndex = 16;
@@ -323,7 +324,7 @@
             // 
             // buttonDel
             // 
-            this.buttonDel.Location = new System.Drawing.Point(379, 36);
+            this.buttonDel.Location = new System.Drawing.Point(518, 36);
             this.buttonDel.Name = "buttonDel";
             this.buttonDel.Size = new System.Drawing.Size(92, 23);
             this.buttonDel.TabIndex = 25;
@@ -333,7 +334,7 @@
             // 
             // buttonUnselect
             // 
-            this.buttonUnselect.Location = new System.Drawing.Point(295, 36);
+            this.buttonUnselect.Location = new System.Drawing.Point(427, 36);
             this.buttonUnselect.Name = "buttonUnselect";
             this.buttonUnselect.Size = new System.Drawing.Size(75, 23);
             this.buttonUnselect.TabIndex = 26;
@@ -420,11 +421,21 @@
             this.bringForwardToolStripMenuItem.Text = "Bring forward";
             this.bringForwardToolStripMenuItem.Click += new System.EventHandler(this.bringForwardToolStripMenuItem_Click);
             // 
+            // comboBoxSelectType
+            // 
+            this.comboBoxSelectType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxSelectType.FormattingEnabled = true;
+            this.comboBoxSelectType.Location = new System.Drawing.Point(300, 38);
+            this.comboBoxSelectType.Name = "comboBoxSelectType";
+            this.comboBoxSelectType.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxSelectType.TabIndex = 31;
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(788, 432);
+            this.Controls.Add(this.comboBoxSelectType);
             this.Controls.Add(this.buttonFill);
             this.Controls.Add(this.buttonDrawPara);
             this.Controls.Add(this.buttonDrawBezier);
@@ -508,6 +519,7 @@
         private System.Windows.Forms.ToolStripMenuItem bringToFrontToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem sendBackwardToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem bringForwardToolStripMenuItem;
+        private System.Windows.Forms.ComboBox comboBoxSelectType;
     }
 }
 
