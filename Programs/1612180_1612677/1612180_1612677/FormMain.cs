@@ -509,10 +509,17 @@ namespace _1612180_1612677
             // neu khong phai select state
             // khong changing shape
             // khong click trung
-            // khong reset bitmap_primary vi de vien
-            if (state != SELECT_STATE || !isChangingShape || selectShape == -1)
+            if (state != SELECT_STATE || !isChangingShape)
             {
                 resetSelect();
+                return;
+            }
+
+            // khong reset bitmap_primary vi de vien de xac dinh
+            if (selectShape == -1)
+            {
+                resetSelect();
+                pictureBoxMain.Image = bitmap_primary;
                 return;
             }
 
@@ -535,7 +542,7 @@ namespace _1612180_1612677
             }
             else if (comboBoxSelectType.SelectedItem.ToString() == "Scale")
             {
-                // di chuyen shape theo mouse move
+                // scale shape theo mouse move
                 myShapes[selectShape].scalePoints(posMovingShape[0], posMovingShape[1]);
 
                 // xoa roi ve lai trong bitmap_primary
@@ -550,7 +557,18 @@ namespace _1612180_1612677
             }
             else if (comboBoxSelectType.SelectedItem.ToString() == "Rotate")
             {
+                // rotate shape theo mouse move
+                myShapes[selectShape].rotatePoints(posMovingShape[0], posMovingShape[1]);
 
+                // xoa roi ve lai trong bitmap_primary
+                clearBitmap();
+                wrapDrawAllShapes(bitmap_primary);
+
+                // shape dang duoc click
+                // lam noi bat len tren bitmap_temp
+                bitmap_temp = (Bitmap)bitmap_primary.Clone();
+                pictureBoxMain.Image = bitmap_temp;
+                wrapHighlightShape(bitmap_temp, selectShape);
             }
 
             // reset lai list moving shape
@@ -610,7 +628,22 @@ namespace _1612180_1612677
             }
             else if (comboBoxSelectType.SelectedItem.ToString() == "Rotate")
             {
+                // backup lai points truoc khi rotate
+                List<Point> savePoints = new List<Point>(myShapes[selectShape].points);
 
+                // rotate shape theo mouse move
+                myShapes[selectShape].rotatePoints(posMovingShape[0], posMovingShape[1]);
+
+                // xoa roi ve lai trong bitmap_primary
+                clearBitmap();
+                wrapDrawAllShapes(bitmap_primary);
+
+                // highlight select shape trong khi di chuyen
+                wrapTemporaryShape(bitmap_primary, selectShape);
+                myShapes[selectShape].drawInsidePoint(bitmap_primary, e.Location, pictureBoxMain);
+
+                // reset lai points cua shape vi chi la ve tam
+                myShapes[selectShape].points = new List<Point>(savePoints);
             }
 
             // xoa diem hien ra khoi list vi tri cua shape moving
@@ -660,7 +693,7 @@ namespace _1612180_1612677
             // mac dinh la khong cho change shape
             isChangingShape = false;
 
-            // ve tren bitmap_primary
+            // ve tren bitmap_temp
             bitmap_temp = (Bitmap)bitmap_primary.Clone();
             pictureBoxMain.Image = bitmap_temp;
             wrapHighlightShape(bitmap_temp, selectShape);
@@ -681,8 +714,7 @@ namespace _1612180_1612677
                 List<Point> edgePoints = myShapes[selectShape].getEdgePoints();
                 foreach (Point p in edgePoints)
                 {
-                    // phai click trung edge Point => cho phep move va scale
-                    // 20 la so pixel de cho click de trung
+                    // phai click trung edge Point => cho phep scale
                     if (MyShape.isPointEqual(e.Location, p))
                     {
                         // set chinh xac diem edge thay cho e.Location
@@ -702,7 +734,26 @@ namespace _1612180_1612677
             }
             else if (comboBoxSelectType.SelectedItem.ToString() == "Rotate")
             {
+                List<Point> edgePoints = myShapes[selectShape].getEdgePoints();
+                foreach (Point p in edgePoints)
+                {
+                    // phai click trung edge Point => cho phep rotate
+                    if (MyShape.isPointEqual(e.Location, p))
+                    {
+                        // set chinh xac diem edge thay cho e.Location
+                        posMovingShape[0] = p;
 
+                        // neu khong co trong list select shape thi them vao
+                        if (selectShapes.IndexOf(selectShape) == -1)
+                        {
+                            selectShapes.Add(selectShape);
+                        }
+
+                        // cho phep thuc hien thay doi shape
+                        isChangingShape = true;
+                        break;
+                    }
+                }
             }
         }
 
