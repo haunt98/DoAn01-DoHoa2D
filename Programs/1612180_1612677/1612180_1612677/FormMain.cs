@@ -592,6 +592,9 @@ namespace _1612180_1612677
             // scale time :)
             if (isScalingShape)
             {
+                // backup lai points truoc khi scale
+                List<Point> savePoints = new List<Point>(myShapes[selectShape].points);
+
                 // scale shape theo mouse move
                 myShapes[selectShape].scalePoints(posMovingShape[0], posMovingShape[1]);
 
@@ -603,7 +606,7 @@ namespace _1612180_1612677
                 wrapHightLightShape(selectShape, bitmap_primary);
 
                 // reset lai points cua shape vi chi la ve tam
-                myShapes[selectShape].scalePoints(posMovingShape[1], posMovingShape[0]);
+                myShapes[selectShape].points = new List<Point>(savePoints);
             }
             // move time :)
             else
