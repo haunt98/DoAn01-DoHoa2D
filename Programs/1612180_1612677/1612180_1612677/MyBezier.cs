@@ -24,7 +24,20 @@ namespace _1612180_1612677
             if (points.Count != 4)
                 return;
             using (Graphics graphics = Graphics.FromImage(_bitmap))
-            using (Pen pen = new Pen(penAttr.color, penAttr.width))
+            using (Pen pen = new Pen(COLOR_PEN_DEFAULT))
+            {
+                pen.DashStyle = DASH_STYLE_TEMP;
+                graphics.DrawBeziers(pen, points.ToArray());
+                pictureBox.Invalidate();
+            }
+        }
+
+        public override void drawTemporaryChange(Bitmap _bitmap, PictureBox pictureBox)
+        {
+            if (points.Count != 4)
+                return;
+            using (Graphics graphics = Graphics.FromImage(_bitmap))
+            using (Pen pen = new Pen(Color.Black))
             {
                 pen.DashStyle = penAttr.dashStyle;
                 graphics.DrawBeziers(pen, points.ToArray());

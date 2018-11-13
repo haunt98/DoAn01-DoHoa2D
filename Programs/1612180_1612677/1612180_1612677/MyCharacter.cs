@@ -22,7 +22,7 @@ namespace _1612180_1612677
 
         public FontAttr fontAttr { get; set; }
 
-        private void getHeightAndWidthOfChar(Graphics graphics, Font font)
+        private void calcWidthHeight(Graphics graphics, Font font)
         {
             //get height and width of text
             width = (int)graphics.MeasureString(fontAttr.text, font).Width;
@@ -42,11 +42,16 @@ namespace _1612180_1612677
             {
                 pen.DashStyle = penAttr.dashStyle;
                 Font font = new Font(fontAttr.fontFamily, fontAttr.size, FontStyle.Regular);
-                getHeightAndWidthOfChar(graphics, font);
+                calcWidthHeight(graphics, font);
                 //draw
                 graphics.DrawString(fontAttr.text, font, brush, mostLeft);
                 pictureBox.Invalidate();
             }
+        }
+
+        public override void drawTemporaryChange(Bitmap _bitmap, PictureBox pictureBox)
+        {
+            throw new NotImplementedException();
         }
 
         public override bool isPointInsidePrecisly(Point p)

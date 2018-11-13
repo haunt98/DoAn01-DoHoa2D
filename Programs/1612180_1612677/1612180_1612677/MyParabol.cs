@@ -79,6 +79,20 @@ namespace _1612180_1612677
             }
         }
 
+        public override void drawTemporaryChange(Bitmap _bitmap, PictureBox pictureBox)
+        {
+            // so diem phai >= 2
+            if (points.Count < 2)
+                return;
+            using (Graphics graphics = Graphics.FromImage(_bitmap))
+            using (Pen pen = new Pen(COLOR_PEN_DEFAULT))
+            {
+                pen.DashStyle = DASH_STYLE_TEMP;
+                graphics.DrawCurve(pen, points.ToArray());
+                pictureBox.Invalidate();
+            }
+        }
+
         public override bool isPointBelongPrecisely(Point p)
         {
             using (GraphicsPath path = new GraphicsPath())

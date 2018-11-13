@@ -152,7 +152,7 @@ namespace _1612180_1612677
             selectShapes.Clear();
             // xoa roi ve lai
             clearBitmap();
-            wrapRedrawAllShapes(bitmap_primary);
+            wrapDrawAllShapes(bitmap_primary);
         }
 
         private void buttonDrawBezier_Click(object sender, EventArgs e)
@@ -251,7 +251,7 @@ namespace _1612180_1612677
                 selectShapes.Clear();
                 // xoa roi ve lai
                 clearBitmap();
-                wrapRedrawAllShapes(bitmap_primary);
+                wrapDrawAllShapes(bitmap_primary);
             }
         }
 
@@ -427,7 +427,7 @@ namespace _1612180_1612677
                 }
                 if (myShape != null)
                 {
-                    myShape.draw(bitmap_temp, pictureBoxMain);
+                    myShape.drawTemporaryChange(bitmap_temp, pictureBoxMain);
                     myShape.drawEdgePoints(bitmap_temp, pictureBoxMain);
                 }
                 isMouseDown = true;
@@ -495,7 +495,7 @@ namespace _1612180_1612677
             // ve shape
             if (myShape != null)
             {
-                myShape.draw(bitmap_temp, pictureBoxMain);
+                myShape.drawTemporaryChange(bitmap_temp, pictureBoxMain);
                 myShape.drawEdgePoints(bitmap_temp, pictureBoxMain);
             }
 
@@ -529,23 +529,17 @@ namespace _1612180_1612677
 
             if (comboBoxSelectType.SelectedItem.ToString() == "Move")
             {
-                // vector di chuyen
-                int moveWidth = posMovingShape[1].X - posMovingShape[0].X;
-                int moveHeight = posMovingShape[1].Y - posMovingShape[0].Y;
-
                 // di chuyen shape theo mouse move
-                myShapes[selectShape].movePoints(moveWidth, moveHeight);
+                myShapes[selectShape].movePoints(posMovingShape[0], posMovingShape[1]);
 
                 // xoa roi ve lai trong bitmap_primary
                 clearBitmap();
-                wrapRedrawAllShapes(bitmap_primary);
+                wrapDrawAllShapes(bitmap_primary);
 
-                // shape dang duoc click
-                // lam noi bat len tren bitmap_temp
+                // ve shape dang duoc click tren bitmap_temp
                 bitmap_temp = (Bitmap)bitmap_primary.Clone();
                 pictureBoxMain.Image = bitmap_temp;
-                wrapHightLightShape(selectShape, bitmap_temp);
-                myShapes[selectShape].drawInsidePoint(bitmap_temp, e.Location, pictureBoxMain);
+                wrapHighlightShape(bitmap_temp, selectShape);
             }
             else if (comboBoxSelectType.SelectedItem.ToString() == "Scale")
             {
@@ -554,13 +548,13 @@ namespace _1612180_1612677
 
                 // xoa roi ve lai trong bitmap_primary
                 clearBitmap();
-                wrapRedrawAllShapes(bitmap_primary);
+                wrapDrawAllShapes(bitmap_primary);
 
                 // shape dang duoc click
                 // lam noi bat len tren bitmap_temp
                 bitmap_temp = (Bitmap)bitmap_primary.Clone();
                 pictureBoxMain.Image = bitmap_temp;
-                wrapHightLightShape(selectShape, bitmap_temp);
+                wrapHighlightShape(bitmap_temp, selectShape);
             }
             else if (comboBoxSelectType.SelectedItem.ToString() == "Rotate")
             {
@@ -591,23 +585,19 @@ namespace _1612180_1612677
 
             if (comboBoxSelectType.SelectedItem.ToString() == "Move")
             {
-                // vector di chuyen
-                int moveWidth = posMovingShape[1].X - posMovingShape[0].X;
-                int moveHeight = posMovingShape[1].Y - posMovingShape[0].Y;
-
                 // di chuyen shape theo mouse move
-                myShapes[selectShape].movePoints(moveWidth, moveHeight);
+                myShapes[selectShape].movePoints(posMovingShape[0], posMovingShape[1]);
 
                 // xoa roi ve lai trong bitmap_primary
                 clearBitmap();
-                wrapRedrawAllShapes(bitmap_primary);
+                wrapDrawAllShapes(bitmap_primary);
 
                 // highlight select shape trong khi di chuyen
-                wrapHightLightShape(selectShape, bitmap_primary);
+                wrapTemporaryShape(bitmap_primary, selectShape);
                 myShapes[selectShape].drawInsidePoint(bitmap_primary, e.Location, pictureBoxMain);
 
                 // reset lai points cua shape vi chi la ve tam
-                myShapes[selectShape].movePoints(-moveWidth, -moveHeight);
+                myShapes[selectShape].movePoints(posMovingShape[1], posMovingShape[0]);
             }
             else if (comboBoxSelectType.SelectedItem.ToString() == "Scale")
             {
@@ -619,10 +609,11 @@ namespace _1612180_1612677
 
                 // xoa roi ve lai trong bitmap_primary
                 clearBitmap();
-                wrapRedrawAllShapes(bitmap_primary);
+                wrapDrawAllShapes(bitmap_primary);
 
                 // highlight select shape trong khi di chuyen
-                wrapHightLightShape(selectShape, bitmap_primary);
+                wrapTemporaryShape(bitmap_primary, selectShape);
+                myShapes[selectShape].drawInsidePoint(bitmap_primary, e.Location, pictureBoxMain);
 
                 // reset lai points cua shape vi chi la ve tam
                 myShapes[selectShape].points = new List<Point>(savePoints);
@@ -689,10 +680,10 @@ namespace _1612180_1612677
             {
                 // ve tren bitmap_temp
                 // hightlight shape dang select
-                bitmap_temp = (Bitmap)bitmap_primary.Clone();
-                pictureBoxMain.Image = bitmap_temp;
-                wrapHightLightShape(selectShape, bitmap_temp);
-                myShapes[selectShape].drawInsidePoint(bitmap_temp, e.Location, pictureBoxMain);
+                //bitmap_temp = (Bitmap)bitmap_primary.Clone();
+                //pictureBoxMain.Image = bitmap_temp;
+                //wrapHighlightShape(bitmap_temp, selectShape);
+                //myShapes[selectShape].drawInsidePoint(bitmap_temp, e.Location, pictureBoxMain);
 
                 // neu khong co trong list select shape thi them vao
                 if (selectShapes.IndexOf(selectShape) == -1)
@@ -710,7 +701,7 @@ namespace _1612180_1612677
                 {
                     // phai click trung edge Point => cho phep move va scale
                     // 20 la so pixel de cho click de trung
-                    if (MyShape.isPointEqual(e.Location, p, 20))
+                    if (MyShape.isPointEqual(e.Location, p, 30))
                     {
                         // neu khong co trong list select shape thi them vao
                         if (selectShapes.IndexOf(selectShape) == -1)
@@ -799,12 +790,12 @@ namespace _1612180_1612677
 
                 // xoa roi ve lai trong bitmap_primary
                 clearBitmap();
-                wrapRedrawAllShapes(bitmap_primary);
+                wrapDrawAllShapes(bitmap_primary);
 
                 // highlight trong bitmap_temp
                 bitmap_temp = (Bitmap)bitmap_primary.Clone();
                 pictureBoxMain.Image = bitmap_temp;
-                wrapHightLightShape(selectShape, bitmap_temp);
+                wrapHighlightShape(bitmap_temp, selectShape);
             }
         }
 
@@ -825,12 +816,12 @@ namespace _1612180_1612677
 
                 // xo roi ve lai trong bitmap_primary
                 clearBitmap();
-                wrapRedrawAllShapes(bitmap_primary);
+                wrapDrawAllShapes(bitmap_primary);
 
                 // hightlight trong bitmap_temp
                 bitmap_temp = (Bitmap)bitmap_primary.Clone();
                 pictureBoxMain.Image = bitmap_temp;
-                wrapHightLightShape(selectShape, bitmap_temp);
+                wrapHighlightShape(bitmap_temp, selectShape);
             }
         }
 
@@ -847,7 +838,7 @@ namespace _1612180_1612677
                 myShapes[selectShape].penAttr = getPenAttr();
             }
             clearBitmap();
-            wrapRedrawAllShapes(bitmap_primary);
+            wrapDrawAllShapes(bitmap_primary);
         }
 
         private void reloadColorInside(object sender, EventArgs e)
@@ -891,7 +882,7 @@ namespace _1612180_1612677
             }
 
             clearBitmap();
-            wrapRedrawAllShapes(bitmap_primary);
+            wrapDrawAllShapes(bitmap_primary);
         }
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
@@ -912,7 +903,7 @@ namespace _1612180_1612677
                 fs.Close();
 
                 clearBitmap();
-                wrapRedrawAllShapes(bitmap_primary);
+                wrapDrawAllShapes(bitmap_primary);
             }
         }
 
@@ -960,15 +951,7 @@ namespace _1612180_1612677
             }
         }
 
-        private void wrapHightLightShape(int _hlShape, Bitmap _bitmap)
-        {
-            // dau tien fill, sau do draw vien, sau do draw edge
-            myShapes[_hlShape].fill(_bitmap, pictureBoxMain);
-            myShapes[_hlShape].draw(_bitmap, pictureBoxMain);
-            myShapes[_hlShape].drawEdgePoints(_bitmap, pictureBoxMain);
-        }
-
-        private void wrapRedrawAllShapes(Bitmap _bitmap)
+        private void wrapDrawAllShapes(Bitmap _bitmap)
         {
             foreach (MyShape myShape in myShapes)
             {
@@ -976,6 +959,23 @@ namespace _1612180_1612677
                 myShape.fill(_bitmap, pictureBoxMain);
                 myShape.draw(_bitmap, pictureBoxMain);
             }
+        }
+
+        private void wrapHighlightShape(Bitmap _bitmap, int _index)
+        {
+            if (_index < 0 || _index >= myShapes.Count)
+                return;
+            myShapes[_index].fill(_bitmap, pictureBoxMain);
+            myShapes[_index].draw(_bitmap, pictureBoxMain);
+            myShapes[_index].drawEdgePoints(_bitmap, pictureBoxMain);
+        }
+
+        private void wrapTemporaryShape(Bitmap _bitmap, int _index)
+        {
+            if (_index < 0 || _index >= myShapes.Count)
+                return;
+            myShapes[_index].drawTemporaryChange(_bitmap, pictureBoxMain);
+            myShapes[_index].drawEdgePoints(_bitmap, pictureBoxMain);
         }
 
         private void sendToBackToolStripMenuItem_Click(object sender, EventArgs e)

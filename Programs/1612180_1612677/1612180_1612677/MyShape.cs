@@ -9,10 +9,13 @@ namespace _1612180_1612677
     [Serializable]
     public abstract class MyShape
     {
-        protected const int RANGE = 6;
-        private Color COLOR_EDGE_POINTS = Color.White;
-        private Color COLOR_FIRST_POINT = Color.Red;
-        private Color COLOR_INSIDE_POINT = Color.Blue;
+        protected const int RANGE = 10;
+        protected Color COLOR_EDGE_POINTS = Color.White;
+        protected Color COLOR_FIRST_POINT = Color.Red;
+        protected Color COLOR_INSIDE_POINT = Color.Blue;
+        protected Color COLOR_PEN_DEFAULT = Color.Black;
+        protected Color COLOR_BRUSH_DEFAULT = Color.White;
+        protected DashStyle DASH_STYLE_TEMP = DashStyle.Dash;
 
         public MyShape(PenAttr _penAttr, List<Point> _points)
         {
@@ -45,6 +48,9 @@ namespace _1612180_1612677
         }
 
         public abstract void draw(Bitmap _bitmap, PictureBox pictureBox);
+
+        // ve net dut khi thay doi shape
+        public abstract void drawTemporaryChange(Bitmap _bitmap, PictureBox pictureBox);
 
         // ve cac diem the hien khung cua shape
         public virtual void drawEdgePoints(Bitmap _bitmap, PictureBox pictureBox)
@@ -143,11 +149,15 @@ namespace _1612180_1612677
         }
 
         // di chuyen points
-        public virtual void movePoints(int _moveWidth, int _moveHeight)
+        public virtual void movePoints(Point p_before, Point p_after)
         {
+            // tinh khoang cach di chuyen
+            int moveWidth = p_after.X - p_before.X;
+            int moveHeight = p_after.Y - p_before.Y;
+
             for (int i = 0; i < points.Count; ++i)
             {
-                points[i] = new Point(points[i].X + _moveWidth, points[i].Y + _moveHeight);
+                points[i] = new Point(points[i].X + moveWidth, points[i].Y + moveHeight);
             }
         }
 
@@ -167,7 +177,7 @@ namespace _1612180_1612677
             return center;
         }
 
-        // scale shape => phong to, thu nho
+        // scale shape, giu nguyen center
         public virtual void scalePoints(Point p_before, Point p_after)
         {
             // khong thay doi gi ca
@@ -209,8 +219,10 @@ namespace _1612180_1612677
             points = new List<Point>(scalePoints);
         }
 
-        // rotate time :) rotate shape i mean :)
-        // guide by huan guru
+        // rotate shape, giu nguyen center
+        public virtual void rotatePoints(Point p_before, Point p_after)
+        {
 
+        }
     }
 }

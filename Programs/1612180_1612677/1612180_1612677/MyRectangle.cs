@@ -14,16 +14,20 @@ namespace _1612180_1612677
         private int height;
         public BrushAttr brushAttr { get; set; }
 
-        public MyRectangle(PenAttr _penAttr, List<Point> _points) :
-            base(_penAttr, _points)
+        private void calcMostLeftWidthHeight()
         {
             // diem trai nhat
             mostLeft = new Point(Math.Min(points[0].X, points[1].X),
                 Math.Min(points[0].Y, points[1].Y));
             width = Math.Abs(points[0].X - points[1].X);
             height = Math.Abs(points[0].Y - points[1].Y);
-            // mac dinh la mau trang
-            brushAttr = new BrushAttr(Color.White, "SolidBrush");
+        }
+
+        public MyRectangle(PenAttr _penAttr, List<Point> _points) :
+            base(_penAttr, _points)
+        {
+            calcMostLeftWidthHeight();
+            brushAttr = new BrushAttr(COLOR_BRUSH_DEFAULT, "SolidBrush");
         }
 
         public static bool isClickedPointsCanDrawShape(List<Point> _points)
@@ -38,6 +42,20 @@ namespace _1612180_1612677
             {
                 Rectangle rectangle = new Rectangle(mostLeft, new Size(width, height));
                 pen.DashStyle = penAttr.dashStyle;
+                graphics.DrawRectangle(pen, rectangle);
+                pictureBox.Invalidate();
+            }
+        }
+
+        public override void drawTemporaryChange(Bitmap _bitmap, PictureBox pictureBox)
+        {
+            using (Graphics graphics = Graphics.FromImage(_bitmap))
+            using (Pen pen = new Pen(COLOR_PEN_DEFAULT))
+            using (Brush brush = new SolidBrush(COLOR_BRUSH_DEFAULT))
+            {
+                Rectangle rectangle = new Rectangle(mostLeft, new Size(width, height));
+                graphics.FillRectangle(brush, rectangle);
+                pen.DashStyle = DashStyle.Dash;
                 graphics.DrawRectangle(pen, rectangle);
                 pictureBox.Invalidate();
             }
@@ -124,25 +142,25 @@ namespace _1612180_1612677
             }
         }
 
-        public override void movePoints(int _moveWidth, int _moveHeight)
+        public override void movePoints(Point p_before, Point p_after)
         {
-            base.movePoints(_moveWidth, _moveHeight);
+            base.movePoints(p_before, p_after);
             // tinh lai
-            mostLeft = new Point(Math.Min(points[0].X, points[1].X),
-                Math.Min(points[0].Y, points[1].Y));
-            width = Math.Abs(points[0].X - points[1].X);
-            height = Math.Abs(points[0].Y - points[1].Y);
-
+            calcMostLeftWidthHeight();
         }
 
         public override void scalePoints(Point p_before, Point p_after)
         {
             base.scalePoints(p_before, p_after);
             // tinh lai
-            mostLeft = new Point(Math.Min(points[0].X, points[1].X),
-                Math.Min(points[0].Y, points[1].Y));
-            width = Math.Abs(points[0].X - points[1].X);
-            height = Math.Abs(points[0].Y - points[1].Y);
+            calcMostLeftWidthHeight();
+        }
+
+        public override void rotatePoints(Point p_before, Point p_after)
+        {
+            base.rotatePoints(p_before, p_after);
+            // tinh lai
+            calcMostLeftWidthHeight();
         }
     }
 }
