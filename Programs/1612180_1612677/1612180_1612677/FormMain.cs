@@ -971,5 +971,25 @@ namespace _1612180_1612677
                 myShape.draw(_bitmap, pictureBoxMain);
             }
         }
+
+        private void sendToBackToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void bringToFrontToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void sendBackwardToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void bringForwardToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

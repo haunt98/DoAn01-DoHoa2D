@@ -151,16 +151,62 @@ namespace _1612180_1612677
             }
         }
 
+        // lay diem trong tam, la diem giu nguyen khi scale
+        public virtual Point getCenterPoint()
+        {
+            Point center = new Point();
+            int sum_X = 0;
+            int sum_Y = 0;
+            foreach (Point p in getEdgePoints())
+            {
+                sum_X += p.X;
+                sum_Y += p.Y;
+            }
+            center.X = sum_X / getEdgePoints().Count;
+            center.Y = sum_Y / getEdgePoints().Count;
+            return center;
+        }
+
         // scale shape => phong to, thu nho
         public virtual void scalePoints(Point p_before, Point p_after)
         {
-            float Sx = p_before.X == 0 ? 1 : (float)p_after.X / p_before.X;
-            float Sy = p_before.Y == 0 ? 1 : (float)p_after.Y / p_before.Y;
-            for (int i = 0; i < points.Count; ++i)
+            // khong thay doi gi ca
+            if (p_before.Equals(p_after))
             {
-                points[i] = new Point((int)Math.Round(points[i].X * Sx),
-                    (int)Math.Round(points[i].Y * Sy));
+                return;
             }
+
+            // khoang cach diem truoc va sau khi di chuyen den diem trung tam
+            Point d_after = p_after - (Size)getCenterPoint();
+            Point d_before = p_before - (Size)getCenterPoint();
+
+            // tinh ty le scale
+            float Sx = d_before.X == 0 ? 0.1f : (float)d_after.X / d_before.X;
+            float Sy = d_before.Y == 0 ? 0.1f : (float)d_after.Y / d_before.Y;
+
+            // gioi han co the scale
+            if (Math.Abs(Sx) < 0.1f)
+            {
+                Sx = Sx > 0 ? 0.1f : -0.1f;
+            }
+            if (Math.Abs(Sy) < 0.1f)
+            {
+                Sy = Sy > 0 ? 0.1f : -0.1f;
+            }
+
+            // su dung matrix de scale
+            Matrix matrix = new Matrix();
+            // di chuyen goc toa do -> diem center
+            matrix.Translate(getCenterPoint().X, getCenterPoint().Y);
+            // scale theo ty le
+            matrix.Scale(Sx, Sy);
+            // di chuyen diem center -> goc toa do
+            matrix.Translate(-getCenterPoint().X, -getCenterPoint().Y);
+
+            // tinh scale points
+            Point[] scalePoints = points.ToArray();
+            matrix.TransformPoints(scalePoints);
+            points = new List<Point>(scalePoints);
         }
     }
 }
