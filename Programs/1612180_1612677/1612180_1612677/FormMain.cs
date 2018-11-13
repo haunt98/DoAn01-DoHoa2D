@@ -506,21 +506,13 @@ namespace _1612180_1612677
 
         private void pictureBoxMain_MouseUp(object sender, MouseEventArgs e)
         {
-            // phai la select state va cho phep change shape
-            if (state != SELECT_STATE || !isChangingShape)
+            // neu khong phai select state
+            // khong changing shape
+            // khong click trung
+            // khong reset bitmap_primary vi de vien
+            if (state != SELECT_STATE || !isChangingShape || selectShape == -1)
             {
-                return;
-            }
-
-            // neu khong select trung shape nao
-            // thi khong lam gi ca
-            if (selectShape == -1)
-            {
-                // reset list point vi tri cua shape truoc va sau
-                posMovingShape.Clear();
-
-                // khong cho phep moving khi khong click trung
-                isChangingShape = false;
+                resetSelect();
                 return;
             }
 
@@ -573,10 +565,8 @@ namespace _1612180_1612677
             // khong click vao shape nao
             if (selectShape == -1)
             {
-                posMovingShape.Clear();
-
-                // khong cho phep thay doi shape khi khong click trung
-                isChangingShape = false;
+                resetSelect();
+                pictureBoxMain.Image = bitmap_primary;
                 return;
             }
 
@@ -659,14 +649,8 @@ namespace _1612180_1612677
             // select khong trung
             if (selectShape == -1)
             {
-                // Ve bang bitmap_primary
+                resetSelect();
                 pictureBoxMain.Image = bitmap_primary;
-
-                // reset vi tri truoc va sau cua shape
-                posMovingShape.Clear();
-
-                // select khong trung thi khong cho thay doi shape
-                isChangingShape = false;
                 return;
             }
 
@@ -676,15 +660,13 @@ namespace _1612180_1612677
             // mac dinh la khong cho change shape
             isChangingShape = false;
 
+            // ve tren bitmap_primary
+            bitmap_temp = (Bitmap)bitmap_primary.Clone();
+            pictureBoxMain.Image = bitmap_temp;
+            wrapHighlightShape(bitmap_temp, selectShape);
+
             if (comboBoxSelectType.SelectedItem.ToString() == "Move")
             {
-                // ve tren bitmap_temp
-                // hightlight shape dang select
-                //bitmap_temp = (Bitmap)bitmap_primary.Clone();
-                //pictureBoxMain.Image = bitmap_temp;
-                //wrapHighlightShape(bitmap_temp, selectShape);
-                //myShapes[selectShape].drawInsidePoint(bitmap_temp, e.Location, pictureBoxMain);
-
                 // neu khong co trong list select shape thi them vao
                 if (selectShapes.IndexOf(selectShape) == -1)
                 {
@@ -701,8 +683,11 @@ namespace _1612180_1612677
                 {
                     // phai click trung edge Point => cho phep move va scale
                     // 20 la so pixel de cho click de trung
-                    if (MyShape.isPointEqual(e.Location, p, 30))
+                    if (MyShape.isPointEqual(e.Location, p))
                     {
+                        // set chinh xac diem edge thay cho e.Location
+                        posMovingShape[0] = p;
+
                         // neu khong co trong list select shape thi them vao
                         if (selectShapes.IndexOf(selectShape) == -1)
                         {
@@ -858,6 +843,15 @@ namespace _1612180_1612677
             wrapDrawAllShapes(bitmap_primary);
         }
 
+        private void resetSelect()
+        {
+            // reset select points
+            posMovingShape.Clear();
+
+            // khong cho changing shape
+            isChangingShape = false;
+        }
+
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
@@ -969,6 +963,12 @@ namespace _1612180_1612677
         private void bringForwardToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
+        }
+
+        // khi thay doi combo box cua select type => reset select
+        private void comboBoxSelectType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            resetSelect();
         }
     }
 }

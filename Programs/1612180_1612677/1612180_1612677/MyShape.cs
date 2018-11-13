@@ -28,12 +28,12 @@ namespace _1612180_1612677
 
         // 2 diem gan nhau la duoc
         // khong can chinh xac lam
-        public static bool isPointEqual(Point p, Point q, int _range)
+        public static bool isPointEqual(Point p, Point q)
         {
             List<Point> ps = new List<Point>();
-            for (int i = -_range; i <= _range; ++i)
+            for (int i = -RANGE / 2; i <= RANGE / 2; ++i)
             {
-                for (int j = -_range; j <= _range; ++j)
+                for (int j = -RANGE / 2; j <= RANGE / 2; ++j)
                 {
                     ps.Add(new Point(p.X + i, p.Y + j));
                 }
