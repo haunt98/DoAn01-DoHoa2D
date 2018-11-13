@@ -998,24 +998,72 @@ namespace _1612180_1612677
             myShapes[_index].drawEdgePoints(_bitmap, pictureBoxMain);
         }
 
+        // dua shape ve vi tri dau tien trong list
+        // vi dau tien -> ve dau tien -> bi che khuat
         private void sendToBackToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (state != SELECT_STATE || selectShape == -1)
+                return;
+            MyShape myShape = myShapes[selectShape];
+            myShapes.RemoveAt(selectShape);
+            myShapes.Insert(0, myShape);
 
+            // reset lai picturebox
+            clearBitmap();
+            wrapDrawAllShapes(bitmap_primary);
         }
 
+        // dua shape ve vi tri cuoi cung trong list
+        // vi cuoi cung -> ve cuoi cung -> noi len tren
         private void bringToFrontToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (state != SELECT_STATE || selectShape == -1)
+                return;
+            MyShape myShape = myShapes[selectShape];
+            myShapes.RemoveAt(selectShape);
+            myShapes.Insert(myShapes.Count, myShape);
 
+            // reset lai picturebox
+            clearBitmap();
+            wrapDrawAllShapes(bitmap_primary);
         }
 
+        // lui lai 1 vi tri
         private void sendBackwardToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (state != SELECT_STATE || selectShape == -1)
+                return;
 
+            // vi tri 0 khong the lui
+            if (selectShape > 0)
+            {
+                MyShape myShape = myShapes[selectShape];
+                myShapes.RemoveAt(selectShape);
+                myShapes.Insert(selectShape - 1, myShape);
+            }
+
+            // reset lai picturebox
+            clearBitmap();
+            wrapDrawAllShapes(bitmap_primary);
         }
 
+        // tien toi mot vi tri
         private void bringForwardToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (state != SELECT_STATE || selectShape == -1)
+                return;
 
+            // vi tri count - 1 khong the tien
+            if (selectShape < myShapes.Count - 1)
+            {
+                MyShape myShape = myShapes[selectShape];
+                myShapes.RemoveAt(selectShape);
+                myShapes.Insert(selectShape + 1, myShape);
+            }
+
+            // reset lai picturebox
+            clearBitmap();
+            wrapDrawAllShapes(bitmap_primary);
         }
 
         // khi thay doi combo box cua select type => reset select
