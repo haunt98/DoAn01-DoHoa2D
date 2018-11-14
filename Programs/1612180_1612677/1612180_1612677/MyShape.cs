@@ -76,7 +76,7 @@ namespace _1612180_1612677
                 / (float)Math.PI * 180;
         }
 
-        public static float calcDistance(Point p_start, Point p_end)
+        public static float calcDistance(PointF p_start, PointF p_end)
         {
             return (float)Math.Sqrt(Math.Pow(p_end.X - p_start.X, 2)
                 + Math.Pow(p_end.Y - p_start.Y, 2));

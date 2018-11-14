@@ -54,7 +54,7 @@
     <Compile Include="FormMain.Designer.cs">
       <DependentUpon>FormMain.cs</DependentUpon>
     </Compile>
-    <Compile Include="MyArcEllipse.cs" />
+    <Compile Include="MyArc.cs" />
     <Compile Include="MyBezier.cs" />
     <Compile Include="MyCharacter.cs" />
     <Compile Include="MyEllipse.cs" />

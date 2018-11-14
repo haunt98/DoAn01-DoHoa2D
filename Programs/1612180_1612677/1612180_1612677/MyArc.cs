@@ -6,32 +6,47 @@ using System.Windows.Forms;
 
 namespace _1612180_1612677
 {
-    internal class MyArcCircle : MyShape
+    internal class MyArc : MyShape
     {
-        private float r;
-        RectangleF bound;
-        float startAngle;
-        float endAngle;
-        float sweepAngle;
+        private RectangleF rect_bound;
+        private float startAngle;
+        private float sweepAngle;
 
-        public MyArcCircle(PenAttr _penAttr, List<Point> _points) :
+        public MyArc(PenAttr _penAttr, List<Point> _points) :
                 base(_penAttr, _points)
         {
+            calcBound();
         }
 
-        private void prepareToDraw()
+        // tinh gioi han va goc quay
+        public void calcBound()
         {
-            if (points.Count == 3)
-            {
-                // p0 - p1
-                r = calcDistance(points[1], points[0]);
-                bound = new RectangleF(Math.Abs(points[0].X - r), Math.Abs(points[0].Y - r), 2 * r, 2 * r);
-                startAngle = calcAngle(points[0], points[1]);
-                endAngle = calcAngle(points[0], points[2]);
-                sweepAngle = endAngle - startAngle;
+            if (points.Count != 3 || centerOfCircle(points) == PointF.Empty)
+                return;
+            float R = calcDistance(centerOfCircle(points), points[0]);
+            rect_bound = new RectangleF(new PointF(centerOfCircle(points).X - R,
+                centerOfCircle(points).Y - R),
+                new SizeF(2 * R, 2 * R));
+            startAngle = calcAngle(Point.Round(centerOfCircle(points)), points[0]);
+            float endAngle = calcAngle(Point.Round(centerOfCircle(points)), points[2]);
+            sweepAngle = endAngle - startAngle;
+        }
 
+        // http://paulbourke.net/geometry/circlesphere/
+        public static PointF centerOfCircle(List<Point> _points)
+        {
+            if (_points.Count != 3)
+                return PointF.Empty;
 
-            }
+            float ma = (float)(_points[1].Y - _points[0].Y) / (_points[1].X - _points[0].X);
+            float mb = (float)(_points[2].Y - _points[1].Y) / (_points[2].X - _points[1].X);
+            float x = (ma * mb * (_points[0].Y - _points[2].Y)
+                + mb * (_points[0].X + _points[1].X)
+                - ma * (_points[1].X + _points[2].X))
+                / (2 * mb - 2 * ma);
+            float y = -1 * (x - (_points[0].X + _points[1].X) / 2) / ma
+                + (_points[0].Y + _points[0].Y) / 2;
+            return new PointF(x, y);
         }
 
         public static bool isClickedPointsCanDrawShape(List<Point> _points)
@@ -41,8 +56,9 @@ namespace _1612180_1612677
 
         public override void draw(Bitmap _bitmap, PictureBox pictureBox)
         {
-            if (points.Count < 3)
+            if (points.Count != 3 || rect_bound.Width == 0 || rect_bound.Height == 0)
                 return;
+
             using (Graphics graphics = Graphics.FromImage(_bitmap))
             using (Pen pen = new Pen(penAttr.color, penAttr.width))
             {
@@ -56,8 +72,7 @@ namespace _1612180_1612677
                 graphics.TranslateTransform(-getCenterPoint().X, -getCenterPoint().Y);
 
                 pen.DashStyle = penAttr.dashStyle;
-                prepareToDraw();
-                graphics.DrawArc(pen, bound, startAngle, sweepAngle);
+                graphics.DrawArc(pen, rect_bound, startAngle, sweepAngle);
 
                 // reset bien hinh
                 graphics.ResetTransform();
@@ -74,14 +89,22 @@ namespace _1612180_1612677
 
         public override bool isPointBelongPrecisely(Point p)
         {
+            if (points.Count != 3 || rect_bound.Width == 0 || rect_bound.Height == 0)
+                return false;
+
             using (GraphicsPath path = new GraphicsPath())
             using (Pen pen = new Pen(penAttr.color, penAttr.width))
             {
-                prepareToDraw();
-                path.AddArc(bound, startAngle, sweepAngle);
                 pen.DashStyle = penAttr.dashStyle;
+                path.AddArc(rect_bound, startAngle, sweepAngle);
                 return path.IsOutlineVisible(pointBeforeScaleRotate(p), pen);
             }
+        }
+
+        public override void movePoints(Point p_before, Point p_after)
+        {
+            base.movePoints(p_before, p_after);
+            calcBound();
         }
     }
 }

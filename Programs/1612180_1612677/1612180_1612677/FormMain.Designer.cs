@@ -462,7 +462,7 @@
             this.buttonArcCircle.TabIndex = 34;
             this.buttonArcCircle.Text = "Arc Circle";
             this.buttonArcCircle.UseVisualStyleBackColor = true;
-            this.buttonArcCircle.Click += new System.EventHandler(this.buttonArcCircle_Click);
+            this.buttonArcCircle.Click += new System.EventHandler(this.buttonDrawArc);
             // 
             // FormMain
             // 

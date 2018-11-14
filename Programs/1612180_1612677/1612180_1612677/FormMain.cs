@@ -23,7 +23,7 @@ namespace _1612180_1612677
         private const int HBH_STATE = 6;
         private const int BEZIER_STATE = 7;
         private const int PARABOL_STATE = 8;
-        private const int ARC_ELLIPSE_STATE = 9;
+        private const int ARC_STATE = 9;
 
         // state luu trang thai hien tai
         private int state = NO_STATE;
@@ -133,6 +133,14 @@ namespace _1612180_1612677
             // default color dialog
             colorDialog.Color = Color.Black;
             buttonShowColor.BackColor = colorDialog.Color;
+
+            // testing
+            using (Graphics g = Graphics.FromImage(bitmap_primary))
+            using (Pen p = new Pen(Color.Red))
+            {
+                Rectangle rect = new Rectangle(new Point(100, 100), new Size(60, 60));
+                g.DrawArc(p, rect, 90, 180);
+            }
         }
 
         private void buttonClearAll_Click(object sender, EventArgs e)
@@ -244,13 +252,13 @@ namespace _1612180_1612677
             state = RECTANGLE_STATE;
         }
 
-        private void buttonArcCircle_Click(object sender, EventArgs e)
+        private void buttonDrawArc(object sender, EventArgs e)
         {
             // reset list
             clickedPoints.Clear();
             selectShapes.Clear();
             // set state
-            state = ARC_ELLIPSE_STATE;
+            state = ARC_STATE;
 
         }
 
@@ -368,8 +376,8 @@ namespace _1612180_1612677
                     flag = MyParabol.isClickedPointsCanDrawShape(clickedPoints);
                     break;
 
-                case ARC_ELLIPSE_STATE:
-                    flag = MyArcCircle.isClickedPointsCanDrawShape(clickedPoints);
+                case ARC_STATE:
+                    flag = MyArc.isClickedPointsCanDrawShape(clickedPoints);
                     break;
 
                 default:
@@ -413,8 +421,8 @@ namespace _1612180_1612677
                         myShape = new MyParabol(getPenAttr(), clickedPoints);
                         break;
 
-                    case ARC_ELLIPSE_STATE:
-                        myShape = new MyArcCircle(getPenAttr(), clickedPoints);
+                    case ARC_STATE:
+                        myShape = new MyArc(getPenAttr(), clickedPoints);
                         break;
 
                     default:
@@ -524,8 +532,8 @@ namespace _1612180_1612677
                     myShape = new MyParabol(getPenAttr(), clickedPoints);
                     break;
 
-                case ARC_ELLIPSE_STATE:
-                    myShape = new MyArcCircle(getPenAttr(), clickedPoints);
+                case ARC_STATE:
+                    myShape = new MyArc(getPenAttr(), clickedPoints);
                     break;
 
                 default:
