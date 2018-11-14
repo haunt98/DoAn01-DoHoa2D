@@ -17,32 +17,23 @@ namespace _1612180_1612677
         public MyArcCircle(PenAttr _penAttr, List<Point> _points) :
                 base(_penAttr, _points)
         {
+        }
 
-        }
-        private float caculateDistantBetweenTwoPoint(Point p1, Point p2)
-        {
-            return (float)Math.Sqrt(Math.Pow((p2.X - p1.X), 2) + Math.Pow((p2.Y - p1.Y), 2));
-
-        }
-        private float caculateAngle(Point center, Point start)
-        {
-            float angle = (float)Math.Atan2(start.Y - center.Y, start.X - center.X);
-            return angle;
-        }
         private void prepareToDraw()
         {
             if (points.Count == 3)
             {
                 // p0 - p1
-                r = caculateDistantBetweenTwoPoint(points[1], points[0]);
+                r = calcDistance(points[1], points[0]);
                 bound = new RectangleF(Math.Abs(points[0].X - r), Math.Abs(points[0].Y - r), 2 * r, 2 * r);
-                startAngle = caculateAngle(points[0], points[1]) * 180 / (float)Math.PI;
-                endAngle = caculateAngle(points[0], points[2]) * 180 / (float)Math.PI;
+                startAngle = calcAngle(points[0], points[1]);
+                endAngle = calcAngle(points[0], points[2]);
                 sweepAngle = endAngle - startAngle;
 
 
             }
         }
+
         public static bool isClickedPointsCanDrawShape(List<Point> _points)
         {
             return _points.Count == 3;

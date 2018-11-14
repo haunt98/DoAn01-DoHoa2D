@@ -14,17 +14,16 @@ namespace _1612180_1612677
     public partial class FormMain : Form
     {
         private const int SELECT_STATE = -1;
-
         private const int NO_STATE = 0;
         private const int LINE_STATE = 1;
         private const int RECTANGLE_STATE = 2;
         private const int ELLIPSE_STATE = 3;
         private const int CHARACTER_STATE = 4;
         private const int POLYGON_STATE = 5;
-        private const int HINHBINHHANH_STATE = 6;
+        private const int HBH_STATE = 6;
         private const int BEZIER_STATE = 7;
         private const int PARABOL_STATE = 8;
-        private const int ARC_CIRCLE_STATE = 9;
+        private const int ARC_ELLIPSE_STATE = 9;
 
         // state luu trang thai hien tai
         private int state = NO_STATE;
@@ -134,17 +133,6 @@ namespace _1612180_1612677
             // default color dialog
             colorDialog.Color = Color.Black;
             buttonShowColor.BackColor = colorDialog.Color;
-
-            using (Graphics g = Graphics.FromImage(bitmap_primary))
-            {
-                g.DrawRectangle(new Pen(Color.Blue, 2), 50, 50, 60, 60);
-                g.TranslateTransform(50 + 60 / 2, 50 + 60 / 2);
-                g.RotateTransform(40);
-                g.TranslateTransform(-50 - 60 / 2, -50 - 60 / 2);
-                g.DrawRectangle(new Pen(Color.Red, 2), 50, 50, 60, 60);
-                g.ResetTransform();
-                g.DrawRectangle(new Pen(Color.Yellow, 2), 60, 60, 60, 60);
-            }
         }
 
         private void buttonClearAll_Click(object sender, EventArgs e)
@@ -217,7 +205,7 @@ namespace _1612180_1612677
             clickedPoints.Clear();
             selectShapes.Clear();
             // set state
-            state = HINHBINHHANH_STATE;
+            state = HBH_STATE;
         }
 
         private void buttonDrawLine_Click(object sender, EventArgs e)
@@ -262,7 +250,7 @@ namespace _1612180_1612677
             clickedPoints.Clear();
             selectShapes.Clear();
             // set state
-            state = ARC_CIRCLE_STATE;
+            state = ARC_ELLIPSE_STATE;
 
         }
 
@@ -368,7 +356,7 @@ namespace _1612180_1612677
                     flag = MyCharater.isClickedPointsCanDrawShape(clickedPoints);
                     break;
 
-                case HINHBINHHANH_STATE:
+                case HBH_STATE:
                     flag = MyHinhBinhHanh.isClickedPointsCanDrawShape(clickedPoints);
                     break;
 
@@ -380,7 +368,7 @@ namespace _1612180_1612677
                     flag = MyParabol.isClickedPointsCanDrawShape(clickedPoints);
                     break;
 
-                case ARC_CIRCLE_STATE:
+                case ARC_ELLIPSE_STATE:
                     flag = MyArcCircle.isClickedPointsCanDrawShape(clickedPoints);
                     break;
 
@@ -413,7 +401,7 @@ namespace _1612180_1612677
                         myShape = new MyCharater(clickedPoints, getFontAttr());
                         break;
 
-                    case HINHBINHHANH_STATE:
+                    case HBH_STATE:
                         myShape = new MyHinhBinhHanh(getPenAttr(), clickedPoints);
                         break;
 
@@ -425,7 +413,7 @@ namespace _1612180_1612677
                         myShape = new MyParabol(getPenAttr(), clickedPoints);
                         break;
 
-                    case ARC_CIRCLE_STATE:
+                    case ARC_ELLIPSE_STATE:
                         myShape = new MyArcCircle(getPenAttr(), clickedPoints);
                         break;
 
@@ -459,7 +447,7 @@ namespace _1612180_1612677
                         myShape = new MyPolygon(getPenAttr(), clickedPoints);
                         break;
 
-                    case HINHBINHHANH_STATE:
+                    case HBH_STATE:
                         myShape = new MyHinhBinhHanh(getPenAttr(), clickedPoints);
                         break;
 
@@ -524,7 +512,7 @@ namespace _1612180_1612677
                     myShape = new MyPolygon(getPenAttr(), clickedPoints);
                     break;
 
-                case HINHBINHHANH_STATE:
+                case HBH_STATE:
                     myShape = new MyHinhBinhHanh(getPenAttr(), clickedPoints);
                     break;
 
@@ -536,7 +524,7 @@ namespace _1612180_1612677
                     myShape = new MyParabol(getPenAttr(), clickedPoints);
                     break;
 
-                case ARC_CIRCLE_STATE:
+                case ARC_ELLIPSE_STATE:
                     myShape = new MyArcCircle(getPenAttr(), clickedPoints);
                     break;
 

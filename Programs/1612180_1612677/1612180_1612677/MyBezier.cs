@@ -24,10 +24,23 @@ namespace _1612180_1612677
             if (points.Count != 4)
                 return;
             using (Graphics graphics = Graphics.FromImage(_bitmap))
-            using (Pen pen = new Pen(COLOR_PEN_DEFAULT))
+            using (Pen pen = new Pen(penAttr.color, penAttr.width))
             {
-                pen.DashStyle = DASH_STYLE_TEMP;
+                // bat smooth
+                graphics.SmoothingMode = SmoothingMode.HighQuality;
+
+                // scale va rotate
+                graphics.TranslateTransform(getCenterPoint().X, getCenterPoint().Y);
+                graphics.ScaleTransform(tyleScale.Width, tyleScale.Height);
+                graphics.RotateTransform(angleRotate);
+                graphics.TranslateTransform(-getCenterPoint().X, -getCenterPoint().Y);
+
+                pen.DashStyle = penAttr.dashStyle;
                 graphics.DrawBeziers(pen, points.ToArray());
+
+                // reset bien hinh
+                graphics.ResetTransform();
+
                 pictureBox.Invalidate();
             }
         }
@@ -44,7 +57,7 @@ namespace _1612180_1612677
             {
                 path.AddBeziers(points.ToArray());
                 pen.DashStyle = penAttr.dashStyle;
-                return path.IsOutlineVisible(p, pen);
+                return path.IsOutlineVisible(pointBeforeScaleRotate(p), pen);
             }
         }
     }

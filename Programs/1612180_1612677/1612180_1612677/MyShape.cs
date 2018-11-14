@@ -67,6 +67,21 @@ namespace _1612180_1612677
             return false;
         }
 
+        // tinh goc tao boi vecto
+        // https://en.wikipedia.org/wiki/Atan2
+        public static float calcAngle(Point p_start, Point p_end)
+        {
+            return (float)Math.Atan2(p_end.Y - p_start.Y,
+                p_end.X - p_start.X)
+                / (float)Math.PI * 180;
+        }
+
+        public static float calcDistance(Point p_start, Point p_end)
+        {
+            return (float)Math.Sqrt(Math.Pow(p_end.X - p_start.X, 2)
+                + Math.Pow(p_end.Y - p_start.Y, 2));
+        }
+
         // diem click trong man hinh la diem nao trong shape truoc khi scale va rotate
         public virtual Point pointBeforeScaleRotate(Point p)
         {
@@ -275,17 +290,8 @@ namespace _1612180_1612677
             Point p_before = pointBeforeScaleRotate(_p_before);
             Point p_after = pointBeforeScaleRotate(_p_after);
 
-            // vector truoc va sau khi di chuyen den diem trung tam
-            Point vector_before = p_before - (Size)getCenterPoint();
-            Point vector_after = p_after - (Size)getCenterPoint();
-
-            // https://en.wikipedia.org/wiki/Atan2
-            float angle_before = (float)Math.Atan2(vector_before.Y, vector_before.X)
-                / (float)Math.PI * 180;
-            float angle_after = (float)Math.Atan2(vector_after.Y, vector_after.X)
-                / (float)Math.PI * 180;
-
-            angleRotate = angle_after - angle_before;
+            angleRotate = calcAngle(getCenterPoint(), p_after)
+                - calcAngle(getCenterPoint(), p_before);
         }
 
         public virtual void updatePenAttr(PenAttr _penAttr)
