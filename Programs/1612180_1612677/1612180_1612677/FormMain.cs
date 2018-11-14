@@ -133,14 +133,6 @@ namespace _1612180_1612677
             // default color dialog
             colorDialog.Color = Color.Black;
             buttonShowColor.BackColor = colorDialog.Color;
-
-            // testing
-            using (Graphics g = Graphics.FromImage(bitmap_primary))
-            using (Pen p = new Pen(Color.Red))
-            {
-                Rectangle rect = new Rectangle(new Point(100, 100), new Size(60, 60));
-                g.DrawArc(p, rect, 90, 180);
-            }
         }
 
         private void buttonClearAll_Click(object sender, EventArgs e)
