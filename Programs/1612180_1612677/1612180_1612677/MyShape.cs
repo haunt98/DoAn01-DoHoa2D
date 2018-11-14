@@ -23,15 +23,25 @@ namespace _1612180_1612677
         {
             penAttr = _penAttr;
             points = new List<Point>(_points);
+            angleRotate = 0;
+            tyleScale = new SizeF(1, 1);
         }
 
         public MyShape(List<Point> _points)
         {
             points = new List<Point>(_points);
+            angleRotate = 0;
+            tyleScale = new SizeF(1, 1);
         }
 
         public PenAttr penAttr { get; set; }
+
         public List<Point> points { get; set; }
+
+        // goc quay
+        public float angleRotate { get; set; }
+
+        public SizeF tyleScale { get; set; }
 
         // 2 diem gan nhau la duoc
         // khong can chinh xac lam
@@ -57,23 +67,72 @@ namespace _1612180_1612677
             return false;
         }
 
+        // diem click trong man hinh la diem nao trong shape truoc khi scale va rotate
+        public virtual Point pointBeforeScaleRotate(Point p)
+        {
+            using (Matrix matrix = new Matrix())
+            {
+                // scale va rotate nguoc lai
+                matrix.Translate(getCenterPoint().X, getCenterPoint().Y);
+                matrix.Rotate(-angleRotate);
+                matrix.Scale(1 / tyleScale.Width, 1 / tyleScale.Height);
+                matrix.Translate(-getCenterPoint().X, -getCenterPoint().Y);
+
+                Point[] temp_points = new Point[1];
+                temp_points[0] = p;
+                matrix.TransformPoints(temp_points);
+                return temp_points[0];
+            }
+        }
+
+        // tra ve index cua p trong edge points, neu khong co tra ve -1
+        public virtual int IndexOfEdgePoints(Point p)
+        {
+            int i;
+            for (i = 0; i < getEdgePoints().Count; ++i)
+            {
+                if (isPointEqual(pointBeforeScaleRotate(p), getEdgePoints()[i]))
+                {
+                    break;
+                }
+            }
+            // khong trung voi diem nao ca
+            if (i == getEdgePoints().Count)
+            {
+                i = -1;
+            }
+            return i;
+        }
+
         public abstract void draw(Bitmap _bitmap, PictureBox pictureBox);
 
         // ve cac diem the hien khung cua shape
         public virtual void drawEdgePoints(Bitmap _bitmap, PictureBox pictureBox)
         {
-            List<Point> edgePoints = getEdgePoints();
             using (Graphics graphics = Graphics.FromImage(_bitmap))
             using (Brush brush = new SolidBrush(COLOR_EDGE_POINTS))
             using (Pen pen = new Pen(Color.Black, 1))
             {
-                foreach (Point p in edgePoints)
+                // smoothing graphics
+                graphics.SmoothingMode = SmoothingMode.HighQuality;
+
+                // scale va rotate
+                graphics.TranslateTransform(getCenterPoint().X, getCenterPoint().Y);
+                graphics.ScaleTransform(tyleScale.Width, tyleScale.Height);
+                graphics.RotateTransform(angleRotate);
+                graphics.TranslateTransform(-getCenterPoint().X, -getCenterPoint().Y);
+
+                foreach (Point p in getEdgePoints())
                 {
                     Point p_mostLeft = new Point(p.X - RANGE / 2, p.Y - RANGE / 2);
                     Rectangle rectangle = new Rectangle(p_mostLeft, new Size(RANGE, RANGE));
                     graphics.FillRectangle(brush, rectangle);
                     graphics.DrawRectangle(pen, rectangle);
                 }
+
+                // reset bien hinh
+                graphics.ResetTransform();
+
                 pictureBox.Invalidate();
             }
         }
@@ -81,30 +140,27 @@ namespace _1612180_1612677
         // ve diem dau tien cua shape
         public virtual void drawFirstPoint(Bitmap _bitmap, PictureBox pictureBox)
         {
-            List<Point> edgePoints = getEdgePoints();
             using (Graphics graphics = Graphics.FromImage(_bitmap))
             using (Brush brush = new SolidBrush(COLOR_FIRST_POINT))
             using (Pen pen = new Pen(Color.Black, 1))
             {
-                Point p_mostLeft = new Point(edgePoints[0].X - RANGE / 2, edgePoints[0].Y - RANGE / 2);
-                Rectangle rectangle = new Rectangle(p_mostLeft, new Size(RANGE, RANGE));
-                graphics.FillRectangle(brush, rectangle);
-                graphics.DrawRectangle(pen, rectangle);
-                pictureBox.Invalidate();
-            }
-        }
+                // smoothing graphics
+                graphics.SmoothingMode = SmoothingMode.HighQuality;
 
-        // ve diem khi select ben trong shape
-        public virtual void drawInsidePoint(Bitmap _bitmap, Point p, PictureBox pictureBox)
-        {
-            using (Graphics graphics = Graphics.FromImage(_bitmap))
-            using (Brush brush = new SolidBrush(COLOR_INSIDE_POINT))
-            using (Pen pen = new Pen(Color.Black, 1))
-            {
-                Point p_mostLeft = new Point(p.X - RANGE / 2, p.Y - RANGE / 2);
+                // scale va rotate
+                graphics.TranslateTransform(getCenterPoint().X, getCenterPoint().Y);
+                graphics.ScaleTransform(tyleScale.Width, tyleScale.Height);
+                graphics.RotateTransform(angleRotate);
+                graphics.TranslateTransform(-getCenterPoint().X, -getCenterPoint().Y);
+
+                Point p_mostLeft = new Point(getEdgePoints()[0].X - RANGE / 2, getEdgePoints()[0].Y - RANGE / 2);
                 Rectangle rectangle = new Rectangle(p_mostLeft, new Size(RANGE, RANGE));
                 graphics.FillRectangle(brush, rectangle);
                 graphics.DrawRectangle(pen, rectangle);
+
+                // reset bien hinh
+                graphics.ResetTransform();
+
                 pictureBox.Invalidate();
             }
         }
@@ -158,9 +214,9 @@ namespace _1612180_1612677
         // lay diem trong tam, la diem giu nguyen khi scale
         public virtual Point getCenterPoint()
         {
-            Point center = new Point();
-            int sum_X = 0;
-            int sum_Y = 0;
+            PointF center = new PointF();
+            float sum_X = 0;
+            float sum_Y = 0;
             foreach (Point p in getEdgePoints())
             {
                 sum_X += p.X;
@@ -168,7 +224,7 @@ namespace _1612180_1612677
             }
             center.X = sum_X / getEdgePoints().Count;
             center.Y = sum_Y / getEdgePoints().Count;
-            return center;
+            return Point.Round(center);
         }
 
         // di chuyen points
@@ -185,13 +241,11 @@ namespace _1612180_1612677
         }
 
         // scale shape, giu nguyen center
-        public virtual void scalePoints(Point p_before, Point p_after)
+        public virtual void scalePoints(Point _p_before, Point _p_after)
         {
-            // khong thay doi gi ca
-            if (p_before.Equals(p_after))
-            {
-                return;
-            }
+            // tinh lai vi hinh co scale va rotate
+            Point p_before = pointBeforeScaleRotate(_p_before);
+            Point p_after = pointBeforeScaleRotate(_p_after);
 
             // vector truoc va sau khi di chuyen den diem trung tam
             Point d_after = p_after - (Size)getCenterPoint();
@@ -211,52 +265,27 @@ namespace _1612180_1612677
                 Sy = Sy > 0 ? 0.1f : -0.1f;
             }
 
-            // su dung matrix de scale
-            Matrix matrix = new Matrix();
-            // di chuyen goc toa do -> diem center
-            matrix.Translate(getCenterPoint().X, getCenterPoint().Y);
-            // scale theo ty le
-            matrix.Scale(Sx, Sy);
-            // di chuyen diem center -> goc toa do
-            matrix.Translate(-getCenterPoint().X, -getCenterPoint().Y);
-
-            // tinh scale points
-            Point[] sp = points.ToArray();
-            matrix.TransformPoints(sp);
-            points = new List<Point>(sp);
+            tyleScale = new SizeF(Sx, Sy);
         }
 
         // rotate shape, giu nguyen center
-        public virtual void rotatePoints(Point p_before, Point p_after)
+        public virtual void rotatePoints(Point _p_before, Point _p_after)
         {
-            // khong thay doi gi ca
-            if (p_before.Equals(p_after))
-            {
-                return;
-            }
+            // tinh lai vi hinh co scale va rotate
+            Point p_before = pointBeforeScaleRotate(_p_before);
+            Point p_after = pointBeforeScaleRotate(_p_after);
 
             // vector truoc va sau khi di chuyen den diem trung tam
-            Point d_after = p_after - (Size)getCenterPoint();
-            Point d_before = p_before - (Size)getCenterPoint();
+            Point vector_before = p_before - (Size)getCenterPoint();
+            Point vector_after = p_after - (Size)getCenterPoint();
 
-            // tinh goc quay
-            int tich_after_before = d_after.X * d_before.X + d_after.Y * d_before.Y;
-            float value_after = (float)Math.Sqrt(d_after.X * d_after.X + d_after.Y * d_after.Y);
-            float value_before = (float)Math.Sqrt(d_before.X * d_before.X + d_before.Y * d_before.Y);
+            // https://en.wikipedia.org/wiki/Atan2
+            float angle_before = (float)Math.Atan2(vector_before.Y, vector_before.X)
+                / (float)Math.PI * 180;
+            float angle_after = (float)Math.Atan2(vector_after.Y, vector_after.X)
+                / (float)Math.PI * 180;
 
-            float acos = (float)tich_after_before / (value_after * value_before);
-            float angle_pi = (float)Math.Acos(acos);
-            float angle_180 = angle_pi / (float)Math.PI * 180;
-
-            // su dung matrix de rotate
-            Matrix matrix = new Matrix();
-            // goc quay va goc toa do
-            matrix.RotateAt(angle_180, getCenterPoint());
-
-            // tinh rotate points
-            Point[] rp = points.ToArray();
-            matrix.TransformPoints(rp);
-            points = new List<Point>(rp);
+            angleRotate = angle_after - angle_before;
         }
 
         public virtual void updatePenAttr(PenAttr _penAttr)

@@ -48,9 +48,22 @@ namespace _1612180_1612677
             using (Graphics graphics = Graphics.FromImage(_bitmap))
             using (Pen pen = new Pen(penAttr.color, penAttr.width))
             {
+                // bat smooth
+                graphics.SmoothingMode = SmoothingMode.HighQuality;
+
+                // scale va rotate
+                graphics.TranslateTransform(getCenterPoint().X, getCenterPoint().Y);
+                graphics.ScaleTransform(tyleScale.Width, tyleScale.Height);
+                graphics.RotateTransform(angleRotate);
+                graphics.TranslateTransform(-getCenterPoint().X, -getCenterPoint().Y);
+
                 Rectangle rectangle = new Rectangle(mostLeft, size);
                 pen.DashStyle = penAttr.dashStyle;
                 graphics.DrawEllipse(pen, rectangle);
+
+                // reset bien hinh
+                graphics.ResetTransform();
+
                 pictureBox.Invalidate();
             }
         }
@@ -59,6 +72,15 @@ namespace _1612180_1612677
         {
             using (Graphics graphics = Graphics.FromImage(_bitmap))
             {
+                // bat smooth
+                graphics.SmoothingMode = SmoothingMode.HighQuality;
+
+                // scale va rotate
+                graphics.TranslateTransform(getCenterPoint().X, getCenterPoint().Y);
+                graphics.ScaleTransform(tyleScale.Width, tyleScale.Height);
+                graphics.RotateTransform(angleRotate);
+                graphics.TranslateTransform(-getCenterPoint().X, -getCenterPoint().Y);
+
                 Rectangle rectangle = new Rectangle(mostLeft, size);
 
                 switch (brushAttr.typeBrush)
@@ -101,6 +123,10 @@ namespace _1612180_1612677
                     default:
                         break;
                 }
+
+                // reset bien hinh
+                graphics.ResetTransform();
+
                 pictureBox.Invalidate();
             }
         }
@@ -124,7 +150,7 @@ namespace _1612180_1612677
             {
                 path.AddEllipse(new Rectangle(mostLeft, size));
                 pen.DashStyle = penAttr.dashStyle;
-                flag |= path.IsOutlineVisible(p, pen);
+                flag |= path.IsOutlineVisible(pointBeforeScaleRotate(p), pen);
             }
             // hcn vien
             using (GraphicsPath path = new GraphicsPath())
@@ -132,7 +158,7 @@ namespace _1612180_1612677
             {
                 path.AddRectangle(new Rectangle(mostLeft, size));
                 pen.DashStyle = penAttr.dashStyle;
-                flag |= path.IsOutlineVisible(p, pen);
+                flag |= path.IsOutlineVisible(pointBeforeScaleRotate(p), pen);
             }
             return flag;
         }
@@ -142,27 +168,13 @@ namespace _1612180_1612677
             using (GraphicsPath path = new GraphicsPath())
             {
                 path.AddEllipse(new Rectangle(mostLeft, size));
-                return path.IsVisible(p);
+                return path.IsVisible(pointBeforeScaleRotate(p));
             }
         }
 
         public override void movePoints(Point p_before, Point p_after)
         {
             base.movePoints(p_before, p_after);
-            // tinh lai
-            calcMostLeftWidthHeight();
-        }
-
-        public override void scalePoints(Point p_before, Point p_after)
-        {
-            base.scalePoints(p_before, p_after);
-            // tinh lai
-            calcMostLeftWidthHeight();
-        }
-
-        public override void rotatePoints(Point p_before, Point p_after)
-        {
-            base.rotatePoints(p_before, p_after);
             // tinh lai
             calcMostLeftWidthHeight();
         }

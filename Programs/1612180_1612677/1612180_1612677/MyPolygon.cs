@@ -51,8 +51,21 @@ namespace _1612180_1612677
             using (Graphics graphics = Graphics.FromImage(_bitmap))
             using (Pen pen = new Pen(penAttr.color, penAttr.width))
             {
+                // bat smooth
+                graphics.SmoothingMode = SmoothingMode.HighQuality;
+
+                // scale va rotate
+                graphics.TranslateTransform(getCenterPoint().X, getCenterPoint().Y);
+                graphics.ScaleTransform(tyleScale.Width, tyleScale.Height);
+                graphics.RotateTransform(angleRotate);
+                graphics.TranslateTransform(-getCenterPoint().X, -getCenterPoint().Y);
+
                 pen.DashStyle = penAttr.dashStyle;
                 graphics.DrawPolygon(pen, points.ToArray());
+
+                // reset bien hinh
+                graphics.ResetTransform();
+
                 pictureBox.Invalidate();
             }
         }
@@ -69,6 +82,15 @@ namespace _1612180_1612677
                 return;
             using (Graphics graphics = Graphics.FromImage(_bitmap))
             {
+                // bat smooth
+                graphics.SmoothingMode = SmoothingMode.HighQuality;
+
+                // scale va rotate
+                graphics.TranslateTransform(getCenterPoint().X, getCenterPoint().Y);
+                graphics.ScaleTransform(tyleScale.Width, tyleScale.Height);
+                graphics.RotateTransform(angleRotate);
+                graphics.TranslateTransform(-getCenterPoint().X, -getCenterPoint().Y);
+
                 switch (brushAttr.typeBrush)
                 {
                     case "SolidBrush":
@@ -109,6 +131,10 @@ namespace _1612180_1612677
                     default:
                         break;
                 }
+
+                // reset bien hinh
+                graphics.ResetTransform();
+
                 pictureBox.Invalidate();
             }
         }
@@ -120,7 +146,7 @@ namespace _1612180_1612677
             {
                 path.AddPolygon(points.ToArray());
                 pen.DashStyle = penAttr.dashStyle;
-                return path.IsOutlineVisible(p, pen);
+                return path.IsOutlineVisible(pointBeforeScaleRotate(p), pen);
             }
         }
 
@@ -129,7 +155,7 @@ namespace _1612180_1612677
             using (GraphicsPath path = new GraphicsPath())
             {
                 path.AddPolygon(points.ToArray());
-                return path.IsVisible(p);
+                return path.IsVisible(pointBeforeScaleRotate(p));
             }
         }
     }

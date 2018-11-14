@@ -69,6 +69,7 @@
             this.comboBoxSelectType = new System.Windows.Forms.ComboBox();
             this.buttonUndo = new System.Windows.Forms.Button();
             this.buttonRedo = new System.Windows.Forms.Button();
+            this.buttonArcCircle = new System.Windows.Forms.Button();
             this.menuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMain)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPenWidth)).BeginInit();
@@ -453,11 +454,22 @@
             this.buttonRedo.UseVisualStyleBackColor = true;
             this.buttonRedo.Click += new System.EventHandler(this.buttonRedo_Click);
             // 
+            // buttonArcCircle
+            // 
+            this.buttonArcCircle.Location = new System.Drawing.Point(28, 356);
+            this.buttonArcCircle.Name = "buttonArcCircle";
+            this.buttonArcCircle.Size = new System.Drawing.Size(75, 23);
+            this.buttonArcCircle.TabIndex = 34;
+            this.buttonArcCircle.Text = "Arc Circle";
+            this.buttonArcCircle.UseVisualStyleBackColor = true;
+            this.buttonArcCircle.Click += new System.EventHandler(this.buttonArcCircle_Click);
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(810, 432);
+            this.Controls.Add(this.buttonArcCircle);
             this.Controls.Add(this.buttonRedo);
             this.Controls.Add(this.buttonUndo);
             this.Controls.Add(this.comboBoxSelectType);
@@ -547,6 +559,7 @@
         private System.Windows.Forms.ComboBox comboBoxSelectType;
         private System.Windows.Forms.Button buttonUndo;
         private System.Windows.Forms.Button buttonRedo;
+        private System.Windows.Forms.Button buttonArcCircle;
     }
 }
 

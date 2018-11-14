@@ -41,6 +41,15 @@ namespace _1612180_1612677
             using (Graphics graphics = Graphics.FromImage(_bitmap))
             using (Font font = new Font(fontAttr.fontFamily, fontAttr.size, fontAttr.fontStyle))
             {
+                // bat smooth
+                graphics.SmoothingMode = SmoothingMode.HighQuality;
+
+                // scale va rotate
+                graphics.TranslateTransform(getCenterPoint().X, getCenterPoint().Y);
+                graphics.ScaleTransform(tyleScale.Width, tyleScale.Height);
+                graphics.RotateTransform(angleRotate);
+                graphics.TranslateTransform(-getCenterPoint().X, -getCenterPoint().Y);
+
                 // tinh lai size tuy theo text va font
                 size = Size.Round(graphics.MeasureString(fontAttr.text, font));
 
@@ -84,12 +93,12 @@ namespace _1612180_1612677
                     default:
                         break;
                 }
+
+                // reset bien hinh
+                graphics.ResetTransform();
+
                 pictureBox.Invalidate();
             }
-        }
-
-        public override void drawInsidePoint(Bitmap _bitmap, Point p, PictureBox pictureBox)
-        {
         }
 
         public override bool isPointInsidePrecisly(Point p)
@@ -97,22 +106,13 @@ namespace _1612180_1612677
             using (GraphicsPath path = new GraphicsPath())
             {
                 path.AddRectangle(new Rectangle(points[0], size));
-                return path.IsVisible(p);
+                return path.IsVisible(pointBeforeScaleRotate(p));
             }
         }
 
-        public override void movePoints(Point p_before, Point p_after)
+        // khong cho character scale
+        public override void scalePoints(Point _p_before, Point _p_after)
         {
-            base.movePoints(p_before, p_after);
-        }
-
-        public override void scalePoints(Point p_before, Point p_after)
-        {
-        }
-
-        public override void rotatePoints(Point p_before, Point p_after)
-        {
-            base.rotatePoints(p_before, p_after);
         }
     }
 }

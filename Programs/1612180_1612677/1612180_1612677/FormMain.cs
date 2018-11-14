@@ -24,6 +24,7 @@ namespace _1612180_1612677
         private const int HINHBINHHANH_STATE = 6;
         private const int BEZIER_STATE = 7;
         private const int PARABOL_STATE = 8;
+        private const int ARC_CIRCLE_STATE = 9;
 
         // state luu trang thai hien tai
         private int state = NO_STATE;
@@ -133,6 +134,17 @@ namespace _1612180_1612677
             // default color dialog
             colorDialog.Color = Color.Black;
             buttonShowColor.BackColor = colorDialog.Color;
+
+            using (Graphics g = Graphics.FromImage(bitmap_primary))
+            {
+                g.DrawRectangle(new Pen(Color.Blue, 2), 50, 50, 60, 60);
+                g.TranslateTransform(50 + 60 / 2, 50 + 60 / 2);
+                g.RotateTransform(40);
+                g.TranslateTransform(-50 - 60 / 2, -50 - 60 / 2);
+                g.DrawRectangle(new Pen(Color.Red, 2), 50, 50, 60, 60);
+                g.ResetTransform();
+                g.DrawRectangle(new Pen(Color.Yellow, 2), 60, 60, 60, 60);
+            }
         }
 
         private void buttonClearAll_Click(object sender, EventArgs e)
@@ -242,6 +254,16 @@ namespace _1612180_1612677
             selectShapes.Clear();
             // set state
             state = RECTANGLE_STATE;
+        }
+
+        private void buttonArcCircle_Click(object sender, EventArgs e)
+        {
+            // reset list
+            clickedPoints.Clear();
+            selectShapes.Clear();
+            // set state
+            state = ARC_CIRCLE_STATE;
+
         }
 
         private void buttonSelect_Click(object sender, EventArgs e)
@@ -358,6 +380,10 @@ namespace _1612180_1612677
                     flag = MyParabol.isClickedPointsCanDrawShape(clickedPoints);
                     break;
 
+                case ARC_CIRCLE_STATE:
+                    flag = MyArcCircle.isClickedPointsCanDrawShape(clickedPoints);
+                    break;
+
                 default:
                     break;
             }
@@ -397,6 +423,10 @@ namespace _1612180_1612677
 
                     case PARABOL_STATE:
                         myShape = new MyParabol(getPenAttr(), clickedPoints);
+                        break;
+
+                    case ARC_CIRCLE_STATE:
+                        myShape = new MyArcCircle(getPenAttr(), clickedPoints);
                         break;
 
                     default:
@@ -504,6 +534,10 @@ namespace _1612180_1612677
 
                 case PARABOL_STATE:
                     myShape = new MyParabol(getPenAttr(), clickedPoints);
+                    break;
+
+                case ARC_CIRCLE_STATE:
+                    myShape = new MyArcCircle(getPenAttr(), clickedPoints);
                     break;
 
                 default:
@@ -614,6 +648,9 @@ namespace _1612180_1612677
 
             if (comboBoxSelectType.SelectedItem.ToString() == "Move")
             {
+                // backup lai vi tri diem
+                List<Point> backupPoints = new List<Point>(myShapes[selectShape].points);
+
                 // di chuyen shape theo mouse move
                 myShapes[selectShape].movePoints(posMovingShape[0], posMovingShape[1]);
 
@@ -623,15 +660,14 @@ namespace _1612180_1612677
 
                 // highlight select shape trong khi di chuyen
                 wrapHighlightShape(bitmap_primary, selectShape);
-                myShapes[selectShape].drawInsidePoint(bitmap_primary, e.Location, pictureBoxMain);
 
                 // reset lai points cua shape vi chi la ve tam
-                myShapes[selectShape].movePoints(posMovingShape[1], posMovingShape[0]);
+                myShapes[selectShape].points = backupPoints;
             }
             else if (comboBoxSelectType.SelectedItem.ToString() == "Scale")
             {
-                // backup lai points truoc khi scale
-                List<Point> savePoints = new List<Point>(myShapes[selectShape].points);
+                // backup lai ty le truoc khi scale
+                SizeF backupTyleScale = myShapes[selectShape].tyleScale;
 
                 // scale shape theo mouse move
                 myShapes[selectShape].scalePoints(posMovingShape[0], posMovingShape[1]);
@@ -642,15 +678,14 @@ namespace _1612180_1612677
 
                 // highlight select shape trong khi di chuyen
                 wrapHighlightShape(bitmap_primary, selectShape);
-                myShapes[selectShape].drawInsidePoint(bitmap_primary, e.Location, pictureBoxMain);
 
-                // reset lai points cua shape vi chi la ve tam
-                myShapes[selectShape].points = new List<Point>(savePoints);
+                // reset lai ty le cua shape
+                myShapes[selectShape].tyleScale = backupTyleScale;
             }
             else if (comboBoxSelectType.SelectedItem.ToString() == "Rotate")
             {
-                // backup lai points truoc khi rotate
-                List<Point> savePoints = new List<Point>(myShapes[selectShape].points);
+                // backup lai angle truoc khi rotate
+                float backupAngleRotate = myShapes[selectShape].angleRotate;
 
                 // rotate shape theo mouse move
                 myShapes[selectShape].rotatePoints(posMovingShape[0], posMovingShape[1]);
@@ -661,10 +696,10 @@ namespace _1612180_1612677
 
                 // highlight select shape trong khi di chuyen
                 wrapHighlightShape(bitmap_primary, selectShape);
-                myShapes[selectShape].drawInsidePoint(bitmap_primary, e.Location, pictureBoxMain);
 
-                // reset lai points cua shape vi chi la ve tam
-                myShapes[selectShape].points = new List<Point>(savePoints);
+                // reset lai angle cua shape vi chi la ve tam
+                myShapes[selectShape].angleRotate = backupAngleRotate;
+
             }
 
             // xoa diem hien ra khoi list vi tri cua shape moving
@@ -730,50 +765,23 @@ namespace _1612180_1612677
                 // cho phep thuc hien thay doi shape
                 isChangingShape = true;
             }
-            else if (comboBoxSelectType.SelectedItem.ToString() == "Scale")
+            else if (comboBoxSelectType.SelectedItem.ToString() == "Scale" ||
+                comboBoxSelectType.SelectedItem.ToString() == "Rotate")
             {
-                List<Point> edgePoints = myShapes[selectShape].getEdgePoints();
-                foreach (Point p in edgePoints)
+                int index = myShapes[selectShape].IndexOfEdgePoints(e.Location);
+                if (index != -1)
                 {
-                    // phai click trung edge Point => cho phep scale
-                    if (MyShape.isPointEqual(e.Location, p))
+                    // set chinh xac diem edge thay cho e.Location
+                    posMovingShape[0] = myShapes[selectShape].getEdgePoints()[index];
+
+                    // neu chua co trong list select shape thi them vao
+                    if (selectShapes.IndexOf(selectShape) == -1)
                     {
-                        // set chinh xac diem edge thay cho e.Location
-                        posMovingShape[0] = p;
-
-                        // neu khong co trong list select shape thi them vao
-                        if (selectShapes.IndexOf(selectShape) == -1)
-                        {
-                            selectShapes.Add(selectShape);
-                        }
-
-                        // cho phep thuc hien thay doi shape
-                        isChangingShape = true;
-                        break;
+                        selectShapes.Add(selectShape);
                     }
-                }
-            }
-            else if (comboBoxSelectType.SelectedItem.ToString() == "Rotate")
-            {
-                List<Point> edgePoints = myShapes[selectShape].getEdgePoints();
-                foreach (Point p in edgePoints)
-                {
-                    // phai click trung edge Point => cho phep rotate
-                    if (MyShape.isPointEqual(e.Location, p))
-                    {
-                        // set chinh xac diem edge thay cho e.Location
-                        posMovingShape[0] = p;
 
-                        // neu khong co trong list select shape thi them vao
-                        if (selectShapes.IndexOf(selectShape) == -1)
-                        {
-                            selectShapes.Add(selectShape);
-                        }
-
-                        // cho phep thuc hien thay doi shape
-                        isChangingShape = true;
-                        break;
-                    }
+                    // cho phep thuc hien thay doi shape
+                    isChangingShape = true;
                 }
             }
         }
@@ -832,12 +840,11 @@ namespace _1612180_1612677
 
         private void reloadFontAttr(object sender, EventArgs e)
         {
-            if (state != SELECT_STATE)
-                return;
-
             // chua click shape nao ca
-            if (selectShape == -1)
+            if (state != SELECT_STATE || selectShape == -1)
+            {
                 return;
+            }
 
             if (selectShape != selectOutlineShape)
             {
@@ -856,12 +863,11 @@ namespace _1612180_1612677
 
         private void reloadPenAttr(object sender, EventArgs e)
         {
-            if (state != SELECT_STATE)
-                return;
-
             // chua click shape nao ca
-            if (selectShape == -1)
+            if (state != SELECT_STATE || selectShape == -1)
+            {
                 return;
+            }
 
             // click vien cua shape
             if (selectShape == selectOutlineShape)
@@ -891,9 +897,15 @@ namespace _1612180_1612677
             if (selectShape == selectOutlineShape)
             {
                 myShapes[selectShape].updatePenAttr(getPenAttr());
+
+                clearBitmap();
+                wrapDrawAllShapes(bitmap_primary);
+
+                // hightlight trong bitmap_temp
+                bitmap_temp = (Bitmap)bitmap_primary.Clone();
+                pictureBoxMain.Image = bitmap_temp;
+                wrapHighlightShape(bitmap_temp, selectShape);
             }
-            clearBitmap();
-            wrapDrawAllShapes(bitmap_primary);
         }
 
         private void reloadColorInside(object sender, EventArgs e)
@@ -903,14 +915,19 @@ namespace _1612180_1612677
                 return;
             }
 
-            // click ben trong, doi mau ben trong
+            // doi mau ben trong
             if (selectShape != selectOutlineShape)
             {
                 myShapes[selectShape].updateBrushAttr(getBrushAttr());
-            }
 
-            clearBitmap();
-            wrapDrawAllShapes(bitmap_primary);
+                clearBitmap();
+                wrapDrawAllShapes(bitmap_primary);
+
+                // hightlight trong bitmap_temp
+                bitmap_temp = (Bitmap)bitmap_primary.Clone();
+                pictureBoxMain.Image = bitmap_temp;
+                wrapHighlightShape(bitmap_temp, selectShape);
+            }
         }
 
         private void resetSelect()
