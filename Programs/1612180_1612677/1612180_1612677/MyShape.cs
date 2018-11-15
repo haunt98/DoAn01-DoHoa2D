@@ -17,7 +17,6 @@ namespace _1612180_1612677
         protected Color COLOR_BRUSH_DEFAULT = Color.White;
         protected Color COLOR_BRUSH_ALTERNATIVE = Color.Blue;
         protected Color COLOR_BRUSH_DARK = Color.Black;
-        protected DashStyle DASH_STYLE_TEMP = DashStyle.Dot;
 
         public MyShape(PenAttr _penAttr, List<Point> _points)
         {
@@ -29,6 +28,7 @@ namespace _1612180_1612677
 
         public MyShape(List<Point> _points)
         {
+            penAttr = new PenAttr(COLOR_PEN_DEFAULT, DashStyle.Solid, 1);
             points = new List<Point>(_points);
             angleRotate = 0;
             tyleScale = new SizeF(1, 1);

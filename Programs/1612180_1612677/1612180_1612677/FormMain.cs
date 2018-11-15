@@ -20,7 +20,7 @@ namespace _1612180_1612677
         private const int ELLIPSE_STATE = 3;
         private const int CHARACTER_STATE = 4;
         private const int POLYGON_STATE = 5;
-        private const int HBH_STATE = 6;
+        private const int PARALLELOGRAM_STATE = 6;
         private const int BEZIER_STATE = 7;
         private const int PARABOL_STATE = 8;
         private const int ARC_STATE = 9;
@@ -37,7 +37,7 @@ namespace _1612180_1612677
         // luu cac diem cua shape
         private List<Point> clickedPoints = new List<Point>();
 
-        //luu bien filePath
+        // luu bien filePath
         private String filePath = "";
 
         // trai qua su kien MouseDown chua
@@ -70,12 +70,10 @@ namespace _1612180_1612677
         // so lan toi da undo, redo
         private const int MAX_LIST_UNDO_REDO = 10;
 
-        // cho phep redo
-        private bool isRedo = false;
+        // index trong listMyShapes
+        private int indexOfListMyShapes = -1;
 
-        // index cua myShapes trong listMyShapes
-        private int indexOfMyShapes = -1;
-
+        // luu cac gia tri myShapes trong qua trinh undo, redo
         private List<List<MyShape>> listMyShapes = new List<List<MyShape>>();
 
         public FormMain()
@@ -93,8 +91,8 @@ namespace _1612180_1612677
             clearBitmap();
 
             // them trang thai ban dau, khong co hinh nao vao undo redo
-            listMyShapes.Add(new List<MyShape>(myShapes));
-            ++indexOfMyShapes;
+            listMyShapes.Add(cloneListMyShape(myShapes));
+            ++indexOfListMyShapes;
 
             // Dash Style combo box
             comboBoxDashStyle.Items.Add("Dash");
@@ -211,7 +209,7 @@ namespace _1612180_1612677
             clickedPoints.Clear();
             selectShapes.Clear();
             // set state
-            state = HBH_STATE;
+            state = PARALLELOGRAM_STATE;
         }
 
         private void buttonDrawLine_Click(object sender, EventArgs e)
@@ -365,8 +363,8 @@ namespace _1612180_1612677
                     flag = MyCharater.isClickedPointsCanDrawShape(clickedPoints);
                     break;
 
-                case HBH_STATE:
-                    flag = MyHinhBinhHanh.isClickedPointsCanDrawShape(clickedPoints);
+                case PARALLELOGRAM_STATE:
+                    flag = MyParallelogram.isClickedPointsCanDrawShape(clickedPoints);
                     break;
 
                 case BEZIER_STATE:
@@ -410,8 +408,8 @@ namespace _1612180_1612677
                         myShape = new MyCharater(clickedPoints, getFontAttr());
                         break;
 
-                    case HBH_STATE:
-                        myShape = new MyHinhBinhHanh(getPenAttr(), clickedPoints);
+                    case PARALLELOGRAM_STATE:
+                        myShape = new MyParallelogram(getPenAttr(), clickedPoints);
                         break;
 
                     case BEZIER_STATE:
@@ -456,8 +454,8 @@ namespace _1612180_1612677
                         myShape = new MyPolygon(getPenAttr(), clickedPoints);
                         break;
 
-                    case HBH_STATE:
-                        myShape = new MyHinhBinhHanh(getPenAttr(), clickedPoints);
+                    case PARALLELOGRAM_STATE:
+                        myShape = new MyParallelogram(getPenAttr(), clickedPoints);
                         break;
 
                     case BEZIER_STATE:
@@ -521,8 +519,8 @@ namespace _1612180_1612677
                     myShape = new MyPolygon(getPenAttr(), clickedPoints);
                     break;
 
-                case HBH_STATE:
-                    myShape = new MyHinhBinhHanh(getPenAttr(), clickedPoints);
+                case PARALLELOGRAM_STATE:
+                    myShape = new MyParallelogram(getPenAttr(), clickedPoints);
                     break;
 
                 case BEZIER_STATE:
@@ -582,7 +580,6 @@ namespace _1612180_1612677
             {
                 // di chuyen shape theo mouse move
                 changeMovePointsObjFromMyShapes(posMovingShape[0], posMovingShape[1], selectShape);
-                //myShapes[selectShape].movePoints(posMovingShape[0], posMovingShape[1]);
 
                 // xoa roi ve lai trong bitmap_primary
                 clearBitmap();
@@ -596,7 +593,7 @@ namespace _1612180_1612677
             else if (comboBoxSelectType.SelectedItem.ToString() == "Scale")
             {
                 // scale shape theo mouse move
-                myShapes[selectShape].scalePoints(posMovingShape[0], posMovingShape[1]);
+                changeScalePointsObjFromMyShapes(posMovingShape[0], posMovingShape[1], selectShape);
 
                 // xoa roi ve lai trong bitmap_primary
                 clearBitmap();
@@ -611,7 +608,7 @@ namespace _1612180_1612677
             else if (comboBoxSelectType.SelectedItem.ToString() == "Rotate")
             {
                 // rotate shape theo mouse move
-                myShapes[selectShape].rotatePoints(posMovingShape[0], posMovingShape[1]);
+                changeRotatePointsObjFromMyShapes(posMovingShape[0], posMovingShape[1], selectShape);
 
                 // xoa roi ve lai trong bitmap_primary
                 clearBitmap();
@@ -1094,20 +1091,15 @@ namespace _1612180_1612677
         private void buttonUndo_Click(object sender, EventArgs e)
         {
             // khong co gi de undo
-            if (indexOfMyShapes == -1
-                || indexOfMyShapes == 0)
+            if (indexOfListMyShapes == -1
+                || indexOfListMyShapes == 0)
             {
                 return;
             }
             else
             {
-                indexOfMyShapes -= 1;
-                // tao clone
-                myShapes = new List<MyShape>();
-                foreach (MyShape ms in listMyShapes[indexOfMyShapes])
-                {
-                    myShapes.Add(ms.clone());
-                }
+                indexOfListMyShapes -= 1;
+                myShapes = cloneListMyShape(listMyShapes[indexOfListMyShapes]);
 
                 // redraw
                 clearBitmap();
@@ -1118,26 +1110,19 @@ namespace _1612180_1612677
         private void buttonRedo_Click(object sender, EventArgs e)
         {
             // khong co gi de redo
-            if ((indexOfMyShapes == MAX_LIST_UNDO_REDO)
-                || indexOfMyShapes == listMyShapes.Count - 1)
+            if ((indexOfListMyShapes == MAX_LIST_UNDO_REDO)
+                || indexOfListMyShapes == listMyShapes.Count - 1)
             {
-                isRedo = false;
                 return;
             }
             else
             {
-                indexOfMyShapes += 1;
-                // tao clone
-                myShapes = new List<MyShape>();
-                foreach (MyShape ms in listMyShapes[indexOfMyShapes])
-                {
-                    myShapes.Add(ms.clone());
-                }
+                indexOfListMyShapes += 1;
+                myShapes = cloneListMyShape(listMyShapes[indexOfListMyShapes]);
 
                 // redraw
                 clearBitmap();
                 wrapDrawAllShapes(bitmap_primary);
-                isRedo = true;
             }
         }
 
@@ -1145,67 +1130,76 @@ namespace _1612180_1612677
         // them myShapes vao list myShapes
         public void addObjToMyShapes(MyShape myShape)
         {
-            // neu co redo truoc do thi xoa het
-            if (isRedo)
+            // xoa het redo
+            for (int i = listMyShapes.Count - 1; i >= indexOfListMyShapes + 1; i--)
             {
-                for (int i = listMyShapes.Count - 1; i >= indexOfMyShapes + 1; i--)
-                {
-                    listMyShapes.RemoveAt(i);
-                }
+                listMyShapes.RemoveAt(i);
             }
-            indexOfMyShapes++;
+            indexOfListMyShapes++;
 
             // them myShape vao myShapes
             myShapes.Add(myShape);
 
-            // clone myShapes
-            List<MyShape> newMyShapes = new List<MyShape>();
-            foreach (MyShape ms in myShapes)
-            {
-                newMyShapes.Add(ms.clone());
-            }
-
-            // them newMyShapes vao listMyShapes
-            listMyShapes.Add(newMyShapes);
+            // them myShapes clone vao listMyShapes
+            listMyShapes.Add(cloneListMyShape(myShapes));
         }
 
         public void changeMovePointsObjFromMyShapes(Point p_before, Point p_after, int index)
         {
-            // neu co redo truoc do thi xoa het
-            if (isRedo)
+            // xoa het redo
+            for (int i = listMyShapes.Count - 1; i >= indexOfListMyShapes + 1; i--)
             {
-                for (int i = listMyShapes.Count - 1; i >= indexOfMyShapes + 1; i--)
-                {
-                    listMyShapes.RemoveAt(i);
-                }
+                listMyShapes.RemoveAt(i);
             }
-            indexOfMyShapes++;
+            indexOfListMyShapes++;
 
             // thay doi myShapes[index]
             myShapes[index].movePoints(p_before, p_after);
 
-            // clone myShapes
-            List<MyShape> newMyShapes = new List<MyShape>();
-            foreach (MyShape ms in myShapes)
-            {
-                newMyShapes.Add(ms.clone());
-            }
+            // them myShapes clone vao listMyShapes
+            listMyShapes.Add(cloneListMyShape(myShapes));
+        }
 
-            // them newMyShapes vao listMyShapes
-            listMyShapes.Add(newMyShapes);
+        public void changeScalePointsObjFromMyShapes(Point p_before, Point p_after, int index)
+        {
+            // xoa het redo
+            for (int i = listMyShapes.Count - 1; i >= indexOfListMyShapes + 1; i--)
+            {
+                listMyShapes.RemoveAt(i);
+            }
+            indexOfListMyShapes++;
+
+            // thay doi myShapes[index]
+            myShapes[index].scalePoints(p_before, p_after);
+
+            // them myShapes clone vao listMyShapes
+            listMyShapes.Add(cloneListMyShape(myShapes));
+        }
+
+        public void changeRotatePointsObjFromMyShapes(Point p_before, Point p_after, int index)
+        {
+            // xoa het redo
+            for (int i = listMyShapes.Count - 1; i >= indexOfListMyShapes + 1; i--)
+            {
+                listMyShapes.RemoveAt(i);
+            }
+            indexOfListMyShapes++;
+
+            // thay doi myShapes[index]
+            myShapes[index].rotatePoints(p_before, p_after);
+
+            // them myShapes clone vao listMyShapes
+            listMyShapes.Add(cloneListMyShape(myShapes));
         }
 
         public void deleteMultiObjFromMyShapes(List<int> multiIndex)
         {
-            // neu co redo truoc do thi xoa het
-            if (isRedo)
+            // xoa het redo
+            for (int i = listMyShapes.Count - 1; i >= indexOfListMyShapes + 1; i--)
             {
-                for (int i = listMyShapes.Count - 1; i >= indexOfMyShapes + 1; i--)
-                {
-                    listMyShapes.RemoveAt(i);
-                }
+                listMyShapes.RemoveAt(i);
             }
-            indexOfMyShapes++;
+            indexOfListMyShapes++;
 
             // sap xep multiIndex theo giam dan roi moi xoa
             foreach (int index in multiIndex.OrderByDescending(i => i))
@@ -1213,41 +1207,34 @@ namespace _1612180_1612677
                 myShapes.RemoveAt(index);
             }
 
-            // clone myShapes
-            List<MyShape> newMyShapes = new List<MyShape>();
-            foreach (MyShape ms in myShapes)
-            {
-                newMyShapes.Add(ms.clone());
-            }
-
-            // them newMyShapes vao listMyShapes
-            listMyShapes.Add(newMyShapes);
+            // them myShapes clone vao listMyShapes
+            listMyShapes.Add(cloneListMyShape(myShapes));
         }
 
         public void deleteAllObjFromMyShapes()
         {
-            // neu co redo truoc do thi xoa het
-            if (isRedo)
+            // xoa het redo
+            for (int i = listMyShapes.Count - 1; i >= indexOfListMyShapes + 1; i--)
             {
-                for (int i = listMyShapes.Count - 1; i >= indexOfMyShapes + 1; i--)
-                {
-                    listMyShapes.RemoveAt(i);
-                }
+                listMyShapes.RemoveAt(i);
             }
-            indexOfMyShapes++;
+            indexOfListMyShapes++;
 
             // xoa het MyShape trong myShapes
             myShapes.Clear();
 
-            // clone myShapes
-            List<MyShape> newMyShapes = new List<MyShape>();
-            foreach (MyShape ms in myShapes)
-            {
-                newMyShapes.Add(ms.clone());
-            }
+            // them myShapes clone vao listMyShapes
+            listMyShapes.Add(cloneListMyShape(myShapes));
+        }
 
-            // them newMyShapes vao listMyShapes
-            listMyShapes.Add(newMyShapes);
+        public List<MyShape> cloneListMyShape(List<MyShape> _myShapes)
+        {
+            List<MyShape> newList = new List<MyShape>();
+            foreach (MyShape ms in _myShapes)
+            {
+                newList.Add(ms.clone());
+            }
+            return newList;
         }
     }
 }

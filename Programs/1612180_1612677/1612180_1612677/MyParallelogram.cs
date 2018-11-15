@@ -7,17 +7,17 @@ using System.Windows.Forms;
 namespace _1612180_1612677
 {
     [Serializable]
-    public class MyHinhBinhHanh : MyShape
+    public class MyParallelogram : MyShape
     {
         public BrushAttr brushAttr { get; set; }
 
-        public MyHinhBinhHanh(PenAttr _penAttr, List<Point> _points) :
+        public MyParallelogram(PenAttr _penAttr, List<Point> _points) :
             base(_penAttr, _points)
         {
             brushAttr = new BrushAttr(COLOR_BRUSH_DEFAULT, "SolidBrush");
         }
 
-        public MyHinhBinhHanh(MyHinhBinhHanh _myHbh)
+        public MyParallelogram(MyParallelogram _myHbh)
             : base(_myHbh)
         {
             brushAttr = new BrushAttr(_myHbh.brushAttr);
@@ -25,7 +25,7 @@ namespace _1612180_1612677
 
         public override MyShape clone()
         {
-            return new MyHinhBinhHanh(this);
+            return new MyParallelogram(this);
         }
 
         private static Point findFinalPointOfParallel(List<Point> _points)
