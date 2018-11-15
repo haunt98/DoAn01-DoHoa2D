@@ -135,30 +135,10 @@ namespace _1612180_1612677
             comboBoxSelectType.SelectedIndex = comboBoxSelectType.Items.IndexOf("Move");
 
             // default color dialog
-            colorDialog.Color = Color.Black;
-            buttonShowColor.BackColor = colorDialog.Color;
-        }
-
-        private void buttonClearAll_Click(object sender, EventArgs e)
-        {
-            // reset list
-            deleteAllObjFromMyShapes();
-
-            clickedPoints.Clear();
-            selectShapes.Clear();
-            posMovingShape.Clear();
-
-            // reset state
-            state = NO_STATE;
-            isMouseDown = false;
-            isChangingShape = false;
-            selectShape = -1;
-            selectInsideShape = -1;
-            selectOutlineShape = -1;
-
-            // redraw
-            clearBitmap();
-            wrapDrawAllShapes(bitmap_primary);
+            colorDialog1.Color = Color.Black;
+            buttonShowColor.BackColor = colorDialog1.Color;
+            colorDialog2.Color = Color.Black;
+            buttonColor2.BackColor = colorDialog2.Color;
         }
 
         private void buttonDel_Click(object sender, EventArgs e)
@@ -268,8 +248,8 @@ namespace _1612180_1612677
 
         private void buttonShowColor_Click(object sender, EventArgs e)
         {
-            colorDialog.ShowDialog();
-            buttonShowColor.BackColor = colorDialog.Color;
+            colorDialog1.ShowDialog();
+            buttonShowColor.BackColor = colorDialog1.Color;
             // load lai mau vien
             reloadColorOutline(sender, e);
         }
@@ -783,7 +763,7 @@ namespace _1612180_1612677
 
         private BrushAttr getBrushAttr()
         {
-            BrushAttr brushAttr = new BrushAttr(colorDialog.Color,
+            BrushAttr brushAttr = new BrushAttr(colorDialog1.Color, colorDialog2.Color,
                 comboBoxBrushStyle.SelectedItem.ToString());
             return brushAttr;
         }
@@ -803,27 +783,27 @@ namespace _1612180_1612677
             switch (comboBoxDashStyle.SelectedItem.ToString())
             {
                 case "Dash":
-                    penAttr = new PenAttr(colorDialog.Color, DashStyle.Dash,
+                    penAttr = new PenAttr(colorDialog1.Color, DashStyle.Dash,
                         Convert.ToInt32(Math.Round(numericUpDownPenWidth.Value, 0)));
                     break;
 
                 case "DashDot":
-                    penAttr = new PenAttr(colorDialog.Color, DashStyle.DashDot,
+                    penAttr = new PenAttr(colorDialog1.Color, DashStyle.DashDot,
                         Convert.ToInt32(Math.Round(numericUpDownPenWidth.Value, 0)));
                     break;
 
                 case "DashDotDot":
-                    penAttr = new PenAttr(colorDialog.Color, DashStyle.DashDotDot,
+                    penAttr = new PenAttr(colorDialog1.Color, DashStyle.DashDotDot,
                         Convert.ToInt32(Math.Round(numericUpDownPenWidth.Value, 0)));
                     break;
 
                 case "Dot":
-                    penAttr = new PenAttr(colorDialog.Color, DashStyle.Dot,
+                    penAttr = new PenAttr(colorDialog1.Color, DashStyle.Dot,
                         Convert.ToInt32(Math.Round(numericUpDownPenWidth.Value, 0)));
                     break;
 
                 case "Solid":
-                    penAttr = new PenAttr(colorDialog.Color, DashStyle.Solid,
+                    penAttr = new PenAttr(colorDialog1.Color, DashStyle.Solid,
                         Convert.ToInt32(Math.Round(numericUpDownPenWidth.Value, 0)));
                     break;
 
@@ -1235,6 +1215,34 @@ namespace _1612180_1612677
                 newList.Add(ms.clone());
             }
             return newList;
+        }
+
+        private void clearAllToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // reset list
+            deleteAllObjFromMyShapes();
+
+            clickedPoints.Clear();
+            selectShapes.Clear();
+            posMovingShape.Clear();
+
+            // reset state
+            state = NO_STATE;
+            isMouseDown = false;
+            isChangingShape = false;
+            selectShape = -1;
+            selectInsideShape = -1;
+            selectOutlineShape = -1;
+
+            // redraw
+            clearBitmap();
+            wrapDrawAllShapes(bitmap_primary);
+        }
+
+        private void buttonColor2_Click(object sender, EventArgs e)
+        {
+            colorDialog2.ShowDialog();
+            buttonShowColor.BackColor = colorDialog2.Color;
         }
     }
 }

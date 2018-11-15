@@ -75,28 +75,28 @@ namespace _1612180_1612677
                         break;
 
                     case "HatchBrushVertical":
-                        using (HatchBrush brush = new HatchBrush(HatchStyle.Vertical, brushAttr.color, COLOR_BRUSH_ALTERNATIVE))
+                        using (HatchBrush brush = new HatchBrush(HatchStyle.Vertical, brushAttr.color, brushAttr.color2))
                         {
                             graphics.DrawString(fontAttr.text, font, brush, points[0]);
                         }
                         break;
 
                     case "HatchBrushHorizontal":
-                        using (HatchBrush brush = new HatchBrush(HatchStyle.Horizontal, brushAttr.color, COLOR_BRUSH_ALTERNATIVE))
+                        using (HatchBrush brush = new HatchBrush(HatchStyle.Horizontal, brushAttr.color, brushAttr.color2))
                         {
                             graphics.DrawString(fontAttr.text, font, brush, points[0]);
                         }
                         break;
 
                     case "HatchBrushCross":
-                        using (HatchBrush brush = new HatchBrush(HatchStyle.Cross, brushAttr.color, COLOR_BRUSH_ALTERNATIVE))
+                        using (HatchBrush brush = new HatchBrush(HatchStyle.Cross, brushAttr.color, brushAttr.color2))
                         {
                             graphics.DrawString(fontAttr.text, font, brush, points[0]);
                         }
                         break;
 
                     case "HatchBrushForwardDiagonal":
-                        using (HatchBrush brush = new HatchBrush(HatchStyle.ForwardDiagonal, brushAttr.color, COLOR_BRUSH_ALTERNATIVE))
+                        using (HatchBrush brush = new HatchBrush(HatchStyle.ForwardDiagonal, brushAttr.color, brushAttr.color2))
                         {
                             graphics.DrawString(fontAttr.text, font, brush, points[0]);
                         }

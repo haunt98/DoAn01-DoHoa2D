@@ -15,7 +15,6 @@ namespace _1612180_1612677
         protected Color COLOR_INSIDE_POINT = Color.White;
         protected Color COLOR_PEN_DEFAULT = Color.Black;
         protected Color COLOR_BRUSH_DEFAULT = Color.White;
-        protected Color COLOR_BRUSH_ALTERNATIVE = Color.Blue;
         protected Color COLOR_BRUSH_DARK = Color.Black;
 
         public MyShape(PenAttr _penAttr, List<Point> _points)

@@ -8,9 +8,17 @@ namespace _1612180_1612677
     [Serializable]
     public class BrushAttr
     {
+        public BrushAttr(Color _color, Color _color2, String _typeBrush)
+        {
+            color = _color;
+            color2 = _color2;
+            typeBrush = _typeBrush;
+        }
+
         public BrushAttr(Color _color, String _typeBrush)
         {
             color = _color;
+            color2 = Color.Black;
             typeBrush = _typeBrush;
         }
 
@@ -30,6 +38,9 @@ namespace _1612180_1612677
         }
 
         public Color color { get; set; }
+
+        public Color color2 { get; set; }
+
         public String typeBrush { get; set; }
     }
 
