@@ -14,6 +14,16 @@ namespace _1612180_1612677
         {
         }
 
+        public MyBezier(MyBezier _myBe)
+            : base(_myBe)
+        {
+        }
+
+        public override MyShape clone()
+        {
+            return new MyBezier(this);
+        }
+
         public static bool isClickedPointsCanDrawShape(List<Point> _points)
         {
             return _points.Count == 4;

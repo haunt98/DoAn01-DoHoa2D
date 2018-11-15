@@ -18,6 +18,19 @@ namespace _1612180_1612677
             calcBound();
         }
 
+        public MyArc(MyArc _myArc)
+            : base(_myArc)
+        {
+            rect_bound = _myArc.rect_bound;
+            startAngle = _myArc.startAngle;
+            sweepAngle = _myArc.sweepAngle;
+        }
+
+        public override MyShape clone()
+        {
+            return new MyArc(this);
+        }
+
         // tinh gioi han va goc quay
         public void calcBound()
         {

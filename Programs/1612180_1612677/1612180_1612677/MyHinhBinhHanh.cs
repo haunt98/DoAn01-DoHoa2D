@@ -17,6 +17,17 @@ namespace _1612180_1612677
             brushAttr = new BrushAttr(COLOR_BRUSH_DEFAULT, "SolidBrush");
         }
 
+        public MyHinhBinhHanh(MyHinhBinhHanh _myHbh)
+            : base(_myHbh)
+        {
+            brushAttr = new BrushAttr(_myHbh.brushAttr);
+        }
+
+        public override MyShape clone()
+        {
+            return new MyHinhBinhHanh(this);
+        }
+
         private static Point findFinalPointOfParallel(List<Point> _points)
         {
             if (_points.Count == 3)

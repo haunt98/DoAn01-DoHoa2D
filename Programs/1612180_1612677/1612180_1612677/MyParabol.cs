@@ -16,6 +16,16 @@ namespace _1612180_1612677
         {
         }
 
+        public MyParabol(MyParabol _myParabol)
+            : base(_myParabol)
+        {
+        }
+
+        public override MyShape clone()
+        {
+            return new MyParabol(this);
+        }
+
         private static Point findFinalPointOfParallel(List<Point> _points)
         {
             if (_points.Count == 2)

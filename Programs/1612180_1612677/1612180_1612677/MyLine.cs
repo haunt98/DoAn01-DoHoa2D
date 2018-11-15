@@ -14,6 +14,16 @@ namespace _1612180_1612677
         {
         }
 
+        public MyLine(MyLine _myLine)
+            : base(_myLine)
+        {
+        }
+
+        public override MyShape clone()
+        {
+            return new MyLine(this);
+        }
+
         public override void updatePenAttr(PenAttr _penAttr)
         {
             penAttr = _penAttr;

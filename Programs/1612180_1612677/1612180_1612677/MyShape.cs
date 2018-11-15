@@ -34,6 +34,16 @@ namespace _1612180_1612677
             tyleScale = new SizeF(1, 1);
         }
 
+        public MyShape(MyShape _myShape)
+        {
+            penAttr = new PenAttr(_myShape.penAttr);
+            points = new List<Point>(_myShape.points);
+            angleRotate = _myShape.angleRotate;
+            tyleScale = _myShape.tyleScale;
+        }
+
+        public abstract MyShape clone();
+
         public PenAttr penAttr { get; set; }
 
         public List<Point> points { get; set; }

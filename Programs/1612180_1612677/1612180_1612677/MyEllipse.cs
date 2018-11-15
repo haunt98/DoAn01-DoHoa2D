@@ -28,6 +28,19 @@ namespace _1612180_1612677
             brushAttr = new BrushAttr(COLOR_BRUSH_DEFAULT, "SolidBrush");
         }
 
+        public MyEllipse(MyEllipse _myEll)
+            : base(_myEll)
+        {
+            mostLeft = _myEll.mostLeft;
+            size = _myEll.size;
+            brushAttr = new BrushAttr(_myEll.brushAttr);
+        }
+
+        public override MyShape clone()
+        {
+            return new MyEllipse(this);
+        }
+
         public static bool isClickedPointsCanDrawShape(List<Point> _points)
         {
             return _points.Count == 2;

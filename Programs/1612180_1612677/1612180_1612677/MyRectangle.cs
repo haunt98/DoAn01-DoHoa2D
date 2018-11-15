@@ -29,6 +29,19 @@ namespace _1612180_1612677
             brushAttr = new BrushAttr(COLOR_BRUSH_DEFAULT, "SolidBrush");
         }
 
+        public MyRectangle(MyRectangle _myRectangle)
+            : base(_myRectangle)
+        {
+            mostLeft = _myRectangle.mostLeft;
+            size = _myRectangle.size;
+            brushAttr = new BrushAttr(_myRectangle.brushAttr);
+        }
+
+        public override MyShape clone()
+        {
+            return new MyRectangle(this);
+        }
+
         public static bool isClickedPointsCanDrawShape(List<Point> _points)
         {
             return _points.Count == 2;

@@ -17,6 +17,17 @@ namespace _1612180_1612677
             brushAttr = new BrushAttr(COLOR_BRUSH_DEFAULT, "SolidBrush");
         }
 
+        public MyPolygon(MyPolygon _myPolygon)
+            : base(_myPolygon)
+        {
+            brushAttr = new BrushAttr(_myPolygon.brushAttr);
+        }
+
+        public override MyShape clone()
+        {
+            return new MyPolygon(this);
+        }
+
         public static bool isClickedPointsCanDrawShape(List<Point> _points)
         {
             // da giac can it nhat 2 diem

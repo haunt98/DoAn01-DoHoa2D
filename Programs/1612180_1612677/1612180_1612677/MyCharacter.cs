@@ -21,6 +21,18 @@ namespace _1612180_1612677
             brushAttr = new BrushAttr(COLOR_BRUSH_DARK, "SolidBrush");
         }
 
+        public MyCharater(MyCharater _myChar)
+            : base(_myChar)
+        {
+            fontAttr = new FontAttr(_myChar.fontAttr);
+            brushAttr = new BrushAttr(_myChar.brushAttr);
+        }
+
+        public override MyShape clone()
+        {
+            return new MyCharater(this);
+        }
+
         public static bool isClickedPointsCanDrawShape(List<Point> _points)
         {
             return _points.Count == 1;
