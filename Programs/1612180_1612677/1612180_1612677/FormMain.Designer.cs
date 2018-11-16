@@ -74,6 +74,8 @@
             this.buttonFontBold = new System.Windows.Forms.Button();
             this.buttonFontItalic = new System.Windows.Forms.Button();
             this.buttonFontUnder = new System.Windows.Forms.Button();
+            this.exportToImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMain)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPenWidth)).BeginInit();
@@ -99,7 +101,9 @@
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openToolStripMenuItem,
             this.saveToolStripMenuItem,
-            this.saveAsToolStripMenuItem});
+            this.saveAsToolStripMenuItem,
+            this.exportToImageToolStripMenuItem,
+            this.closeToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(39, 21);
             this.fileToolStripMenuItem.Text = "File";
@@ -108,7 +112,7 @@
             // 
             this.openToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("openToolStripMenuItem.Image")));
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
             this.openToolStripMenuItem.Text = "Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
@@ -502,6 +506,22 @@
             this.buttonFontUnder.UseVisualStyleBackColor = true;
             this.buttonFontUnder.Click += new System.EventHandler(this.buttonFontUnder_Click);
             // 
+            // exportToImageToolStripMenuItem
+            // 
+            this.exportToImageToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("exportToImageToolStripMenuItem.Image")));
+            this.exportToImageToolStripMenuItem.Name = "exportToImageToolStripMenuItem";
+            this.exportToImageToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
+            this.exportToImageToolStripMenuItem.Text = "Export to Image";
+            this.exportToImageToolStripMenuItem.Click += new System.EventHandler(this.exportToImageToolStripMenuItem_Click);
+            // 
+            // closeToolStripMenuItem
+            // 
+            this.closeToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("closeToolStripMenuItem.Image")));
+            this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
+            this.closeToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
+            this.closeToolStripMenuItem.Text = "Close";
+            this.closeToolStripMenuItem.Click += new System.EventHandler(this.closeToolStripMenuItem_Click);
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -604,6 +624,8 @@
         private System.Windows.Forms.Button buttonFontBold;
         private System.Windows.Forms.Button buttonFontItalic;
         private System.Windows.Forms.Button buttonFontUnder;
+        private System.Windows.Forms.ToolStripMenuItem exportToImageToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem closeToolStripMenuItem;
     }
 }
 

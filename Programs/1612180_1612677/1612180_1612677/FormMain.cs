@@ -153,9 +153,7 @@ namespace _1612180_1612677
 
             deleteMultiObjFromMyShapes(selectShapes);
 
-            state = NO_STATE;
-            selectShapes.Clear();
-
+            hardResetState();
             wrapDrawAllShapes(bitmap_primary);
         }
 
@@ -923,10 +921,12 @@ namespace _1612180_1612677
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "Binary files (*.bin)|*.bin";
+            ofd.InitialDirectory = @"C:\";
+            ofd.RestoreDirectory = true;
+            ofd.DefaultExt = "bin";
+            ofd.Filter = "Binary file (*.bin)|*.bin";
             if (ofd.ShowDialog() == DialogResult.OK)
             {
-                myShapes.Clear();
                 FileStream fs = new FileStream(ofd.FileName, FileMode.Open);
                 BinaryFormatter bf = new BinaryFormatter();
                 int length = (int)bf.Deserialize(fs);
@@ -934,9 +934,17 @@ namespace _1612180_1612677
                 for (int i = 0; i < length; i++)
                 {
                     MyShape myShape = (MyShape)bf.Deserialize(fs);
-                    addObjToMyShapes(myShape);
+                    // them vao khong can undo, redo
+                    myShapes.Add(myShape);
                 }
                 fs.Close();
+
+                hardResetState();
+
+                // them trang thai file ban dau vao undo redo
+                hardResetUndoRedo();
+                listMyShapes.Add(cloneListMyShape(myShapes));
+                ++indexOfListMyShapes;
 
                 wrapDrawAllShapes(bitmap_primary);
             }
@@ -949,7 +957,7 @@ namespace _1612180_1612677
             sfd.RestoreDirectory = true;
             sfd.FileName = "Untitled";
             sfd.DefaultExt = "bin";
-            sfd.Filter = "Binary files (*.bin)|*.bin";
+            sfd.Filter = "Binary file (*.bin)|*.bin";
 
             if (sfd.ShowDialog() == DialogResult.OK)
             {
@@ -983,6 +991,37 @@ namespace _1612180_1612677
             else
             {
                 saveAsToolStripMenuItem_Click(sender, e);
+            }
+        }
+
+        private void closeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private void exportToImageToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.InitialDirectory = @"C:\";
+            sfd.RestoreDirectory = true;
+            sfd.FileName = "Untitled";
+            sfd.DefaultExt = "png";
+            sfd.Filter = "PNG Image (*.png)|*.png|JPEG Image (*.jpeg)|*.jpeg";
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                switch (Path.GetExtension(sfd.FileName))
+                {
+                    case ".png":
+                        bitmap_primary.Save(sfd.FileName, ImageFormat.Png);
+                        break;
+
+                    case ".jpeg":
+                        bitmap_primary.Save(sfd.FileName, ImageFormat.Jpeg);
+                        break;
+
+                    default:
+                        break;
+                }
             }
         }
 
@@ -1064,6 +1103,16 @@ namespace _1612180_1612677
             wrapDrawAllShapes(bitmap_primary);
         }
 
+        private void clearAllToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            deleteAllObjFromMyShapes();
+            hardResetState();
+            resetFontStyleState();
+
+            // redraw
+            wrapDrawAllShapes(bitmap_primary);
+        }
+
         // khi thay doi combo box cua select type => reset select
         private void comboBoxSelectType_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -1110,7 +1159,7 @@ namespace _1612180_1612677
         // them myShapes vao list myShapes
         public void addObjToMyShapes(MyShape myShape)
         {
-            resetRedo();
+            removeRedo();
 
             // them myShape vao myShapes
             myShapes.Add(myShape);
@@ -1122,7 +1171,7 @@ namespace _1612180_1612677
 
         public void changeMovePointsObjFromMyShapes(Point p_before, Point p_after, int index)
         {
-            resetRedo();
+            removeRedo();
 
             // thay doi myShapes[index]
             myShapes[index].movePoints(p_before, p_after);
@@ -1134,7 +1183,7 @@ namespace _1612180_1612677
 
         public void changeScalePointsObjFromMyShapes(Point p_before, Point p_after, int index)
         {
-            resetRedo();
+            removeRedo();
 
             // thay doi myShapes[index]
             myShapes[index].scalePoints(p_before, p_after);
@@ -1146,7 +1195,7 @@ namespace _1612180_1612677
 
         public void changeRotatePointsObjFromMyShapes(Point p_before, Point p_after, int index)
         {
-            resetRedo();
+            removeRedo();
 
             // thay doi myShapes[index]
             myShapes[index].rotatePoints(p_before, p_after);
@@ -1158,7 +1207,7 @@ namespace _1612180_1612677
 
         public void changePenAttrObjFromMyShapes(int index)
         {
-            resetRedo();
+            removeRedo();
 
             // thay doi myShapes[index]
             myShapes[index].updatePenAttr(getPenAttr());
@@ -1170,7 +1219,7 @@ namespace _1612180_1612677
 
         public void changeBrushAttrObjFromMyShapes(int index)
         {
-            resetRedo();
+            removeRedo();
 
             // thay doi myShapes[index]
             myShapes[index].updateBrushAttr(getBrushAttr());
@@ -1182,7 +1231,7 @@ namespace _1612180_1612677
 
         public void changeFontAttrObjFromMyShapes(int index)
         {
-            resetRedo();
+            removeRedo();
 
             // thay doi myShapes[index]
             myShapes[index].updateFontAttr(getFontAttr());
@@ -1194,7 +1243,7 @@ namespace _1612180_1612677
 
         public void deleteMultiObjFromMyShapes(List<int> multiIndex)
         {
-            resetRedo();
+            removeRedo();
 
             // sap xep multiIndex theo giam dan roi moi xoa
             foreach (int index in multiIndex.OrderByDescending(i => i))
@@ -1209,7 +1258,7 @@ namespace _1612180_1612677
 
         public void deleteAllObjFromMyShapes()
         {
-            resetRedo();
+            removeRedo();
 
             // xoa het MyShape trong myShapes
             myShapes.Clear();
@@ -1229,7 +1278,7 @@ namespace _1612180_1612677
             return newList;
         }
 
-        public void resetRedo()
+        public void removeRedo()
         {
             for (int i = listMyShapes.Count - 1; i >= indexOfListMyShapes + 1; i--)
             {
@@ -1237,29 +1286,10 @@ namespace _1612180_1612677
             }
         }
 
-        private void clearAllToolStripMenuItem_Click(object sender, EventArgs e)
+        public void hardResetUndoRedo()
         {
-            // reset list
-            deleteAllObjFromMyShapes();
-
-            clickedPoints.Clear();
-            selectShapes.Clear();
-            posMovingShape.Clear();
-
-            // reset state
-            state = NO_STATE;
-
-            isMouseDown = false;
-            isChangingShape = false;
-
-            selectShape = -1;
-            selectInsideShape = -1;
-            selectOutlineShape = -1;
-
-            resetFontStyleState();
-
-            // redraw
-            wrapDrawAllShapes(bitmap_primary);
+            listMyShapes.Clear();
+            indexOfListMyShapes = -1;
         }
 
         void resetFontStyleState()
@@ -1318,6 +1348,23 @@ namespace _1612180_1612677
             }
 
             reloadFontAttr(sender, e);
+        }
+
+        // xoa het chi giu lai myShapes
+        public void hardResetState()
+        {
+            state = NO_STATE;
+
+            isMouseDown = false;
+            isChangingShape = false;
+
+            // khong select hinh nao nua va xoa het ds select
+            selectShape = -1;
+            selectOutlineShape = -1;
+            selectInsideShape = -1;
+            selectShapes.Clear();
+            posMovingShape.Clear();
+            clickedPoints.Clear();
         }
     }
 }
