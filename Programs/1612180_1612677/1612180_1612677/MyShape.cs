@@ -137,9 +137,6 @@ namespace _1612180_1612677
             using (Brush brush = new SolidBrush(COLOR_EDGE_POINTS))
             using (Pen pen = new Pen(Color.Black, 1))
             {
-                // smoothing graphics
-                graphics.SmoothingMode = SmoothingMode.HighQuality;
-
                 // scale va rotate
                 graphics.TranslateTransform(getCenterPoint().X, getCenterPoint().Y);
                 graphics.ScaleTransform(tyleScale.Width, tyleScale.Height);
@@ -168,9 +165,6 @@ namespace _1612180_1612677
             using (Brush brush = new SolidBrush(COLOR_FIRST_POINT))
             using (Pen pen = new Pen(Color.Black, 1))
             {
-                // smoothing graphics
-                graphics.SmoothingMode = SmoothingMode.HighQuality;
-
                 // scale va rotate
                 graphics.TranslateTransform(getCenterPoint().X, getCenterPoint().Y);
                 graphics.ScaleTransform(tyleScale.Width, tyleScale.Height);

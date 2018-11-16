@@ -52,9 +52,6 @@ namespace _1612180_1612677
             using (Graphics graphics = Graphics.FromImage(_bitmap))
             using (Pen pen = new Pen(penAttr.color, penAttr.width))
             {
-                // bat smooth
-                graphics.SmoothingMode = SmoothingMode.HighQuality;
-
                 // scale va rotate
                 graphics.TranslateTransform(getCenterPoint().X, getCenterPoint().Y);
                 graphics.ScaleTransform(tyleScale.Width, tyleScale.Height);
@@ -86,9 +83,6 @@ namespace _1612180_1612677
         {
             using (Graphics graphics = Graphics.FromImage(_bitmap))
             {
-                // bat smooth
-                graphics.SmoothingMode = SmoothingMode.HighQuality;
-
                 // scale va rotate
                 graphics.TranslateTransform(getCenterPoint().X, getCenterPoint().Y);
                 graphics.ScaleTransform(tyleScale.Width, tyleScale.Height);

@@ -53,9 +53,6 @@ namespace _1612180_1612677
             using (Graphics graphics = Graphics.FromImage(_bitmap))
             using (Font font = new Font(fontAttr.fontFamily, fontAttr.size, fontAttr.fontStyle))
             {
-                // bat smooth
-                graphics.SmoothingMode = SmoothingMode.HighQuality;
-
                 // scale va rotate
                 graphics.TranslateTransform(getCenterPoint().X, getCenterPoint().Y);
                 graphics.ScaleTransform(tyleScale.Width, tyleScale.Height);
