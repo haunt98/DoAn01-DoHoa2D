@@ -76,6 +76,11 @@ namespace _1612180_1612677
         // luu cac gia tri myShapes trong qua trinh undo, redo
         private List<List<MyShape>> listMyShapes = new List<List<MyShape>>();
 
+        // luu cac thuoc tinh FontStyle
+        bool isFontBold = false;
+        bool isFontItalic = false;
+        bool isFontUnder = false;
+
         public FormMain()
         {
             InitializeComponent();
@@ -756,10 +761,26 @@ namespace _1612180_1612677
 
         private FontAttr getFontAttr()
         {
+            // set font style
+            FontStyle fontStyle = FontStyle.Regular;
+            if (isFontBold)
+            {
+                fontStyle |= FontStyle.Bold;
+            }
+            if (isFontItalic)
+            {
+                fontStyle |= FontStyle.Italic;
+            }
+            if (isFontUnder)
+            {
+                fontStyle |= FontStyle.Underline;
+            }
+
             FontAttr fontAttr = new FontAttr(textBoxChar.Text,
                 comboBoxFont.SelectedItem.ToString(),
                 Convert.ToInt32(Math.Round(numericUpDownFontSize.Value, 0)),
-                FontStyle.Regular);
+                fontStyle);
+
             return fontAttr;
         }
 
@@ -1227,14 +1248,76 @@ namespace _1612180_1612677
 
             // reset state
             state = NO_STATE;
+
             isMouseDown = false;
             isChangingShape = false;
+
             selectShape = -1;
             selectInsideShape = -1;
             selectOutlineShape = -1;
 
+            resetFontStyleState();
+
             // redraw
             wrapDrawAllShapes(bitmap_primary);
+        }
+
+        void resetFontStyleState()
+        {
+            // reset font style state
+            isFontBold = false;
+            isFontItalic = false;
+            isFontUnder = false;
+
+            // reset font style button
+            buttonFontBold.UseVisualStyleBackColor = true;
+            buttonFontItalic.UseVisualStyleBackColor = true;
+            buttonFontUnder.UseVisualStyleBackColor = true;
+        }
+
+        private void buttonFontBold_Click(object sender, EventArgs e)
+        {
+            isFontBold = !isFontBold;
+            if (isFontBold)
+            {
+                buttonFontBold.BackColor = Color.Violet;
+            }
+            else
+            {
+                buttonFontBold.UseVisualStyleBackColor = true;
+            }
+
+            reloadFontAttr(sender, e);
+        }
+
+        private void buttonFontItalic_Click(object sender, EventArgs e)
+        {
+            isFontItalic = !isFontItalic;
+            if (isFontItalic)
+            {
+                buttonFontItalic.BackColor = Color.Violet;
+            }
+            else
+            {
+                buttonFontItalic.UseVisualStyleBackColor = true;
+            }
+
+            reloadFontAttr(sender, e);
+        }
+
+        private void buttonFontUnder_Click(object sender, EventArgs e)
+        {
+            isFontUnder = !isFontUnder;
+            if (isFontUnder)
+            {
+                buttonFontUnder.BackColor = Color.Violet;
+            }
+            else
+            {
+                buttonFontUnder.UseVisualStyleBackColor = true;
+            }
+
+            reloadFontAttr(sender, e);
         }
     }
 }

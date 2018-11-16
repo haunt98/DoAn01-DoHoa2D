@@ -24,10 +24,11 @@ namespace _1612180_1612677
 
         public BrushAttr(BrushAttr brushAttr)
         {
-            // mac dinh la mau trang
+            // mac dinh la mau trang va den
             if (brushAttr == null)
             {
                 color = Color.White;
+                color2 = Color.Black;
                 typeBrush = "SolidBrush";
             }
             else
@@ -62,6 +63,7 @@ namespace _1612180_1612677
             text = fontAttr.text;
             fontFamily = fontAttr.fontFamily;
             size = fontAttr.size;
+            fontStyle = fontAttr.fontStyle;
         }
 
         public String text { get; set; }

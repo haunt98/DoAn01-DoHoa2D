@@ -54,7 +54,6 @@
             this.buttonDrawChar = new System.Windows.Forms.Button();
             this.textBoxChar = new System.Windows.Forms.TextBox();
             this.comboBoxFont = new System.Windows.Forms.ComboBox();
-            this.label6 = new System.Windows.Forms.Label();
             this.numericUpDownFontSize = new System.Windows.Forms.NumericUpDown();
             this.buttonDrawPolygon = new System.Windows.Forms.Button();
             this.buttonDel = new System.Windows.Forms.Button();
@@ -72,6 +71,9 @@
             this.label8 = new System.Windows.Forms.Label();
             this.pictureBoxPenWidth = new System.Windows.Forms.PictureBox();
             this.pictureBoxDashStyle = new System.Windows.Forms.PictureBox();
+            this.buttonFontBold = new System.Windows.Forms.Button();
+            this.buttonFontItalic = new System.Windows.Forms.Button();
+            this.buttonFontUnder = new System.Windows.Forms.Button();
             this.menuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMain)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPenWidth)).BeginInit();
@@ -195,9 +197,9 @@
             // 
             // pictureBoxMain
             // 
-            this.pictureBoxMain.Location = new System.Drawing.Point(12, 132);
+            this.pictureBoxMain.Location = new System.Drawing.Point(12, 149);
             this.pictureBoxMain.Name = "pictureBoxMain";
-            this.pictureBoxMain.Size = new System.Drawing.Size(709, 392);
+            this.pictureBoxMain.Size = new System.Drawing.Size(709, 375);
             this.pictureBoxMain.TabIndex = 3;
             this.pictureBoxMain.TabStop = false;
             this.pictureBoxMain.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureBoxMain_MouseDown);
@@ -313,20 +315,10 @@
             this.comboBoxFont.TabIndex = 21;
             this.comboBoxFont.SelectedIndexChanged += new System.EventHandler(this.reloadFontAttr);
             // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(400, 100);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(60, 17);
-            this.label6.TabIndex = 22;
-            this.label6.Text = "Font Size";
-            // 
             // numericUpDownFontSize
             // 
             this.numericUpDownFontSize.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.numericUpDownFontSize.Location = new System.Drawing.Point(480, 98);
+            this.numericUpDownFontSize.Location = new System.Drawing.Point(400, 98);
             this.numericUpDownFontSize.Name = "numericUpDownFontSize";
             this.numericUpDownFontSize.Size = new System.Drawing.Size(58, 25);
             this.numericUpDownFontSize.TabIndex = 23;
@@ -480,11 +472,44 @@
             this.pictureBoxDashStyle.TabIndex = 41;
             this.pictureBoxDashStyle.TabStop = false;
             // 
+            // buttonFontBold
+            // 
+            this.buttonFontBold.Image = ((System.Drawing.Image)(resources.GetObject("buttonFontBold.Image")));
+            this.buttonFontBold.Location = new System.Drawing.Point(464, 94);
+            this.buttonFontBold.Name = "buttonFontBold";
+            this.buttonFontBold.Size = new System.Drawing.Size(32, 32);
+            this.buttonFontBold.TabIndex = 42;
+            this.buttonFontBold.UseVisualStyleBackColor = true;
+            this.buttonFontBold.Click += new System.EventHandler(this.buttonFontBold_Click);
+            // 
+            // buttonFontItalic
+            // 
+            this.buttonFontItalic.Image = ((System.Drawing.Image)(resources.GetObject("buttonFontItalic.Image")));
+            this.buttonFontItalic.Location = new System.Drawing.Point(496, 94);
+            this.buttonFontItalic.Name = "buttonFontItalic";
+            this.buttonFontItalic.Size = new System.Drawing.Size(32, 32);
+            this.buttonFontItalic.TabIndex = 43;
+            this.buttonFontItalic.UseVisualStyleBackColor = true;
+            this.buttonFontItalic.Click += new System.EventHandler(this.buttonFontItalic_Click);
+            // 
+            // buttonFontUnder
+            // 
+            this.buttonFontUnder.Image = ((System.Drawing.Image)(resources.GetObject("buttonFontUnder.Image")));
+            this.buttonFontUnder.Location = new System.Drawing.Point(528, 94);
+            this.buttonFontUnder.Name = "buttonFontUnder";
+            this.buttonFontUnder.Size = new System.Drawing.Size(32, 32);
+            this.buttonFontUnder.TabIndex = 44;
+            this.buttonFontUnder.UseVisualStyleBackColor = true;
+            this.buttonFontUnder.Click += new System.EventHandler(this.buttonFontUnder_Click);
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(733, 536);
+            this.Controls.Add(this.buttonFontUnder);
+            this.Controls.Add(this.buttonFontItalic);
+            this.Controls.Add(this.buttonFontBold);
             this.Controls.Add(this.pictureBoxDashStyle);
             this.Controls.Add(this.pictureBoxPenWidth);
             this.Controls.Add(this.label8);
@@ -501,7 +526,6 @@
             this.Controls.Add(this.buttonDel);
             this.Controls.Add(this.buttonDrawPolygon);
             this.Controls.Add(this.numericUpDownFontSize);
-            this.Controls.Add(this.label6);
             this.Controls.Add(this.comboBoxFont);
             this.Controls.Add(this.textBoxChar);
             this.Controls.Add(this.buttonDrawChar);
@@ -554,7 +578,6 @@
         private System.Windows.Forms.Button buttonDrawChar;
         private System.Windows.Forms.TextBox textBoxChar;
         private System.Windows.Forms.ComboBox comboBoxFont;
-        private System.Windows.Forms.Label label6;
         private System.Windows.Forms.NumericUpDown numericUpDownFontSize;
         private System.Windows.Forms.Button buttonDrawPolygon;
         private System.Windows.Forms.Button buttonDel;
@@ -578,6 +601,9 @@
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.PictureBox pictureBoxPenWidth;
         private System.Windows.Forms.PictureBox pictureBoxDashStyle;
+        private System.Windows.Forms.Button buttonFontBold;
+        private System.Windows.Forms.Button buttonFontItalic;
+        private System.Windows.Forms.Button buttonFontUnder;
     }
 }
 
