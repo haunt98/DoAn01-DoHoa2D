@@ -254,18 +254,6 @@ namespace _1612180_1612677
             reloadColorOutline(sender, e);
         }
 
-        private void buttonUnselect_Click(object sender, EventArgs e)
-        {
-            if (state == SELECT_STATE)
-            {
-                state = NO_STATE;
-                selectShapes.Clear();
-                // xoa roi ve lai
-                clearBitmap();
-                wrapDrawAllShapes(bitmap_primary);
-            }
-        }
-
         private void buttonFill_Click(object sender, EventArgs e)
         {
             // load lai mau ben trong
