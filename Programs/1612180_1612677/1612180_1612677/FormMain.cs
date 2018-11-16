@@ -1006,7 +1006,7 @@ namespace _1612180_1612677
             sfd.RestoreDirectory = true;
             sfd.FileName = "Untitled";
             sfd.DefaultExt = "png";
-            sfd.Filter = "PNG Image (*.png)|*.png|JPEG Image (*.jpeg)|*.jpeg";
+            sfd.Filter = "PNG Image (*.png)|*.png|JPEG Image (*.jpeg)|*.jpeg|GIF Image (*.gif)|*.gif|TIFF Image (*.tiff)|*.tiff";
             if (sfd.ShowDialog() == DialogResult.OK)
             {
                 switch (Path.GetExtension(sfd.FileName))
@@ -1017,6 +1017,14 @@ namespace _1612180_1612677
 
                     case ".jpeg":
                         bitmap_primary.Save(sfd.FileName, ImageFormat.Jpeg);
+                        break;
+
+                    case ".gif":
+                        bitmap_primary.Save(sfd.FileName, ImageFormat.Gif);
+                        break;
+
+                    case ".tiff":
+                        bitmap_primary.Save(sfd.FileName, ImageFormat.Tiff);
                         break;
 
                     default:
