@@ -1374,5 +1374,15 @@ namespace _1612180_1612677
             posMovingShape.Clear();
             clickedPoints.Clear();
         }
+
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Paint2D is an educational project, which draw 2D object" + Environment.NewLine
+                + Environment.NewLine
+                + "Our team" + Environment.NewLine
+                + "\t" + "Nguyen Chi Thuc - 1612677" + Environment.NewLine
+                + "\t" + "Nguyen Tran Hau - 1612180" + Environment.NewLine,
+                "About");
+        }
     }
 }
