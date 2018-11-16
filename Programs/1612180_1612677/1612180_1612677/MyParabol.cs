@@ -26,7 +26,7 @@ namespace _1612180_1612677
             return new MyParabol(this);
         }
 
-        private static Point findFinalPointOfParallel(List<Point> _points)
+        private static Point findFinalPointOfParabol(List<Point> _points)
         {
             if (_points.Count == 2)
             {
@@ -71,7 +71,7 @@ namespace _1612180_1612677
         {
             if (_points.Count == 2)
             {
-                Point final = findFinalPointOfParallel(_points);
+                Point final = findFinalPointOfParabol(_points);
                 if (final != Point.Empty)
                 {
                     _points.Add(final);
