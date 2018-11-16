@@ -33,6 +33,7 @@ namespace _1612180_1612677
             else
             {
                 color = brushAttr.color;
+                color2 = brushAttr.color2;
                 typeBrush = brushAttr.typeBrush;
             }
         }

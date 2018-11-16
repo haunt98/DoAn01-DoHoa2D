@@ -46,7 +46,7 @@
             this.buttonSelect = new System.Windows.Forms.Button();
             this.buttonDrawEll = new System.Windows.Forms.Button();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
-            this.buttonShowColor = new System.Windows.Forms.Button();
+            this.buttonColor1 = new System.Windows.Forms.Button();
             this.numericUpDownPenWidth = new System.Windows.Forms.NumericUpDown();
             this.comboBoxDashStyle = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
@@ -105,21 +105,21 @@
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(120, 22);
             this.openToolStripMenuItem.Text = "Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(120, 22);
             this.saveToolStripMenuItem.Text = "Save";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
             // saveAsToolStripMenuItem
             // 
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(120, 22);
             this.saveAsToolStripMenuItem.Text = "Save as";
             this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
             // 
@@ -192,9 +192,9 @@
             // 
             // pictureBoxMain
             // 
-            this.pictureBoxMain.Location = new System.Drawing.Point(0, 132);
+            this.pictureBoxMain.Location = new System.Drawing.Point(12, 132);
             this.pictureBoxMain.Name = "pictureBoxMain";
-            this.pictureBoxMain.Size = new System.Drawing.Size(733, 300);
+            this.pictureBoxMain.Size = new System.Drawing.Size(709, 392);
             this.pictureBoxMain.TabIndex = 3;
             this.pictureBoxMain.TabStop = false;
             this.pictureBoxMain.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureBoxMain_MouseDown);
@@ -221,14 +221,14 @@
             this.buttonDrawEll.UseVisualStyleBackColor = true;
             this.buttonDrawEll.Click += new System.EventHandler(this.buttonDrawEll_Click);
             // 
-            // buttonShowColor
+            // buttonColor1
             // 
-            this.buttonShowColor.Location = new System.Drawing.Point(490, 30);
-            this.buttonShowColor.Name = "buttonShowColor";
-            this.buttonShowColor.Size = new System.Drawing.Size(32, 32);
-            this.buttonShowColor.TabIndex = 8;
-            this.buttonShowColor.UseVisualStyleBackColor = true;
-            this.buttonShowColor.Click += new System.EventHandler(this.buttonShowColor_Click);
+            this.buttonColor1.Location = new System.Drawing.Point(490, 30);
+            this.buttonColor1.Name = "buttonColor1";
+            this.buttonColor1.Size = new System.Drawing.Size(32, 32);
+            this.buttonColor1.TabIndex = 8;
+            this.buttonColor1.UseVisualStyleBackColor = true;
+            this.buttonColor1.Click += new System.EventHandler(this.buttonColor1_Click);
             // 
             // numericUpDownPenWidth
             // 
@@ -481,7 +481,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(733, 432);
+            this.ClientSize = new System.Drawing.Size(733, 536);
             this.Controls.Add(this.pictureBoxDashStyle);
             this.Controls.Add(this.pictureBoxPenWidth);
             this.Controls.Add(this.label8);
@@ -506,7 +506,7 @@
             this.Controls.Add(this.label3);
             this.Controls.Add(this.comboBoxDashStyle);
             this.Controls.Add(this.numericUpDownPenWidth);
-            this.Controls.Add(this.buttonShowColor);
+            this.Controls.Add(this.buttonColor1);
             this.Controls.Add(this.buttonDrawEll);
             this.Controls.Add(this.buttonSelect);
             this.Controls.Add(this.pictureBoxMain);
@@ -543,7 +543,7 @@
         private System.Windows.Forms.Button buttonSelect;
         private System.Windows.Forms.Button buttonDrawEll;
         private System.Windows.Forms.ColorDialog colorDialog1;
-        private System.Windows.Forms.Button buttonShowColor;
+        private System.Windows.Forms.Button buttonColor1;
         private System.Windows.Forms.NumericUpDown numericUpDownPenWidth;
         private System.Windows.Forms.ComboBox comboBoxDashStyle;
         private System.Windows.Forms.Label label3;

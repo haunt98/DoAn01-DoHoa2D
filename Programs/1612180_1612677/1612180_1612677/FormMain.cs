@@ -135,8 +135,8 @@ namespace _1612180_1612677
             comboBoxSelectType.SelectedIndex = comboBoxSelectType.Items.IndexOf("Move");
 
             // default color dialog
-            colorDialog1.Color = Color.Black;
-            buttonShowColor.BackColor = colorDialog1.Color;
+            colorDialog1.Color = Color.Blue;
+            buttonColor1.BackColor = colorDialog1.Color;
             colorDialog2.Color = Color.Black;
             buttonColor2.BackColor = colorDialog2.Color;
         }
@@ -151,8 +151,6 @@ namespace _1612180_1612677
             state = NO_STATE;
             selectShapes.Clear();
 
-            // redraw
-            clearBitmap();
             wrapDrawAllShapes(bitmap_primary);
         }
 
@@ -246,12 +244,18 @@ namespace _1612180_1612677
             state = SELECT_STATE;
         }
 
-        private void buttonShowColor_Click(object sender, EventArgs e)
+        private void buttonColor1_Click(object sender, EventArgs e)
         {
             colorDialog1.ShowDialog();
-            buttonShowColor.BackColor = colorDialog1.Color;
+            buttonColor1.BackColor = colorDialog1.Color;
             // load lai mau vien
             reloadColorOutline(sender, e);
+        }
+
+        private void buttonColor2_Click(object sender, EventArgs e)
+        {
+            colorDialog2.ShowDialog();
+            buttonColor2.BackColor = colorDialog2.Color;
         }
 
         private void buttonFill_Click(object sender, EventArgs e)
@@ -550,7 +554,6 @@ namespace _1612180_1612677
                 changeMovePointsObjFromMyShapes(posMovingShape[0], posMovingShape[1], selectShape);
 
                 // xoa roi ve lai trong bitmap_primary
-                clearBitmap();
                 wrapDrawAllShapes(bitmap_primary);
 
                 // ve shape dang duoc click tren bitmap_temp
@@ -564,7 +567,6 @@ namespace _1612180_1612677
                 changeScalePointsObjFromMyShapes(posMovingShape[0], posMovingShape[1], selectShape);
 
                 // xoa roi ve lai trong bitmap_primary
-                clearBitmap();
                 wrapDrawAllShapes(bitmap_primary);
 
                 // shape dang duoc click
@@ -579,7 +581,6 @@ namespace _1612180_1612677
                 changeRotatePointsObjFromMyShapes(posMovingShape[0], posMovingShape[1], selectShape);
 
                 // xoa roi ve lai trong bitmap_primary
-                clearBitmap();
                 wrapDrawAllShapes(bitmap_primary);
 
                 // shape dang duoc click
@@ -618,7 +619,6 @@ namespace _1612180_1612677
                 myShapes[selectShape].movePoints(posMovingShape[0], posMovingShape[1]);
 
                 // xoa roi ve lai trong bitmap_primary
-                clearBitmap();
                 wrapDrawAllShapes(bitmap_primary);
 
                 // highlight select shape trong khi di chuyen
@@ -636,7 +636,6 @@ namespace _1612180_1612677
                 myShapes[selectShape].scalePoints(posMovingShape[0], posMovingShape[1]);
 
                 // xoa roi ve lai trong bitmap_primary
-                clearBitmap();
                 wrapDrawAllShapes(bitmap_primary);
 
                 // highlight select shape trong khi di chuyen
@@ -654,7 +653,6 @@ namespace _1612180_1612677
                 myShapes[selectShape].rotatePoints(posMovingShape[0], posMovingShape[1]);
 
                 // xoa roi ve lai trong bitmap_primary
-                clearBitmap();
                 wrapDrawAllShapes(bitmap_primary);
 
                 // highlight select shape trong khi di chuyen
@@ -811,10 +809,9 @@ namespace _1612180_1612677
 
             if (selectShape != selectOutlineShape)
             {
-                myShapes[selectShape].updateFontAttr(getFontAttr());
+                changeFontAttrObjFromMyShapes(selectShape);
 
                 // xoa roi ve lai trong bitmap_primary
-                clearBitmap();
                 wrapDrawAllShapes(bitmap_primary);
 
                 // hightlight trong bitmap_temp
@@ -836,10 +833,9 @@ namespace _1612180_1612677
             if (selectShape == selectOutlineShape)
             {
                 // thay doi vien
-                myShapes[selectShape].updatePenAttr(getPenAttr());
+                changePenAttrObjFromMyShapes(selectShape);
 
                 // xo roi ve lai trong bitmap_primary
-                clearBitmap();
                 wrapDrawAllShapes(bitmap_primary);
 
                 // hightlight trong bitmap_temp
@@ -859,9 +855,8 @@ namespace _1612180_1612677
             // click outline, doi mau vien
             if (selectShape == selectOutlineShape)
             {
-                myShapes[selectShape].updatePenAttr(getPenAttr());
+                changePenAttrObjFromMyShapes(selectShape);
 
-                clearBitmap();
                 wrapDrawAllShapes(bitmap_primary);
 
                 // hightlight trong bitmap_temp
@@ -881,9 +876,8 @@ namespace _1612180_1612677
             // doi mau ben trong
             if (selectShape != selectOutlineShape)
             {
-                myShapes[selectShape].updateBrushAttr(getBrushAttr());
+                changeBrushAttrObjFromMyShapes(selectShape);
 
-                clearBitmap();
                 wrapDrawAllShapes(bitmap_primary);
 
                 // hightlight trong bitmap_temp
@@ -897,6 +891,9 @@ namespace _1612180_1612677
         {
             // reset select points
             posMovingShape.Clear();
+
+            // reset select list
+            selectShapes.Clear();
 
             // khong cho changing shape
             isChangingShape = false;
@@ -920,7 +917,6 @@ namespace _1612180_1612677
                 }
                 fs.Close();
 
-                clearBitmap();
                 wrapDrawAllShapes(bitmap_primary);
             }
         }
@@ -971,6 +967,7 @@ namespace _1612180_1612677
 
         private void wrapDrawAllShapes(Bitmap _bitmap)
         {
+            clearBitmap();
             foreach (MyShape myShape in myShapes)
             {
                 // fill truoc draw sau de ve vien
@@ -999,7 +996,6 @@ namespace _1612180_1612677
             myShapes.Insert(0, myShape);
 
             // reset lai picturebox
-            clearBitmap();
             wrapDrawAllShapes(bitmap_primary);
         }
 
@@ -1014,7 +1010,6 @@ namespace _1612180_1612677
             myShapes.Insert(myShapes.Count, myShape);
 
             // reset lai picturebox
-            clearBitmap();
             wrapDrawAllShapes(bitmap_primary);
         }
 
@@ -1030,7 +1025,6 @@ namespace _1612180_1612677
             myShapes.Insert(selectShape - 1, myShape);
 
             // reset lai picturebox
-            clearBitmap();
             wrapDrawAllShapes(bitmap_primary);
         }
 
@@ -1046,7 +1040,6 @@ namespace _1612180_1612677
             myShapes.Insert(selectShape + 1, myShape);
 
             // reset lai picturebox
-            clearBitmap();
             wrapDrawAllShapes(bitmap_primary);
         }
 
@@ -1066,11 +1059,10 @@ namespace _1612180_1612677
             }
             else
             {
-                indexOfListMyShapes -= 1;
+                --indexOfListMyShapes;
                 myShapes = cloneListMyShape(listMyShapes[indexOfListMyShapes]);
 
                 // redraw
-                clearBitmap();
                 wrapDrawAllShapes(bitmap_primary);
             }
         }
@@ -1085,11 +1077,10 @@ namespace _1612180_1612677
             }
             else
             {
-                indexOfListMyShapes += 1;
+                ++indexOfListMyShapes;
                 myShapes = cloneListMyShape(listMyShapes[indexOfListMyShapes]);
 
                 // redraw
-                clearBitmap();
                 wrapDrawAllShapes(bitmap_primary);
             }
         }
@@ -1098,76 +1089,91 @@ namespace _1612180_1612677
         // them myShapes vao list myShapes
         public void addObjToMyShapes(MyShape myShape)
         {
-            // xoa het redo
-            for (int i = listMyShapes.Count - 1; i >= indexOfListMyShapes + 1; i--)
-            {
-                listMyShapes.RemoveAt(i);
-            }
-            indexOfListMyShapes++;
+            resetRedo();
 
             // them myShape vao myShapes
             myShapes.Add(myShape);
 
             // them myShapes clone vao listMyShapes
             listMyShapes.Add(cloneListMyShape(myShapes));
+            ++indexOfListMyShapes;
         }
 
         public void changeMovePointsObjFromMyShapes(Point p_before, Point p_after, int index)
         {
-            // xoa het redo
-            for (int i = listMyShapes.Count - 1; i >= indexOfListMyShapes + 1; i--)
-            {
-                listMyShapes.RemoveAt(i);
-            }
-            indexOfListMyShapes++;
+            resetRedo();
 
             // thay doi myShapes[index]
             myShapes[index].movePoints(p_before, p_after);
 
             // them myShapes clone vao listMyShapes
             listMyShapes.Add(cloneListMyShape(myShapes));
+            ++indexOfListMyShapes;
         }
 
         public void changeScalePointsObjFromMyShapes(Point p_before, Point p_after, int index)
         {
-            // xoa het redo
-            for (int i = listMyShapes.Count - 1; i >= indexOfListMyShapes + 1; i--)
-            {
-                listMyShapes.RemoveAt(i);
-            }
-            indexOfListMyShapes++;
+            resetRedo();
 
             // thay doi myShapes[index]
             myShapes[index].scalePoints(p_before, p_after);
 
             // them myShapes clone vao listMyShapes
             listMyShapes.Add(cloneListMyShape(myShapes));
+            ++indexOfListMyShapes;
         }
 
         public void changeRotatePointsObjFromMyShapes(Point p_before, Point p_after, int index)
         {
-            // xoa het redo
-            for (int i = listMyShapes.Count - 1; i >= indexOfListMyShapes + 1; i--)
-            {
-                listMyShapes.RemoveAt(i);
-            }
-            indexOfListMyShapes++;
+            resetRedo();
 
             // thay doi myShapes[index]
             myShapes[index].rotatePoints(p_before, p_after);
 
             // them myShapes clone vao listMyShapes
             listMyShapes.Add(cloneListMyShape(myShapes));
+            ++indexOfListMyShapes;
+        }
+
+        public void changePenAttrObjFromMyShapes(int index)
+        {
+            resetRedo();
+
+            // thay doi myShapes[index]
+            myShapes[index].updatePenAttr(getPenAttr());
+
+            // them myShapes clone vao listMyShapes
+            listMyShapes.Add(cloneListMyShape(myShapes));
+            ++indexOfListMyShapes;
+        }
+
+        public void changeBrushAttrObjFromMyShapes(int index)
+        {
+            resetRedo();
+
+            // thay doi myShapes[index]
+            myShapes[index].updateBrushAttr(getBrushAttr());
+
+            // them myShapes clone vao listMyShapes
+            listMyShapes.Add(cloneListMyShape(myShapes));
+            ++indexOfListMyShapes;
+        }
+
+        public void changeFontAttrObjFromMyShapes(int index)
+        {
+            resetRedo();
+
+            // thay doi myShapes[index]
+            myShapes[index].updateFontAttr(getFontAttr());
+
+            // them myShapes clone vao listMyShapes
+            listMyShapes.Add(cloneListMyShape(myShapes));
+            ++indexOfListMyShapes;
         }
 
         public void deleteMultiObjFromMyShapes(List<int> multiIndex)
         {
-            // xoa het redo
-            for (int i = listMyShapes.Count - 1; i >= indexOfListMyShapes + 1; i--)
-            {
-                listMyShapes.RemoveAt(i);
-            }
-            indexOfListMyShapes++;
+            resetRedo();
 
             // sap xep multiIndex theo giam dan roi moi xoa
             foreach (int index in multiIndex.OrderByDescending(i => i))
@@ -1177,22 +1183,19 @@ namespace _1612180_1612677
 
             // them myShapes clone vao listMyShapes
             listMyShapes.Add(cloneListMyShape(myShapes));
+            ++indexOfListMyShapes;
         }
 
         public void deleteAllObjFromMyShapes()
         {
-            // xoa het redo
-            for (int i = listMyShapes.Count - 1; i >= indexOfListMyShapes + 1; i--)
-            {
-                listMyShapes.RemoveAt(i);
-            }
-            indexOfListMyShapes++;
+            resetRedo();
 
             // xoa het MyShape trong myShapes
             myShapes.Clear();
 
             // them myShapes clone vao listMyShapes
             listMyShapes.Add(cloneListMyShape(myShapes));
+            ++indexOfListMyShapes;
         }
 
         public List<MyShape> cloneListMyShape(List<MyShape> _myShapes)
@@ -1203,6 +1206,14 @@ namespace _1612180_1612677
                 newList.Add(ms.clone());
             }
             return newList;
+        }
+
+        public void resetRedo()
+        {
+            for (int i = listMyShapes.Count - 1; i >= indexOfListMyShapes + 1; i--)
+            {
+                listMyShapes.RemoveAt(i);
+            }
         }
 
         private void clearAllToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1223,14 +1234,7 @@ namespace _1612180_1612677
             selectOutlineShape = -1;
 
             // redraw
-            clearBitmap();
             wrapDrawAllShapes(bitmap_primary);
-        }
-
-        private void buttonColor2_Click(object sender, EventArgs e)
-        {
-            colorDialog2.ShowDialog();
-            buttonShowColor.BackColor = colorDialog2.Color;
         }
     }
 }
