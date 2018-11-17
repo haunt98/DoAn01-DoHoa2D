@@ -1,0 +1,524 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{vietnam}
+
+% make indent in first paragraph
+\usepackage{indentfirst}
+
+% break long url
+\usepackage[hyphens]{url}
+
+% make table inside section
+\usepackage{float}
+
+% chen code
+\usepackage{listings}
+\lstset{language=[Sharp]C, basicstyle=\ttfamily, breaklines=true}
+
+% space between lines
+\linespread{1.3}
+
+\title{BÁO CÁO DOAN-01: ĐỒ HỌA 2D}
+\author{Nguyễn Trần Hậu - MSSV 1612180 \and Nguyễn Chí Thức - MSSV 1612677}
+\date{Tháng 11, 2018}
+
+\begin{document}
+
+\maketitle
+\newpage
+\tableofcontents
+\newpage
+
+\begin{abstract}
+Chương trình được viết bằng ngôn ngữ C\# với IDE Visual Studio 2015.
+Thực hiện các chức năng vẽ đoạn thẳng, vẽ hình chữ nhật, vẽ cung tròn, đa giác , text, ...
+cùng phép biến hình là di chuyển, tỷ lệ và quay, ...
+và tô màu biên, màu bên trong, thay đổi font, ...
+Một số chức năng khác như đọc, lưu file và thực hiện undo/redo.
+\end{abstract}
+
+\section{Phân công}
+Nguyễn Chí Thức:
+\begin{itemize}
+\item Yêu cầu 1: Vẽ hình bình hành, đường gấp khúc, hình ellipse, parabol, bezier, kí tự
+\item Yêu cầu 2: Lưu file, đọc file
+\item Yêu cầu 3:
+\subitem Tô màu bên trong những hình khép kín
+\subitem Chọn font chữ, size, kiểu chữ (đậm, nghiêng, gạch chân)
+\item Yêu cầu 5:
+\subitem Xây dựng undo, redo cho thêm hình mới, xóa hình cũ
+\end{itemize}
+
+Nguyễn Trần Hậu:
+\begin{itemize}
+\item Yêu cầu 1: Vẽ đường thẳng, hình chữ nhật, đa giác, ellipse, cung tròn
+\item Yêu cầu 3:
+\subitem Thay đổi thuộc tính biên
+\item Yêu cầu 4: Xây dựng phép biến hình: di chuyển, tỷ lệ, xoay
+\item Yêu cầu 5:
+\subitem Xuất ra file ảnh
+\subitem Thay đổi thứ tự của hình
+\subitem Xây dựng undo, redo cho sửa thuộc tính của hình
+\end{itemize}
+
+\section{Mức độ hoàn thành}
+\begin{tabular}[H]{| c | p{6cm} |}
+\hline
+\textbf{Yêu cầu} & \textbf{Mức độ hoàn thành} \\
+\hline
+Yêu cầu 1 & 90\% (thiếu hyperbol, đường gấp khúc) \\
+\hline
+Yêu cầu 2 & 100\% \\
+\hline
+Yêu cầu 3 & 100\% \\
+\hline
+Yêu cầu 4 & 100\% \\
+\hline
+Yêu cầu 5 (nâng cao) & 15\% (chỉ làm xuất file ảnh, thay đổi thứ tự hình và undo, redo) \\
+\hline
+\end{tabular}
+
+\section{Sơ lược chương trình}
+\subsection{Danh sách class}
+Chương trình chứa class MyShape là abstract class chứa các thuộc tính và phương thức chung của các class hình vẽ.
+Các class kế thừa từ class MyShape bao gồm 3 nhóm:
+\begin{itemize}
+\item Nhóm chỉ có thể tô màu biên: MyArc, MyBezier, MyLine, MyParabol
+\item Nhóm tô màu biên và tô màu bên trong: MyEllipse, MyParallelogram, MyPolygon, MyRectangle
+\item MyCharater là nhóm riêng
+\end{itemize}
+
+Ngoài ra còn có thêm 3 class hỗ trợ:
+\begin{itemize}
+\item Class PenAttr: Lưu các thuộc tính để tạo class Pen
+\item Class BrushAttr: Lưu các thuộc tính để tạo class Brush
+\item Class FontAttr: Lưu các thuộc tính để tạo class Font
+\end{itemize}
+
+Các thuộc tính và phương thức còn lại nằm trong class FormMain.
+
+\subsection{Ý tưởng}
+Sử dụng PictureBox (là hình chữ nhật màu trắng ở phía dưới các nút trong chương trình) để hiển thị các hình ảnh người dùng vẽ lên.
+Người dùng nhấn các nút tương ứng với các hình như đường thẳng, hình chữ nhật, ellipse, … rồi di chuyển và click chuột trong PictureBox để vẽ.
+Nhận biết khi nào người dùng vẽ trên PictureBox bằng sự kiện MouseDown, MouseMove và MouseUp.
+Chương trình có 2 chế độ là vẽ hình và chọn (select).
+Để chuyển từ chế độ vẽ qua chế độ chọn, người dùng nhấn nút select.
+Và để đổi lại chế độ vẽ thì người dùng chỉ cần nhấn lại nút chứa các hình ảnh cần vẽ.
+
+Ở \textbf{chế độ vẽ hình}, sau khi chọn nút có hình ảnh người dùng cần vẽ,
+click vào trong PictureBox di chuyển chuột sau đó click lại lần nữa để hoàn thành hình.
+Số lần click tùy theo loại hình mà người dùng chọn.
+
+\begin{tabular}[H]{| c | p{6cm} |}
+\hline
+\textbf{Hình}  & \textbf{Số lần click chuột} \\
+\hline
+Đoạn thẳng & 2 \\
+\hline
+Hình chữ nhật & 2 \\
+\hline
+Hình ellipse & 2 \\
+\hline
+Hình đa giác & (click cho đến khi trùng với vị trí click ban đầu) \\
+\hline
+Hình bình hành & 3 \\
+\hline
+Cung tròn & 3 \\
+\hline
+Bezier & 4 \\
+\hline
+Parabol & 2 \\
+\hline
+Text & 1 \\
+\hline
+\end{tabular}
+
+Ở \textbf{chế độ chọn}, khi click vào hình nào thì hình đó nổi lên trên và xuất hiện những điểm neo thể hiện khung của hình.
+Trong chế độ chọn có tính năng xóa, là xóa một hình hay nhiều hình đang được chọn.
+
+Có 3 phép biến hình trong chế độ chọn.
+Đó là phép di chuyển (move), phép tỷ lệ (scale), phép quay (rotate).
+Để di chuyển hình click vào điểm nằm trên biên, khung hoặc nằm trong hình rồi kéo thả.
+Để thực hiện phép tỷ lệ và phép quay click vào các điểm neo của hình rồi kéo thả.
+
+Bên cạnh đó, chương trình còn cho phép người dùng chọn màu, chọn kiểu của nét vẽ,
+chọn kiểu tô màu đối với vẽ hình; chọn font chữ, kiểu font, kích thước font đối với text.
+
+\section{Thiết kế class MyShape và các class con kế thừa từ MyShape}
+\subsection{Thuộc tính chính class MyShape}
+\begin{lstlisting}
+public PenAttr penAttr { get; set; }
+\end{lstlisting}
+
+\texttt{penAttr} lưu thuộc tính cho class Pen khi MyShape tạo class Pen để vẽ biên.
+Toàn bộ hình đều cần biên.
+
+\begin{lstlisting}
+public List<Point> points { get; set; }
+\end{lstlisting}
+
+\texttt{points} lưu các tọa độ điểm mà người dùng click vào PictureBox để vẽ hình.
+
+\begin{lstlisting}
+public float angleRotate { get; set; }
+\end{lstlisting}
+
+\texttt{angleRotate} lưu góc quay của hình. Mặc định góc quay = 0, tức là không quay.
+
+\begin{lstlisting}
+public SizeF tyleScale { get; set; }
+\end{lstlisting}
+
+\texttt{tyleScale} lưu tỷ lệ khi scale. Mặc định tỷ lệ = 1, tức là không scale.
+
+\subsection{Phương thức chính class MyShape}
+Phương thức khởi tạo chính
+\begin{lstlisting}
+public MyShape(PenAttr _penAttr, List<Point> _points)
+public MyShape(List<Point> _points)
+public MyShape(MyShape myShape)
+\end{lstlisting}
+
+Class MyShape là abstract class , không khởi tạo trực tiếp.
+Phương thức khởi tạo của MyShape dùng để phục vụ cho những class con kế thừa từ MyShape.
+
+\begin{lstlisting}
+public abstract void draw(Bitmap _bitmap, PictureBox pictureBox);
+public virtual void fill(Bitmap _bitmap, PictureBox pictureBox)
+\end{lstlisting}
+
+Vì tùy hình cụ thể mà có cách vẽ khác nhau, nhưng hình nào cũng phải vẽ được,
+nên phương thức \texttt{draw()} là abstract.
+Không phải hình nào cũng có cách tô màu bên trong nên phương thức fill() là virtual.
+Mặc định của phương thức \texttt{fill()} là không làm gì cả.
+Cài đặt cụ thể nằm ở những class kế thừa.
+
+\begin{lstlisting}
+public virtual List<Point> getEdgePoints()
+public virtual void drawEdgePoints(Bitmap _bitmap, PictureBox pictureBox)
+\end{lstlisting}
+
+Phương thức \texttt{getEdgePoints()} trả về những điểm neo của hình.
+Điểm neo là những điểm nằm trên biên của hình, ví dụ như 4 đỉnh của hình chữ nhật,
+2 đỉnh của đoạn thẳng, ...
+Điểm neo dùng để scale, quay hình.
+Mặc định trả về points, nhưng đối với hình chữ nhật và hình ellipse thì
+vẽ bằng 4 điểm nhưng points chỉ gồm 2 điểm nên thêm 2 điểm còn lại vào.
+Phương thức \texttt{drawEdgePoints()} để vẽ những điểm neo của hình.
+
+\begin{lstlisting}
+public virtual bool isPointBelongPrecisely(Point p)
+public bool isPointBelong(Point p)
+public virtual bool isPointInsidePrecisly(Point p)
+\end{lstlisting}
+
+Phương thức \texttt{isPointBelongPrecisely()} kiểm tra chính xác tọa độ p có nằm ở biên hình hay không.
+Phương thức này cần cài đặt cụ thể ở từng class kế thừa.
+Nhưng vì click đúng từng tọa độ là rất khó,
+nên phương thức \texttt{isPointBelong()} kiểm tra tọa độ p và những tọa độ xung quanh p,
+chỉ cần một trong những điểm đó nằm trên biên là được.
+Phương thức \texttt{isPointInsidePrecisly()} kiểm tra chính xác tọa độ p có nằm trong hình hay không.
+Mặc định phương thức này trả về false vì có những hình không có vùng phía trong (như đoạn thẳng, bezier, ...)
+Đối với những hình có vùng phía trong thì cài đặt lại trong class kế thừa.
+
+\begin{lstlisting}
+public virtual void movePoints(Point p_before, Point p_after)
+public virtual void scalePoints(Point _p_before, Point _p_after)
+public virtual void rotatePoints(Point _p_before, Point _p_after)
+\end{lstlisting}
+
+3 phương thức thể hiện phép biến hình.
+Phương thức \texttt{movePoints()} tính độ lệch giữa điểm click kéo đi điểm sau khi thả rồi tính lại points theo độ lệch.
+Phương thức \texttt{scalePoints()} và \texttt{rotatePoints()} không làm thay đổi points.
+Phương thức \texttt{scalePoints()}  tính tỷ lệ giữa 2 khoảng cách., là khoảng cách điểm khi thả ra đến trọng tâm hình
+và khoảng cách điểm khi click kéo đến trọng tâm của hình, rồi lưu vào \texttt{tyleScale}.
+Phương thức \texttt{rotatePoints()} tính góc quay giữa 2 vecto, là vecto từ trọng tâm hình đển điểm khi thả ra
+và vector từ trọng tâm của hình đến điểm khi click kéo đi, rồi lưu vào \texttt{angleRotate}.
+
+\subsection{Nhóm class chỉ tô màu biên}
+Nhóm class chỉ tô màu biên bao gồm: MyArc, MyBezier, MyLine, MyParabol.
+
+Class MyBezier, MyLine, MyParabol không có thêm thuộc tính so với class MyShape.
+
+Class MyArc có thêm thuộc tính mới
+\begin{lstlisting}
+private RectangleF rect_bound;
+private float startAngle;
+private float sweepAngle;
+\end{lstlisting}
+
+\texttt{rect\_bound} lưu hình chữ nhật bao quanh cung tròn.
+\texttt{startAngle} là góc so với Ox tại điểm bắt đầu cung.
+\texttt{sweepAngle} là góc quay của cung.
+
+Cả 4 class đều cài đặt lại phương thức:
+\begin{lstlisting}
+public override void draw(Bitmap _bitmap, PictureBox pictureBox)
+public override bool isPointBelongPrecisely(Point p)
+\end{lstlisting}
+
+Phương thức \texttt{draw()} dùng các phương thức của class Graphics để vẽ.
+Các phương thức có sẵn của class Graphics: \texttt{DrawCurve(), DrawBeziers(), DrawLine(), DrawArc()} để vẽ hình;
+\texttt{TranslateTransform(), ScaleTransform(), RotateTransform()} để scale và xoay. Trong phương thức draw(),
+tự động scale và xoay luôn vì ở class MyShape đã lưu \texttt{tyleScale} và \texttt{angleRotate} rồi.
+Phương thức \texttt{isPointBelongPrecisely()} sử dụng class GraphicsPath có phương thức \texttt{IsOutlineVisible()}.
+
+Class MyArc có 2 phương thức riêng:
+\begin{lstlisting}
+public void calcBound()
+public static PointF centerOfCircle(List<Point> _points)
+\end{lstlisting}
+
+Phương thức \texttt{centerOfCircle()} tính tọa độ của tâm hình tròn ngoại tiếp của \texttt{\_points}.
+Phương thức calcBound() dùng để tính hình chữ nhật bo quanh hình tròn có tâm được tính từ \texttt{centerOfCircle()}
+
+\subsection{Nhóm class tô màu biên và tô màu bên trong}
+Nhóm class tô màu biên và tô màu bên trong: MyEllipse, MyParallelogram, MyPolygon, MyRectangle
+
+4 class có thêm thuộc tính mới so với class MyShape:
+\begin{lstlisting}
+public BrushAttr brushAttr { get; set; }
+\end{lstlisting}
+
+\texttt{brushAttr} dùng để khởi tạo class Brush, dùng để tô màu bên trong hình.
+
+Class MyEllipse và MyRectangle có thêm thuộc tính mới so với class MyShape:
+\begin{lstlisting}
+private Point mostLeft;
+private Size size;
+\end{lstlisting}
+
+Ellipse nằm trong khung là hình chữ nhật.
+\texttt{mostLeft} lưu tọa độ điểm trái nhất, \texttt{size} lưu kích thước của hình chữ nhật.
+
+Cả 4 class đều cài đặt lại phương thức:
+\begin{lstlisting}
+public override void draw(Bitmap _bitmap, PictureBox pictureBox)
+public override void fill(Bitmap _bitmap, PictureBox pictureBox)
+public override bool isPointBelongPrecisely(Point p)
+public override bool isPointInsidePrecisly(Point p)
+\end{lstlisting}
+
+Phương thức \texttt{draw()} dùng phương thức của class Graphics để vẽ.
+Phương thức \texttt{fill()} dùng phương thức của class Graphics để tô màu bên trong.
+Các phương thức có sẵn của class Graphics: \texttt{DrawRectangle(), DrawPolygon(), DrawEllipse()} để vẽ hình;
+\texttt{FillRectangle(), FillPolygon(), DrawEllipse()} để tô màu bên trong;
+\texttt{TranslateTransform(), ScaleTransform(), RotateTransform()} để scale và xoay.
+Trong phương thức \texttt{draw()} và \texttt{fill()}, tự động scale và xoay luôn vì ở class MyShape đã lưu \texttt{tyleScale} và \texttt{angleRotate} rồi.
+Phương thức \texttt{isPointBelongPrecisely()} sử dụng class GraphicsPath có phương thức \texttt{IsOutlineVisible()}.
+Phương thức \texttt{isPointInsidePrecisly()} sử dụng class GraphicsPath có phương thức \texttt{IsVisible()}.
+
+\subsection{Class MyCharater}
+Class MyCharater có thêm thuộc tính mới so với class MyShape:
+\begin{lstlisting}
+private Size size;
+public BrushAttr brushAttr { get; set; }
+public FontAttr fontAttr { get; set; }
+\end{lstlisting}
+\texttt{size} chỉ kích thước hình chữ nhật bao quanh text,
+\texttt{brushAttr} là các thuộc tính của class Brush để tô màu text,
+\texttt{fontAttr} là các thuộc tính của class Font để tạo text.
+
+Class MyCharater cài đặt lại phương thức:
+\begin{lstlisting}
+public override void draw(Bitmap _bitmap, PictureBox pictureBox)
+public override bool isPointInsidePrecisly(Point p)
+public override void scalePoints(Point _p_before, Point _p_after)
+\end{lstlisting}
+
+Phương thức \texttt{draw()} dùng phương thức của class Graphics để vẽ.
+Các phương thức có sẵn của class Graphics: \texttt{DrawString()} để viết text;
+\texttt{TranslateTransform(), RotateTransform()} để scale và xoay.
+\texttt{isPointInsidePrecisly()} dùng class GraphicsPath có phương thức \texttt{IsVisible()}.
+\texttt{scalePoints()} không làm gì cả, vì phóng to thu nhỏ đã có font size.
+
+\section{Thiết kế của class phụ trợ}
+\subsection{Class PenAttr}
+Thuộc tính:
+\begin{lstlisting}
+public Color color { get; set; }
+public DashStyle dashStyle { get; set; }
+public int width { get; set; }
+\end{lstlisting}
+
+Dùng để lưu những dữ liệu cần thiết để khởi tạo đối tượng Pen, gồm \texttt{color} dùng để chỉ định màu tô,
+\texttt{dashStyle} là kiểu nét vẽ  và \texttt{width} là độ dày của các nét vẽ.
+Dùng để tô màu, chỉ định nét vẽ và kiểu nét vẽ khi vẽ các hình đã được yêu cầu.
+
+Phương thức khởi tạo:
+\begin{lstlisting}
+public PenAttr(Color _color, DashStyle _dashStyle, int _width)
+public PenAttr(PenAttr penAttr)
+\end{lstlisting}
+
+\subsection{Class BrushAttr}
+Thuộc tính:
+\begin{lstlisting}
+public Color color { get; set; }
+public Color color2 { get; set; }
+public String typeBrush { get; set; }
+\end{lstlisting}
+
+Dùng để lưu trữ các dữ liệu cần thiết để khởi tạo class Brush.
+Một số kiểu Brush cần 2 màu để tô nên ở đây lưu 2 giá trị \texttt{color} và \texttt{color2},
+\texttt{typeBrush} dùng để chỉ định loại tô màu mà người dùng muốn chọn.
+Dùng để tô màu bên trong các hình vẽ có thể tô được như là đừng ellipse, đa giác, hình chữ nhật,  hình bình hành.
+
+Phương thức khởi tạo:
+\begin{lstlisting}
+public BrushAttr(Color _color, String _typeBrush)
+public BrushAttr(BrushAttr brushAttr)
+\end{lstlisting}
+
+Dùng để khởi tạo đối tượng mới cho class BrushAttr,
+từ các giá trị này để tạo class Brush dùng để tô màu bên trong đối tượng.
+
+\subsection{Class FontAttr}
+Thuộc tính:
+\begin{lstlisting}
+public String text { get; set; }
+public string fontFamily { get; set; }
+public int size { get; set; }
+public FontStyle fontStyle { get; set; }
+\end{lstlisting}
+
+Dùng để lưu trữ dữ liệu cần thiết để khởi tạo class Font và để vẽ kí tự.
+\texttt{text} dùng để lưu nội dung,
+\texttt{fontFamily} dùng để chỉ định loại font cần vẽ kí tự,
+\texttt{size} lưu kích thước của hình chữ nhật bao quanh,
+\texttt{fontStyle} dùng để chọn loại mà mình muốn vẽ là in đậm, in nghiêng và gạch chân
+
+Phương thức khởi tạo:
+\begin{lstlisting}
+public FontAttr(String _text, string _fontFamily, int _size, FontStyle _fontStyle)
+public FontAttr(FontAttr fontAttr)
+\end{lstlisting}
+
+\section{Cài đặt trong FormMain}
+Trong FormMain, chương trình lưu tất cả các hình người dùng từng vẽ bằng \texttt{myShapes}
+\begin{lstlisting}
+private List<MyShape> myShapes = new List<MyShape>();
+\end{lstlisting}
+
+
+\subsection{Bắt sự kiện trong PictureBox}
+Chương trình bắt 3 sự kiện trong PictureBox,
+bao gồm MouseDown, MouseMove, MouseUp
+\begin{lstlisting}
+private void pictureBoxMain_MouseDown(object sender, MouseEventArgs e)
+private void pictureBoxMain_MouseMove(object sender, MouseEventArgs e)
+private void pictureBoxMain_MouseUp(object sender, MouseEventArgs e)
+\end{lstlisting}
+
+Chương trình lưu những điểm người dùng đã click bằng \texttt{clickedPoints}
+\begin{lstlisting}
+private List<Point> clickedPoints = new List<Point>();
+\end{lstlisting}
+
+Khi xảy ra sự kiện MouseDown,
+chương trình kiểm tra đang ở trong chế dộ vẽ hình hay chế độ chọn.
+
+Nếu đang ở trong chế độ vẽ hình, thêm tọa độ điểm vừa click vào \texttt{clickedPoints}.
+Kiểm tra xem \texttt{clickedPoints} đã đủ để vẽ hình đã chọn chưa.
+Nếu rồi thì vẽ hình đó ra và thêm vào \texttt{myShapes} và không bắt tiếp sự kiện MouseMove.
+Nếu chưa bắt sự kiện MouseMove và MouseDown tiếp theo.
+
+Nếu đang ở trong chế độ chọn, kiểm tra tọa độ của điểm vừa chọn có nằm ở biên hay nằm trong hình nào không.
+Ưu tiên điểm nằm ở biên hơn điểm nằm ở bên trong vì điểm nằm ở biên khó click hơn,
+ưu tiên hình vừa mới vẽ. Bên cạnh đó kiểm tra đang trong trạng thái Move, Scale, Rotate để có cho phép
+bắt sự kiện MouseMove hay không. Nếu trong trạng thái Move, thì cho phép bắt MouseMove.
+Nếu trong trạng thái Scale hoặc Rotate, kiểm tra có click trúng điểm neo hay không,
+nếu có cho phép bắt MouseMove, nếu không thì thôi.
+
+Khi xảy ra sự kiện MouseMove,
+chương trình kiểm tra đang ở trong chế độ chọn hay chế độ vẽ hình.
+
+Nếu đang ở chế độ vẽ hình, kiểm tra có còn bắt sự kiện MouseDown nữa hay không.
+Nếu không còn bắt thì không làm gì cả,
+nếu còn bắt thì vẽ hình với điểm mà con trỏ chuột đang chỉ vào
+để người dùng có cảm giác trực quan là hình được vẽ hình dạng như thế nào.
+Lưu ý đây chỉ là vẽ tạm, vẽ thật và thêm vào hình vừa tạo vào myShapes nằm ở MouseDown.
+
+Nếu đang ở chế độ chọn, kiểm tra có được bắt sự kiện MouseMove hay không.
+Nếu không thì dừng lại không làm gì cả.
+Nếu có thì vẽ hình với điểm mà con trỏ chuột đang chỉ vào tùy theo trạng thái Move, Scale, Rotate.
+Lưu ý đây chỉ là vẽ tạm, vẽ thật và thay đổi thuộc tính hình được chọn trong myShapes nằm ở MouseUp.
+
+Khi xảy ra sự kiện MouseUp, kiểm tra có đang ở chế độ chọn hay không.
+Nếu không thì dừng lại không làm gì cả.
+Nếu có thì kiểm tra tiếp có vừa trải qua sự kiện MouseMove hay không.
+Nếu không thì đừng lại không làm gì cả.
+Nếu có thì vẽ hình với điểm mà con trỏ chuột vừa thả ra tùy theo trạng thái Move, Scale, Rotate.
+Hình vừa vẽ được lưu lại thuộc tính mới trong myShapes. (points, tyleScale, angleRotate)
+
+\subsection{Tính năng lưu file, đọc file}
+Để thuận tiện cho việc lưu và đọc file, sử dụng Serialization cho tất cả các class có trong chương trình.
+
+Sử dụng class SaveFileDialog để mở dialog lưu file.
+Mặc định lưu file vào ổ \texttt{C}, file lưu có dạng mở rộng là \texttt{*.bin}
+
+Sử dụng class OpenFileDialog để mở dialog đọc file.
+Mặc định mở file trong ổ \texttt{C}, file đọc phải có dạng mở rộng là \texttt{*.bin}
+
+Có hai cách để lưu là Save và Save as.
+Nếu file đang mở ra chưa lưu, thì Save và Save as đều mở ra SaveFileDialog.
+Nếu file đang mở đã có file lưu, thì Save lưu thẳng vào file lưu cũ,
+Save as mở ra SaveFileDialog để lưu vào file mới.
+
+\subsection{Xuất ra ảnh}
+Sử dụng class Bitmap với phương thức Save() để lưu dưới dạng hình ảnh.
+Những định dạng hỗ trợ: \texttt{*.png, *.jpeg, *.gif, *.tiff}
+
+\subsection{Thay đổi thứ tự các hình}
+Vì đã lưu các hình trong \texttt{myShapes} theo thứ tự thời gian.
+Hình vẽ đầu tiên là \texttt{myShapes[0]}, hình vẽ tiếp theo là \texttt{myShapes[1]}, ...
+Do đó thay đổi thứ tự của hình là thay đổi thứ tự trong \texttt{myShapes}.
+Vì \texttt{myShapes} khai báo dạng \texttt{List<MyShape>}
+nên dùng những phương thức của \texttt{List} để hỗ trợ: RemoveAt(), Insert()
+
+\subsection{Cài đặt undo, redo}
+Để cài đặt undo và redo, thêm 2 thuộc tính mới:
+\begin{lstlisting}
+private int indexOfListMyShapes = -1;
+private List<List<MyShape>> listMyShapes = new List<List<MyShape>>();
+\end{lstlisting}
+
+\texttt{listMyShapes} lưu lại danh sách \texttt{myShapes} theo thứ tự thời gian,
+mỗi lần thay đổi  thuộc tính của 1 hình trong \texttt{myShapes}, hoặc thêm hình mới, xóa hình cũ.
+\texttt{indexOfListMyShapes} thể hiện vị trí của \texttt{myShapes} hiện tại trong \texttt{listMyShapes}.
+
+Khi nhấn nút Undo, kiểm tra trước \texttt{myShapes} hiện tại trong \texttt{listMyShapes}
+còn \texttt{myShapes} nào hay không.
+Nếu còn thì thay thế \texttt{myShapes} hiện tại bằng \texttt{myShapes} trước đó.
+
+Khi nhấn nút Redo, kiểm tra sau \texttt{myShapes} hiện tại trong \texttt{listMyShapes}
+còn \texttt{myShapes} nào hay không.
+Nếu còn thì thay thế \texttt{myShapes} hiện tại bằng \texttt{myShapes} sau đó.
+
+\begin{thebibliography}{9}
+\bibitem{cite1} Equation of a Circle from 3 Points (2 dimensions) \\
+\url{http://paulbourke.net/geometry/circlesphere/}
+
+\bibitem{cite2} Using atan2 to find angle between two vectors \\
+\url{https://stackoverflow.com/questions/21483999/using-atan2-to-find-angle-between-two-vectors}
+
+\bibitem{cite3} How to rotate, scale, and translate a matrix all at once in C\#? \\
+\url{https://stackoverflow.com/questions/636081/how-to-rotate-scale-and-translate-a-matrix-all-at-once-in-c}
+
+\bibitem{cite4} Whats the difference between Control.Invalidate, Control.Update and Control.Refresh? \\
+\url{https://blogs.msdn.microsoft.com/subhagpo/2005/02/22/whats-the-difference-between-control-invalidate-control-update-and-control-refresh/}
+
+\bibitem{cite5} GraphicsPath Class \\
+\url{https://docs.microsoft.com/en-us/dotnet/api/system.drawing.drawing2d.graphicspath?view=netframework-4.7.2}
+
+\bibitem{cite6} Pen Class \\
+\url{https://docs.microsoft.com/en-us/dotnet/api/system.drawing.pen?view=netframework-4.7.2}
+
+\bibitem{cite7} Brush Class \\
+\url{https://docs.microsoft.com/en-us/dotnet/api/system.drawing.brush?view=netframework-4.7.2}
+
+\bibitem{cite8} Font Class \\
+\url{https://docs.microsoft.com/en-us/dotnet/api/system.drawing.font?view=netframework-4.7.2}
+
+\end{thebibliography}
+
+\end{document}
